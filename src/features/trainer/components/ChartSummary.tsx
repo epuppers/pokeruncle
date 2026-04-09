@@ -1,35 +1,10 @@
-import type { ProviderCharts } from '@/features/trainer/lib/range-loader'
-import { POSITIONS, SCENARIOS, type Position, type Scenario } from '@/types/poker'
+import { SCENARIOS } from '@/types/poker'
+
+import { parseChartKey } from '@/features/trainer/lib/chart-utils'
+import type { ProviderCharts } from '@/features/trainer/types'
 
 interface ChartSummaryProps {
   charts: ProviderCharts
-}
-
-function parseChartKey(key: string): { hero: Position; scenario: Scenario; villain?: Position } | null {
-  const parts = key.split('-')
-  if (parts.length < 2) return null
-
-  const hero = parts[0] as Position
-  if (!POSITIONS.includes(hero)) return null
-
-  // Scenario may contain hyphens (e.g. "vs-open", "vs-3bet", "3bet-defense")
-  // Try matching known scenarios from longest to shortest
-  const rest = parts.slice(1).join('-')
-  const scenarioIds = SCENARIOS.map((s) => s.id).sort((a, b) => b.length - a.length)
-
-  for (const scenarioId of scenarioIds) {
-    if (rest === scenarioId) {
-      return { hero, scenario: scenarioId }
-    }
-    if (rest.startsWith(scenarioId + '-')) {
-      const villain = rest.slice(scenarioId.length + 1) as Position
-      if (POSITIONS.includes(villain)) {
-        return { hero, scenario: scenarioId, villain }
-      }
-    }
-  }
-
-  return null
 }
 
 export function ChartSummary({ charts }: ChartSummaryProps) {

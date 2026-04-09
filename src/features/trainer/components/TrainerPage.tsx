@@ -1,28 +1,60 @@
+import { useEffect } from 'react'
+
 import { useTrainerStore } from '@/stores/trainerStore'
+
 import { useRangeQuery } from '@/features/trainer/hooks/use-range-query'
+import { useSpotDealer } from '@/features/trainer/hooks/use-spot-dealer'
+import { useTrainerKeyboard } from '@/features/trainer/hooks/use-trainer-keyboard'
+import { ActionBar } from './ActionBar'
+import { FeedbackView } from './FeedbackView'
+import { HonestyBanner } from './HonestyBanner'
+import { RollDisplay } from './RollDisplay'
+import { SessionHud } from './SessionHud'
+import { TableView } from './TableView'
 import { TrainerProviderSelector } from './TrainerProviderSelector'
-import { ChartSummary } from './ChartSummary'
 
 export function TrainerPage() {
-  const { provider } = useTrainerStore()
+  const provider = useTrainerStore((s) => s.provider)
+  const trainerPhase = useTrainerStore((s) => s.trainerPhase)
+  const submitAction = useTrainerStore((s) => s.submitAction)
+  const nextSpot = useTrainerStore((s) => s.nextSpot)
+
   const { charts } = useRangeQuery(provider)
+  const { dealNext } = useSpotDealer(charts)
+
+  // nextSpot sets phase to idle, which triggers the auto-deal effect below
+  useTrainerKeyboard(nextSpot)
+
+  // Auto-deal when entering idle phase (initial mount or after provider change)
+  useEffect(() => {
+    if (trainerPhase.phase === 'idle') {
+      dealNext()
+    }
+  }, [trainerPhase.phase, dealNext])
 
   return (
-    <div className="flex-1 flex flex-col gap-6 max-w-lg mx-auto w-full">
-      <div className="flex flex-col items-center gap-4">
+    <div className="flex-1 flex flex-col gap-4 max-w-md mx-auto w-full">
+      <div className="flex items-center justify-between">
         <TrainerProviderSelector />
       </div>
 
-      <ChartSummary charts={charts} />
+      <HonestyBanner charts={charts} />
+      <SessionHud />
 
-      <div className="rounded-lg border border-neutral-800 bg-neutral-900/50 p-6 text-center">
-        <p className="text-sm text-neutral-400">
-          Training loop coming in Phase 3.
-        </p>
-        <p className="text-xs text-neutral-600 mt-2">
-          Select a provider above to verify data loading.
-        </p>
-      </div>
+      {trainerPhase.phase === 'active' && (
+        <div className="flex flex-col gap-4">
+          <TableView spot={trainerPhase.spot} />
+          <RollDisplay rolledNumber={trainerPhase.spot.rolledNumber} />
+          <ActionBar onAction={submitAction} disabled={false} />
+        </div>
+      )}
+
+      {trainerPhase.phase === 'feedback' && (
+        <div className="flex flex-col gap-4">
+          <TableView spot={trainerPhase.spot} />
+          <FeedbackView spot={trainerPhase.spot} result={trainerPhase.result} />
+        </div>
+      )}
     </div>
   )
 }

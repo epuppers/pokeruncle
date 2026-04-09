@@ -1,3 +1,6 @@
 export { TrainerPage } from './components/TrainerPage'
 export { useRangeQuery } from './hooks/use-range-query'
 export { loadProvider, resolveCorrectAction } from './lib/range-loader'
+export { generateSpot } from './lib/spot-generator'
+export { hasMixedStrategies, parseChartKey, enumerateCharts } from './lib/chart-utils'
+export type { Spot, SpotResult, TrainerPhase, SessionStats, ProviderCharts } from './types'

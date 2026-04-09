@@ -1,5 +1,5 @@
-import type { Cell, Position, Provider, Scenario } from '@/types/poker'
-import { normalizeCell } from '@/types/poker'
+import type { Action, Cell, Position, Provider, Scenario } from '@/types/poker'
+import { getSortedActions, normalizeCell } from '@/types/poker'
 import type { Chart } from '@/data/ranges'
 import { getChartKey } from '@/data/ranges'
 
@@ -60,18 +60,17 @@ export function getCellFromLoaded(
 }
 
 /** Get the correct action for a cell given a rolled number (1-100). */
-export function resolveCorrectAction(cell: Cell, rolledNumber: number): string {
+export function resolveCorrectAction(cell: Cell, rolledNumber: number): Action {
   const { actions } = normalizeCell(cell)
+  const sorted = getSortedActions(actions)
 
-  // Build cumulative frequency bands in action order
+  // Build cumulative frequency bands in display order (allin → raise → call → fold)
   let cumulative = 0
-  for (const [action, freq] of Object.entries(actions)) {
-    if (!freq) continue
+  for (const [action, freq] of sorted) {
     cumulative += freq
     if (rolledNumber <= cumulative) return action
   }
 
-  // Fallback: first action with any frequency
-  const firstAction = Object.entries(actions).find(([, f]) => f && f > 0)
-  return firstAction ? firstAction[0] : 'fold'
+  // Fallback: first action with any frequency, or fold
+  return sorted.length > 0 ? sorted[0][0] : 'fold'
 }
