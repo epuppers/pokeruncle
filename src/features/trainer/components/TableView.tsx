@@ -50,16 +50,27 @@ function getStackLabel(spot: Spot): string {
   return '100 blinds'
 }
 
-/** Build a map of what each position did in this hand so far. */
-function getPositionActions(spot: Spot): Map<Position, { action: string; style: 'bet' | 'fold' | 'raise' | 'hero' }> {
-  const actions = new Map<Position, { action: string; style: 'bet' | 'fold' | 'raise' | 'hero' }>()
+interface PositionAction {
+  action: string
+  style: 'bet' | 'fold' | 'raise' | 'hero'
+  /** Sequence order (0-based) — used for staggered animation delay */
+  seq: number
+}
 
-  // Blinds always post
-  actions.set('SB', { action: '½ bet', style: 'bet' })
-  actions.set('BB', { action: '1 bet', style: 'bet' })
+/**
+ * Build an ordered sequence of what each position did.
+ * Actions are numbered sequentially so badges can animate in one at a time.
+ */
+function getPositionActions(spot: Spot): Map<Position, PositionAction> {
+  const actions = new Map<Position, PositionAction>()
+  let seq = 0
+
+  // Blinds always post first
+  actions.set('SB', { action: '½ bet', style: 'bet', seq: seq++ })
+  actions.set('BB', { action: '1 bet', style: 'bet', seq: seq++ })
 
   if (spot.kind === 'push-fold') {
-    return getPushFoldPositionActions(spot, actions)
+    return getPushFoldPositionActions(spot, actions, seq)
   }
 
   const heroPos = spot.hero
@@ -67,43 +78,41 @@ function getPositionActions(spot: Spot): Map<Position, { action: string; style: 
 
   switch (spot.scenario) {
     case 'RFI': {
-      // Everyone before hero folds
       for (const pos of posOrder) {
         if (pos === heroPos) break
         if (pos !== 'SB' && pos !== 'BB') {
-          actions.set(pos, { action: 'folds', style: 'fold' })
+          actions.set(pos, { action: 'folds', style: 'fold', seq: seq++ })
         }
       }
-      actions.set(heroPos, { action: 'YOUR TURN', style: 'hero' })
+      actions.set(heroPos, { action: 'YOUR TURN', style: 'hero', seq: seq++ })
       break
     }
     case 'vs-open': {
       if (spot.kind === 'response') {
-        actions.set(spot.villain, { action: 'raises', style: 'raise' })
-        actions.set(heroPos, { action: 'YOUR TURN', style: 'hero' })
+        actions.set(spot.villain, { action: 'raises', style: 'raise', seq: seq++ })
+        actions.set(heroPos, { action: 'YOUR TURN', style: 'hero', seq: seq++ })
       }
       break
     }
     case 'vs-3bet': {
       if (spot.kind === 'response') {
-        actions.set(heroPos, { action: 'raised', style: 'raise' })
-        actions.set(spot.villain, { action: 're-raises', style: 'raise' })
-        // Override hero — they need to act again
-        actions.set(heroPos, { action: 'YOUR TURN', style: 'hero' })
+        actions.set(heroPos, { action: 'raised', style: 'raise', seq: seq++ })
+        actions.set(spot.villain, { action: 're-raises', style: 'raise', seq: seq++ })
+        actions.set(heroPos, { action: 'YOUR TURN', style: 'hero', seq: seq++ })
       }
       break
     }
     case 'vs-4bet': {
       if (spot.kind === 'response') {
-        actions.set(spot.villain, { action: 'raised', style: 'raise' })
-        actions.set(heroPos, { action: 'YOUR TURN', style: 'hero' })
+        actions.set(spot.villain, { action: 'raised', style: 'raise', seq: seq++ })
+        actions.set(heroPos, { action: 'YOUR TURN', style: 'hero', seq: seq++ })
       }
       break
     }
     case '3bet-defense': {
       if (spot.kind === 'response') {
-        actions.set(spot.villain, { action: 'calls', style: 'bet' })
-        actions.set(heroPos, { action: 'YOUR TURN', style: 'hero' })
+        actions.set(spot.villain, { action: 'calls', style: 'bet', seq: seq++ })
+        actions.set(heroPos, { action: 'YOUR TURN', style: 'hero', seq: seq++ })
       }
       break
     }
@@ -114,18 +123,22 @@ function getPositionActions(spot: Spot): Map<Position, { action: string; style: 
 
 function getPushFoldPositionActions(
   spot: Spot & { kind: 'push-fold' },
-  actions: Map<Position, { action: string; style: 'bet' | 'fold' | 'raise' | 'hero' }>,
-): Map<Position, { action: string; style: 'bet' | 'fold' | 'raise' | 'hero' }> {
+  actions: Map<Position, PositionAction>,
+  seq: number,
+): Map<Position, PositionAction> {
   if (spot.scenario === 'push') {
-    actions.set(spot.hero, { action: 'YOUR TURN', style: 'hero' })
+    actions.set(spot.hero, { action: 'YOUR TURN', style: 'hero', seq })
   } else {
     if (spot.villain) {
-      actions.set(spot.villain, { action: 'ALL-IN', style: 'raise' })
+      actions.set(spot.villain, { action: 'ALL-IN', style: 'raise', seq: seq++ })
     }
-    actions.set(spot.hero, { action: 'YOUR TURN', style: 'hero' })
+    actions.set(spot.hero, { action: 'YOUR TURN', style: 'hero', seq })
   }
   return actions
 }
+
+/** Delay per action step in ms */
+const STEP_DELAY_MS = 800
 
 export function TableView({ spot }: TableViewProps) {
   const villain = spot.kind === 'response' ? spot.villain : spot.kind === 'push-fold' ? spot.villain : undefined
@@ -142,7 +155,7 @@ export function TableView({ spot }: TableViewProps) {
 
       {/* Table */}
       <div className="relative w-full max-w-lg aspect-[3/2] rounded-[40%] ring-4 ring-wood bg-[radial-gradient(ellipse_at_center,var(--color-felt-light),var(--color-felt))] shadow-[inset_0_2px_20px_rgba(0,0,0,0.4),0_4px_16px_rgba(0,0,0,0.3)]">
-        {/* Position labels with action badges */}
+        {/* Position labels with staggered action badges */}
         {POSITIONS.map((pos) => {
           const { x, y } = POSITION_ANGLES[pos]
           const isHero = pos === spot.hero
@@ -150,21 +163,23 @@ export function TableView({ spot }: TableViewProps) {
           const entry = POSITION_LABELS[pos]
           const posAction = positionActions.get(pos)
           const isFolded = posAction?.style === 'fold'
+          const delay = posAction ? posAction.seq * STEP_DELAY_MS : 0
 
           return (
             <div
-              key={pos}
+              key={`${spot.id}-${pos}`}
               className="absolute -translate-x-1/2 -translate-y-1/2"
               style={{ left: `${x}%`, top: `${y}%` }}
             >
               <div
                 className={cn(
                   'flex flex-col items-center gap-1 rounded-lg px-2.5 py-1.5 text-sm font-semibold transition-colors',
-                  isHero && 'bg-brass/25 text-brass ring-2 ring-brass/50 scale-110 animate-pulse',
+                  isHero && 'bg-brass/25 text-brass ring-2 ring-brass/50 scale-110',
                   isVillain && 'bg-rose-500/20 text-rose-300 ring-1 ring-rose-500/40',
-                  isFolded && 'opacity-30',
+                  isFolded && 'animate-[fadeOut_0.3s_ease-out_forwards]',
                   !isHero && !isVillain && !isFolded && 'text-muted-foreground',
                 )}
+                style={isFolded ? { animationDelay: `${delay + 400}ms` } : undefined}
               >
                 {/* "YOU" badge for hero */}
                 {isHero && (
@@ -173,16 +188,18 @@ export function TableView({ spot }: TableViewProps) {
                   </span>
                 )}
                 <PokerTerm label={entry.label} tip={entry.tip} className="text-inherit border-0" />
-                {/* Action badge */}
+                {/* Action badge — fades in with staggered delay */}
                 {posAction && (
                   <span
                     className={cn(
                       'text-[10px] font-bold uppercase tracking-wide rounded-full px-1.5 py-0.5',
+                      'opacity-0 animate-[fadeIn_0.4s_ease-out_forwards]',
                       posAction.style === 'hero' && 'bg-brass/30 text-brass',
                       posAction.style === 'raise' && 'bg-rose-500/20 text-rose-300',
                       posAction.style === 'bet' && 'bg-foreground/10 text-muted-foreground',
                       posAction.style === 'fold' && 'text-muted-foreground/50',
                     )}
+                    style={{ animationDelay: `${delay}ms` }}
                   >
                     {posAction.action}
                   </span>
