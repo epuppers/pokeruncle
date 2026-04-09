@@ -29,6 +29,13 @@ export async function recordSpotResult(
     qualityScore,
     timestamp: Date.now(),
     decisionTimeMs,
+    provider: spot.provider,
+    hero: spot.hero,
+    villain: spot.kind === 'response' ? spot.villain : null,
+    scenario: spot.scenario,
+    heroHand: spot.heroHand,
+    rolledNumber: spot.rolledNumber,
+    correctAction: spot.correctAction,
   })
 
   await updateSpotMastery(spotTypeKey, qualityScore)

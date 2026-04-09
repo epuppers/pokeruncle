@@ -20,6 +20,20 @@ export interface SpotResultRecord {
   timestamp: number
   /** Milliseconds the user took to decide. */
   decisionTimeMs: number
+  /** Range provider (e.g. 'pekarstas'). Added in v2. */
+  provider: string
+  /** Hero position. Added in v2. */
+  hero: string
+  /** Villain position, or null for RFI spots. Added in v2. */
+  villain: string | null
+  /** Scenario type. Added in v2. */
+  scenario: string
+  /** Hero hand class (e.g. 'AKs'). Added in v2. */
+  heroHand: string
+  /** RNG roll 1–100 for mixed strategy resolution. Added in v2. */
+  rolledNumber: number
+  /** The GTO-correct action for this spot. Added in v2. */
+  correctAction: string
 }
 
 /** Per-spot-type mastery state for spaced repetition (SM-2). */
@@ -46,6 +60,10 @@ export class PokerTrainerDB extends Dexie {
     super('uncles-table')
     this.version(1).stores({
       spotResults: '++id, spotId, timestamp, isCorrect',
+      masteryRecords: 'spotTypeKey, nextReviewAt',
+    })
+    this.version(2).stores({
+      spotResults: '++id, spotId, timestamp, isCorrect, provider, hero, scenario, [hero+scenario], heroHand',
       masteryRecords: 'spotTypeKey, nextReviewAt',
     })
   }

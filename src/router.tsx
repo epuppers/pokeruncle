@@ -15,6 +15,7 @@ import { POSITIONS, SCENARIOS, type Position, type Scenario } from '@/types/poke
 const TrainerPage = lazy(() => import('@/features/trainer').then(m => ({ default: m.TrainerPage })))
 const AnalyzerPage = lazy(() => import('@/components/analyze/AnalyzerPage').then(m => ({ default: m.AnalyzerPage })))
 const DisclaimerPage = lazy(() => import('@/components/DisclaimerPage').then(m => ({ default: m.DisclaimerPage })))
+const ReviewPage = lazy(() => import('@/features/review').then(m => ({ default: m.ReviewPage })))
 
 // Root layout component
 function RootLayout() {
@@ -38,6 +39,7 @@ function RootLayout() {
           {/* Navigation tabs */}
           <nav aria-label="Main navigation" className="flex gap-1">
             <NavLink to="/train" label="Train" />
+            <NavLink to="/review" label="Review" />
             <NavLink to="/" label="Ranges" exact />
             <NavLink to="/analyze" label="Analyze" />
           </nav>
@@ -180,9 +182,16 @@ const analyzeRoute = createRoute({
   component: AnalyzerPage,
 })
 
+const reviewRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/review',
+  component: ReviewPage,
+})
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   trainRoute,
+  reviewRoute,
   analyzeRoute,
   disclaimerRoute,
 ])
