@@ -2,15 +2,29 @@ import type Tesseract from 'tesseract.js'
 
 let workerPromise: Promise<Tesseract.Worker> | null = null
 
+/** Poker-relevant characters for OCR whitelist */
+const POKER_CHAR_WHITELIST = [
+  'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
+  '0123456789',
+  '$.,/()[] -:#+%',
+  // Cyrillic for Russian GGPoker client
+  'АБВГДЕЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдежзийклмнопрстуфхцчшщъыьэюя',
+].join('')
+
 /**
  * Lazily initialize a Tesseract worker. Reuses the same worker across calls.
  * Loads Russian + English language data for GGPoker hand histories.
  */
 function getWorker(): Promise<Tesseract.Worker> {
   if (!workerPromise) {
-    workerPromise = import('tesseract.js').then((mod) =>
-      mod.createWorker(['rus', 'eng'])
-    )
+    workerPromise = import('tesseract.js').then(async (mod) => {
+      const worker = await mod.createWorker(['rus', 'eng'])
+      await worker.setParameters({
+        tessedit_pageseg_mode: '6' as unknown as Tesseract.PSM, // Uniform block of text
+        tessedit_char_whitelist: POKER_CHAR_WHITELIST,
+      })
+      return worker
+    })
   }
   return workerPromise
 }

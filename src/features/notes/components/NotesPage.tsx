@@ -6,7 +6,9 @@ import { useNotesStore } from '../store'
 import { loadImage, preprocessForOcr } from '../lib/imagePreprocessor'
 import { recognizeText } from '../lib/tesseractWorker'
 import { generateNote } from '../lib/llm7Client'
+import { GGPOKER_PRESET } from '../lib/presets'
 import { ScreenshotInput } from './ScreenshotInput'
+import { PreprocessPreview } from './PreprocessPreview'
 import { OcrPreview } from './OcrPreview'
 import { NoteResult } from './NoteResult'
 
@@ -15,26 +17,26 @@ export function NotesPage() {
   const ocrText = useNotesStore((s) => s.ocrText)
   const ocrStatus = useNotesStore((s) => s.ocrStatus)
   const llmStatus = useNotesStore((s) => s.llmStatus)
+  const regionConfig = useNotesStore((s) => s.regionConfig)
   const setOcrText = useNotesStore((s) => s.setOcrText)
   const setOcrStatus = useNotesStore((s) => s.setOcrStatus)
   const setNote = useNotesStore((s) => s.setNote)
   const setLlmStatus = useNotesStore((s) => s.setLlmStatus)
   const reset = useNotesStore((s) => s.reset)
 
-  // Run OCR when a new image is set
-  useEffect(() => {
+  const runOcr = useCallback(() => {
     if (!imageDataUrl) return
 
-    let cancelled = false
+    setOcrStatus('loading')
 
-    async function runOcr() {
-      setOcrStatus('loading')
+    void (async () => {
       try {
-        const img = await loadImage(imageDataUrl!)
-        const preprocessed = preprocessForOcr(img)
+        const img = await loadImage(imageDataUrl)
+        const preprocessed = preprocessForOcr(img, {
+          ...GGPOKER_PRESET,
+          region: regionConfig,
+        })
         const text = await recognizeText(preprocessed)
-
-        if (cancelled) return
 
         if (!text.trim()) {
           setOcrStatus('error', "Couldn't extract text. Make sure the hand history is visible and readable.")
@@ -44,15 +46,17 @@ export function NotesPage() {
         setOcrText(text.trim())
         setOcrStatus('done')
       } catch (err) {
-        if (cancelled) return
         const message = err instanceof Error ? err.message : 'OCR failed'
         setOcrStatus('error', message)
       }
-    }
+    })()
+  }, [imageDataUrl, regionConfig, setOcrText, setOcrStatus])
 
-    void runOcr()
-    return () => { cancelled = true }
-  }, [imageDataUrl, setOcrText, setOcrStatus])
+  // Auto-run OCR when a new image is set
+  useEffect(() => {
+    if (!imageDataUrl) return
+    runOcr()
+  }, [imageDataUrl]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleGenerateNote = useCallback(() => {
     if (!ocrText.trim()) return
@@ -83,6 +87,14 @@ export function NotesPage() {
       </div>
 
       <ScreenshotInput />
+
+      <PreprocessPreview />
+
+      {imageDataUrl && ocrStatus !== 'loading' && (
+        <Button variant="outline" size="sm" onClick={runOcr}>
+          Re-run OCR
+        </Button>
+      )}
 
       <OcrPreview />
 

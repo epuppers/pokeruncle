@@ -3,6 +3,7 @@ import { useCallback, useRef } from 'react'
 import { cn } from '@/lib/utils'
 
 import { useNotesStore } from '../store'
+import { RegionOverlay } from './RegionOverlay'
 
 function readFileAsDataUrl(file: File): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -86,11 +87,14 @@ export function ScreenshotInput() {
       />
 
       {imageDataUrl ? (
-        <img
-          src={imageDataUrl}
-          alt="Screenshot preview"
-          className="mx-auto max-h-64 rounded"
-        />
+        <div className="relative mx-auto max-h-64">
+          <img
+            src={imageDataUrl}
+            alt="Screenshot preview"
+            className="max-h-64 rounded"
+          />
+          <RegionOverlay />
+        </div>
       ) : (
         <div className="flex flex-col items-center gap-2 py-8 text-neutral-400">
           <p className="text-sm font-medium">
