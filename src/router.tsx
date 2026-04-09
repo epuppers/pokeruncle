@@ -18,6 +18,7 @@ const LeaderboardArchive = lazy(() => import('@/components/leaderboard/Leaderboa
 const LeaderboardRakeback = lazy(() => import('@/components/leaderboard/LeaderboardPage').then(m => ({ default: m.LeaderboardRakeback })))
 const AnalyzerPage = lazy(() => import('@/components/analyze/AnalyzerPage').then(m => ({ default: m.AnalyzerPage })))
 const DisclaimerPage = lazy(() => import('@/components/DisclaimerPage').then(m => ({ default: m.DisclaimerPage })))
+const NotesPage = lazy(() => import('@/features/notes').then(m => ({ default: m.NotesPage })))
 
 // Root layout component
 function RootLayout() {
@@ -42,6 +43,7 @@ function RootLayout() {
           <nav aria-label="Main navigation" className="flex gap-1">
             <NavLink to="/" label="Preflop Ranges" exact />
             <NavLink to="/leaderboard" label="GG Leaderboards" />
+            <NavLink to="/notes" label="Notes" />
           </nav>
         </div>
       </header>
@@ -213,6 +215,12 @@ const analyzeRoute = createRoute({
   component: AnalyzerPage,
 })
 
+const notesRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/notes',
+  component: NotesPage,
+})
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   leaderboardRoute.addChildren([
@@ -221,6 +229,7 @@ const routeTree = rootRoute.addChildren([
     leaderboardRakebackRoute,
   ]),
   analyzeRoute,
+  notesRoute,
   disclaimerRoute,
 ])
 

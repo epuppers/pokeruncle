@@ -1,0 +1,32 @@
+import { create } from 'zustand'
+
+import type { NotesState, NotesActions, OcrStatus, LlmStatus } from './types'
+
+const initialState: NotesState = {
+  imageDataUrl: null,
+  ocrText: '',
+  ocrStatus: 'idle',
+  ocrError: null,
+  note: '',
+  llmStatus: 'idle',
+  llmError: null,
+}
+
+export const useNotesStore = create<NotesState & NotesActions>()((set) => ({
+  ...initialState,
+
+  setImage: (dataUrl: string) =>
+    set({ imageDataUrl: dataUrl, ocrText: '', ocrStatus: 'idle', ocrError: null, note: '', llmStatus: 'idle', llmError: null }),
+
+  setOcrText: (text: string) => set({ ocrText: text }),
+
+  setOcrStatus: (status: OcrStatus, error?: string) =>
+    set({ ocrStatus: status, ocrError: error ?? null }),
+
+  setNote: (note: string) => set({ note }),
+
+  setLlmStatus: (status: LlmStatus, error?: string) =>
+    set({ llmStatus: status, llmError: error ?? null }),
+
+  reset: () => set(initialState),
+}))
