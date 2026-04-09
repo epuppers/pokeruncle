@@ -29,6 +29,26 @@ export interface NotesState {
   regionConfig: RegionConfig
 }
 
+export type GoldenExampleCategory =
+  | 'overcalling'
+  | 'bluff-spots'
+  | 'sizing-tells'
+  | 'positional-leaks'
+  | 'passive-play'
+  | 'aggro-lines'
+  | 'standard-line'
+  | 'multiway'
+  | 'allin-preflop'
+  | 'garbled-ocr'
+
+export interface GoldenExample {
+  id: string
+  category: GoldenExampleCategory
+  ocrText: string
+  idealNote: string
+  requiredSubstrings: string[]
+}
+
 export interface NotesActions {
   setImage: (dataUrl: string) => void
   setOcrText: (text: string) => void
