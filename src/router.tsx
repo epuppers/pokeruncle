@@ -12,6 +12,7 @@ import { useChartStore } from '@/stores/chartStore'
 import { POSITIONS, SCENARIOS, type Position, type Scenario } from '@/types/poker'
 
 // Lazy-loaded route components
+const TrainerPage = lazy(() => import('@/features/trainer').then(m => ({ default: m.TrainerPage })))
 const AnalyzerPage = lazy(() => import('@/components/analyze/AnalyzerPage').then(m => ({ default: m.AnalyzerPage })))
 const DisclaimerPage = lazy(() => import('@/components/DisclaimerPage').then(m => ({ default: m.DisclaimerPage })))
 
@@ -36,6 +37,7 @@ function RootLayout() {
 
           {/* Navigation tabs */}
           <nav aria-label="Main navigation" className="flex gap-1">
+            <NavLink to="/train" label="Train" />
             <NavLink to="/" label="Ranges" exact />
             <NavLink to="/analyze" label="Analyze" />
           </nav>
@@ -166,6 +168,12 @@ const disclaimerRoute = createRoute({
   component: DisclaimerPage,
 })
 
+const trainRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/train',
+  component: TrainerPage,
+})
+
 const analyzeRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/analyze',
@@ -174,6 +182,7 @@ const analyzeRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
+  trainRoute,
   analyzeRoute,
   disclaimerRoute,
 ])
