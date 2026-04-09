@@ -16,13 +16,13 @@ export function StrategyBar({ cell, rolledNumber }: StrategyBarProps) {
 
   return (
     <div className="w-full">
-      <div className="relative flex h-10 w-full overflow-hidden rounded-lg">
+      <div className="relative flex h-12 w-full overflow-hidden rounded-lg">
         {sorted.map(([action, freq]) => (
           <div
             key={action}
             className={cn(
               ACTION_COLORS[action],
-              'flex items-center justify-center text-xs font-medium text-white',
+              'flex items-center justify-center text-sm font-semibold text-white',
             )}
             style={{ width: `${freq}%` }}
           >
@@ -35,13 +35,17 @@ export function StrategyBar({ cell, rolledNumber }: StrategyBarProps) {
         ))}
         {rolledNumber !== undefined && (
           <div
-            className="absolute top-0 bottom-0 w-1 -translate-x-1/2 rounded-full bg-brass shadow-[0_0_6px_var(--color-brass)]"
+            className="absolute top-0 bottom-0 flex flex-col items-center"
             style={{ left: `${rolledNumber}%` }}
-            aria-label={`Roll: ${rolledNumber}`}
-          />
+          >
+            <div className="w-1 flex-1 -translate-x-1/2 rounded-full bg-brass shadow-[0_0_8px_var(--color-brass)]" />
+            <div className="absolute -bottom-5 -translate-x-1/2 text-xs font-bold text-brass tabular-nums">
+              {rolledNumber}
+            </div>
+          </div>
         )}
       </div>
-      <div className="mt-1.5 flex gap-3 text-xs text-muted-foreground">
+      <div className="mt-6 flex gap-4 text-sm text-muted-foreground">
         {sorted.map(([action, freq]) => (
           <span key={action}>
             {actionLabel(action)}: {freq}%

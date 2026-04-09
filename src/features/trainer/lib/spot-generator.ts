@@ -1,5 +1,6 @@
-import type { HandType, Provider, Scenario } from '@/types/poker'
+import type { Card, HandType, Provider, Scenario } from '@/types/poker'
 
+import { enumerateCombos } from '@/lib/analyzer/comboCounter'
 import type { MasteryRecord } from '@/lib/db'
 
 import { enumerateCharts, enumerateTournamentCharts } from '@/features/trainer/lib/chart-utils'
@@ -13,6 +14,18 @@ import type {
   SpotFilters,
   TournamentScenario,
 } from '@/features/trainer/types'
+
+/** Pick a random specific card combo for a hand name like "AKs". */
+function dealCards(heroHand: string): [Card, Card] {
+  const combos = enumerateCombos(heroHand)
+  if (combos.length === 0) {
+    // Fallback: synthesize cards from hand name
+    const rank1 = heroHand[0] as Card['rank']
+    const rank2 = heroHand[1] as Card['rank']
+    return [{ rank: rank1, suit: 's' }, { rank: rank2, suit: 'h' }]
+  }
+  return combos[Math.floor(Math.random() * combos.length)]
+}
 
 /**
  * Generate a random training spot from the loaded charts.
@@ -56,6 +69,8 @@ export function generateSpot(
   const correctAction = resolveCorrectAction(cell, rolledNumber)
   const id = crypto.randomUUID()
 
+  const heroCards = dealCards(heroHand)
+
   if (entry.scenario === 'RFI') {
     return {
       kind: 'open',
@@ -64,6 +79,7 @@ export function generateSpot(
       hero: entry.hero,
       scenario: entry.scenario,
       heroHand,
+      heroCards,
       cell,
       rolledNumber,
       correctAction,
@@ -78,6 +94,7 @@ export function generateSpot(
     villain: entry.villain!,
     scenario: entry.scenario,
     heroHand,
+    heroCards,
     cell,
     rolledNumber,
     correctAction,
@@ -191,6 +208,7 @@ function buildSpotFromCandidate(
   const rolledNumber = Math.ceil(Math.random() * 100)
   const correctAction = resolveCorrectAction(cell, rolledNumber)
   const id = crypto.randomUUID()
+  const heroCards = dealCards(hand)
 
   if (chart.scenario === 'RFI') {
     return {
@@ -200,6 +218,7 @@ function buildSpotFromCandidate(
       hero: chart.hero,
       scenario: chart.scenario,
       heroHand: hand,
+      heroCards,
       cell,
       rolledNumber,
       correctAction,
@@ -214,6 +233,7 @@ function buildSpotFromCandidate(
     villain: chart.villain!,
     scenario: chart.scenario,
     heroHand: hand,
+    heroCards,
     cell,
     rolledNumber,
     correctAction,
@@ -279,6 +299,7 @@ function buildPushFoldSpotFromCandidate(
   const rolledNumber = Math.ceil(Math.random() * 100)
   const correctAction = resolveCorrectAction(cell, rolledNumber)
   const id = crypto.randomUUID()
+  const heroCards = dealCards(hand)
 
   return {
     kind: 'push-fold',
@@ -288,6 +309,7 @@ function buildPushFoldSpotFromCandidate(
     scenario: chart.scenario,
     villain: chart.villain,
     heroHand: hand,
+    heroCards,
     cell,
     rolledNumber,
     correctAction,

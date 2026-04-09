@@ -56,13 +56,13 @@ export function ActionBar({ onAction, disabled, spot }: ActionBarProps) {
           key={action}
           variant={variant}
           className={cn(
-            'flex-1 h-14 text-base gap-2',
+            'flex-1 h-16 text-lg gap-2',
             disabled && 'opacity-40 pointer-events-none',
           )}
           disabled={disabled}
           onClick={() => onAction(action)}
         >
-          <Icon className="size-4" />
+          <Icon className="size-5" />
           {label}
           <kbd className="ml-1 rounded-sm bg-black/20 px-1.5 py-0.5 text-xs font-mono shadow-[0_1px_0_rgba(0,0,0,0.3)]">
             {shortcut}

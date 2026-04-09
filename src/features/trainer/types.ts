@@ -1,4 +1,4 @@
-import type { Action, Cell, HandType, Position, Provider, Scenario } from '@/types/poker'
+import type { Action, Card, Cell, HandType, Position, Provider, Scenario } from '@/types/poker'
 
 export type { ProviderCharts } from './lib/range-loader'
 
@@ -31,6 +31,7 @@ export type Spot =
       hero: Position
       scenario: 'RFI'
       heroHand: string
+      heroCards: [Card, Card]
       cell: Cell
       rolledNumber: number
       correctAction: Action
@@ -43,6 +44,7 @@ export type Spot =
       villain: Position
       scenario: 'vs-open' | 'vs-3bet' | 'vs-4bet' | '3bet-defense'
       heroHand: string
+      heroCards: [Card, Card]
       cell: Cell
       rolledNumber: number
       correctAction: Action
@@ -55,6 +57,7 @@ export type Spot =
       scenario: TournamentScenario
       villain?: Position
       heroHand: string
+      heroCards: [Card, Card]
       cell: Cell
       rolledNumber: number
       correctAction: Action

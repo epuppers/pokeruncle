@@ -17,7 +17,7 @@ export function SessionHud() {
     elapsedMinutes > 0 ? (handsPlayed / elapsedMinutes).toFixed(1) : '—'
 
   return (
-    <div className="flex items-center justify-center gap-4 rounded-lg bg-secondary/50 px-4 py-2 text-xs">
+    <div className="flex items-center justify-center gap-5 rounded-lg bg-secondary/50 px-5 py-3 text-sm">
       <Stat label="Hands Played" value={handsPlayed} icon={Hash} />
       <Stat label="Accuracy" value={`${accuracy}%`} icon={Target} />
       <Stat label="Avg. Time" value={`${avgTimeS}s`} icon={Clock} />

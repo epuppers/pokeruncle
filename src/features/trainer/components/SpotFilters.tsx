@@ -207,7 +207,7 @@ function ToggleChip({
       type="button"
       onClick={onClick}
       className={cn(
-        'rounded-md border px-2 py-0.5 text-xs transition-colors',
+        'rounded-md border px-3 py-1 text-sm transition-colors',
         active
           ? 'border-brass bg-brass/20 text-brass'
           : 'border-border bg-background text-muted-foreground hover:bg-accent/30',
@@ -236,7 +236,7 @@ function ToggleChipWithTip({
           type="button"
           onClick={onClick}
           className={cn(
-            'rounded-md border px-2 py-0.5 text-xs transition-colors',
+            'rounded-md border px-3 py-1 text-sm transition-colors',
             active
               ? 'border-brass bg-brass/20 text-brass'
               : 'border-border bg-background text-muted-foreground hover:bg-accent/30',

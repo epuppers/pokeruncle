@@ -8,7 +8,6 @@ import { useTrainerKeyboard } from '@/features/trainer/hooks/use-trainer-keyboar
 import { ActionBar } from './ActionBar'
 import { FeedbackView } from './FeedbackView'
 import { HonestyBanner } from './HonestyBanner'
-import { RollDisplay } from './RollDisplay'
 import { SessionHud } from './SessionHud'
 import { SpotFilters } from './SpotFilters'
 import { TableView } from './TableView'
@@ -34,7 +33,7 @@ export function TrainerPage() {
   }, [trainerPhase.phase, dealNext])
 
   return (
-    <div className="flex-1 flex flex-col gap-4 max-w-lg mx-auto w-full">
+    <div className="flex-1 flex flex-col gap-5 max-w-2xl mx-auto w-full">
       <div className="flex items-center justify-between">
         <TrainerProviderSelector />
       </div>
@@ -44,15 +43,14 @@ export function TrainerPage() {
       <SessionHud />
 
       {trainerPhase.phase === 'active' && (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-5">
           <TableView spot={trainerPhase.spot} />
-          <RollDisplay rolledNumber={trainerPhase.spot.rolledNumber} />
           <ActionBar onAction={submitAction} disabled={false} spot={trainerPhase.spot} />
         </div>
       )}
 
       {trainerPhase.phase === 'feedback' && (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-5">
           <TableView spot={trainerPhase.spot} />
           <FeedbackView spot={trainerPhase.spot} result={trainerPhase.result} />
         </div>

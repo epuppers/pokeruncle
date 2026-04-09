@@ -6,6 +6,7 @@ import { POSITION_LABELS, SCENARIO_LABELS, TOURNAMENT_SCENARIO_LABELS, positionL
 
 import { TOURNAMENT_SCENARIO_CONFIGS } from '@/features/trainer/types'
 import type { Spot } from '@/features/trainer/types'
+import { HeroHand } from './HeroHand'
 
 interface TableViewProps {
   spot: Spot
@@ -116,14 +117,14 @@ export function TableView({ spot }: TableViewProps) {
   const scenarioInfo = getScenarioLabel(spot)
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-5">
       {/* Scenario label */}
-      <div className="text-sm font-medium text-muted-foreground">
+      <div className="text-base font-semibold text-muted-foreground">
         <PokerTerm label={scenarioInfo.label} tip={scenarioInfo.tip} />
       </div>
 
       {/* Table */}
-      <div className="relative w-full max-w-sm aspect-[3/2] rounded-[40%] ring-4 ring-wood bg-[radial-gradient(ellipse_at_center,var(--color-felt-light),var(--color-felt))] shadow-[inset_0_2px_20px_rgba(0,0,0,0.4),0_4px_16px_rgba(0,0,0,0.3)]">
+      <div className="relative w-full max-w-lg aspect-[3/2] rounded-[40%] ring-4 ring-wood bg-[radial-gradient(ellipse_at_center,var(--color-felt-light),var(--color-felt))] shadow-[inset_0_2px_20px_rgba(0,0,0,0.4),0_4px_16px_rgba(0,0,0,0.3)]">
         {/* Position labels */}
         {POSITIONS.map((pos) => {
           const { x, y } = POSITION_ANGLES[pos]
@@ -139,24 +140,22 @@ export function TableView({ spot }: TableViewProps) {
             >
               <div
                 className={cn(
-                  'flex flex-col items-center gap-0.5 rounded-lg px-2 py-1 text-xs font-medium transition-colors',
+                  'flex flex-col items-center gap-0.5 rounded-lg px-2.5 py-1.5 text-sm font-semibold transition-colors',
                   isHero && 'bg-brass/20 text-brass ring-1 ring-brass/40',
                   isVillain && 'bg-rose-500/20 text-rose-300 ring-1 ring-rose-500/40',
                   !isHero && !isVillain && 'text-muted-foreground',
                 )}
               >
                 <PokerTerm label={entry.label} tip={entry.tip} className="text-inherit border-0" />
-                <span className="text-[10px] tabular-nums opacity-60">{stackLabel}</span>
+                <span className="text-xs tabular-nums opacity-60">{stackLabel}</span>
               </div>
             </div>
           )
         })}
 
-        {/* Hero hand (center) */}
+        {/* Hero cards (center) */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="font-display text-4xl font-bold tracking-wide text-foreground drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]">
-            {spot.heroHand}
-          </div>
+          <HeroHand cards={spot.heroCards} />
         </div>
       </div>
 
@@ -165,7 +164,7 @@ export function TableView({ spot }: TableViewProps) {
         {getActionHistory(spot).map((action, i) => (
           <span
             key={i}
-            className="rounded-full bg-secondary px-2.5 py-0.5 text-xs text-muted-foreground"
+            className="rounded-full bg-secondary px-3 py-1 text-sm text-muted-foreground"
           >
             {action}
           </span>

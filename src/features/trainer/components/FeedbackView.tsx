@@ -51,18 +51,13 @@ function getPushFoldExplanation(spot: Spot & { kind: 'push-fold' }): string {
   return `${base}: Fold. Not strong enough to call an all-in here.`
 }
 
-function getRollExplanation(spot: Spot): string {
-  const { rolledNumber, correctAction } = spot
-  return `Your number was ${rolledNumber}. Based on the strategy bands below, the correct play this time is ${actionLabel(correctAction)}.`
-}
-
 export function FeedbackView({ spot, result }: FeedbackViewProps) {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-5">
       {/* Correct / Incorrect banner */}
       <div
         className={cn(
-          'rounded-lg px-4 py-3 text-center font-semibold transition-all',
+          'rounded-lg px-5 py-4 text-center text-lg font-bold transition-all',
           result.isCorrect
             ? 'bg-correct/20 text-correct animate-in zoom-in-95 duration-200'
             : 'bg-incorrect/20 text-incorrect animate-in slide-in-from-left-1 duration-150',
@@ -72,24 +67,24 @@ export function FeedbackView({ spot, result }: FeedbackViewProps) {
       </div>
 
       {/* Action comparison */}
-      <div className="flex items-center justify-center gap-6 text-sm">
-        <div className="flex flex-col items-center gap-1">
-          <span className="text-muted-foreground">Your action</span>
+      <div className="flex items-center justify-center gap-8 text-base">
+        <div className="flex flex-col items-center gap-1.5">
+          <span className="text-sm text-muted-foreground">Your action</span>
           <span
             className={cn(
-              'rounded px-3 py-1 text-sm font-medium text-white',
+              'rounded-lg px-4 py-1.5 text-base font-semibold text-white',
               ACTION_COLORS[result.userAction],
             )}
           >
             {actionLabel(result.userAction)}
           </span>
         </div>
-        <div className="text-muted-foreground">vs</div>
-        <div className="flex flex-col items-center gap-1">
-          <span className="text-muted-foreground">Correct action</span>
+        <div className="text-muted-foreground text-lg">vs</div>
+        <div className="flex flex-col items-center gap-1.5">
+          <span className="text-sm text-muted-foreground">Correct action</span>
           <span
             className={cn(
-              'rounded px-3 py-1 text-sm font-medium text-white',
+              'rounded-lg px-4 py-1.5 text-base font-semibold text-white',
               ACTION_COLORS[spot.correctAction],
             )}
           >
@@ -98,21 +93,21 @@ export function FeedbackView({ spot, result }: FeedbackViewProps) {
         </div>
       </div>
 
-      {/* Strategy distribution */}
-      <div className="flex flex-col gap-1.5">
-        <span className="text-xs text-muted-foreground">How to play this hand</span>
+      {/* Strategy distribution with roll explanation */}
+      <div className="flex flex-col gap-2">
+        <span className="text-sm font-medium text-muted-foreground">How to play this hand</span>
         <StrategyBar cell={spot.cell} rolledNumber={spot.rolledNumber} />
+        <p className="text-sm text-muted-foreground">
+          Your number landed on <span className="font-bold text-brass">{spot.rolledNumber}</span> — that falls in the <span className="font-semibold text-foreground">{actionLabel(spot.correctAction)}</span> zone.
+        </p>
       </div>
 
-      {/* Roll explanation */}
-      <p className="text-xs text-muted-foreground">{getRollExplanation(spot)}</p>
-
       {/* Explanation */}
-      <p className="text-sm text-foreground/80">{getExplanation(spot)}</p>
+      <p className="text-base text-foreground/80">{getExplanation(spot)}</p>
 
       {/* Next spot prompt */}
-      <p className="text-center text-xs text-muted-foreground">
-        Press <kbd className="rounded-sm bg-secondary px-1.5 py-0.5 font-mono shadow-[0_1px_0_rgba(0,0,0,0.3)]">Space</kbd> for next hand
+      <p className="text-center text-sm text-muted-foreground">
+        Press <kbd className="rounded-sm bg-secondary px-2 py-1 font-mono shadow-[0_1px_0_rgba(0,0,0,0.3)]">Space</kbd> for next hand
       </p>
     </div>
   )

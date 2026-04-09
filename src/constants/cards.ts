@@ -21,15 +21,15 @@ export const RANK_NAMES: Record<Rank, string> = {
 }
 
 export const SUIT_COLORS: Record<Suit, string> = {
-  s: 'text-neutral-300',
-  h: 'text-red-500',
+  s: 'text-foreground',
+  h: 'text-red-400',
   d: 'text-blue-400',
-  c: 'text-green-500',
+  c: 'text-emerald-400',
 }
 
 export const SUIT_BG: Record<Suit, string> = {
-  s: 'bg-neutral-800',
+  s: 'bg-secondary',
   h: 'bg-red-950',
   d: 'bg-blue-950',
-  c: 'bg-green-950',
+  c: 'bg-emerald-950',
 }
