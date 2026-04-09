@@ -1,6 +1,10 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
+import { useNavigate } from '@tanstack/react-router'
 
 import { Button } from '@/components/ui/button'
+import { useAnalyzerStore } from '@/stores/analyzerStore'
+import { detectBoardCards } from '@/features/detection/lib/cardDetector'
+import { parsePositions } from '@/features/detection/lib/positionParser'
 
 import { useNotesStore } from '../store'
 import { loadImage, preprocessForOcr } from '../lib/imagePreprocessor'
@@ -23,6 +27,38 @@ export function NotesPage() {
   const setNote = useNotesStore((s) => s.setNote)
   const setLlmStatus = useNotesStore((s) => s.setLlmStatus)
   const reset = useNotesStore((s) => s.reset)
+
+  const navigate = useNavigate()
+  const [analyzeStatus, setAnalyzeStatus] = useState<'idle' | 'loading' | 'error'>('idle')
+  const [analyzeWarnings, setAnalyzeWarnings] = useState<string[]>([])
+
+  const handleAnalyze = useCallback(async () => {
+    if (!imageDataUrl || !ocrText) return
+    setAnalyzeStatus('loading')
+    setAnalyzeWarnings([])
+
+    try {
+      const img = await loadImage(imageDataUrl)
+      const [cardResult, posResult] = await Promise.all([
+        detectBoardCards(img),
+        Promise.resolve(parsePositions(ocrText)),
+      ])
+
+      const warnings = [...cardResult.warnings, ...posResult.warnings]
+      setAnalyzeWarnings(warnings)
+
+      const store = useAnalyzerStore.getState()
+      if (cardResult.cards.length > 0) store.setBoard(cardResult.cards)
+      if (posResult.oopPosition) store.setOopPosition(posResult.oopPosition)
+      if (posResult.ipPosition) store.setIpPosition(posResult.ipPosition)
+      if (posResult.potType) store.setPotType(posResult.potType)
+
+      setAnalyzeStatus('idle')
+      void navigate({ to: '/analyze' })
+    } catch {
+      setAnalyzeStatus('error')
+    }
+  }, [imageDataUrl, ocrText, navigate])
 
   const runOcr = useCallback(() => {
     if (!imageDataUrl) return
@@ -99,12 +135,33 @@ export function NotesPage() {
       <OcrPreview />
 
       {ocrStatus === 'done' && (
-        <Button
-          onClick={handleGenerateNote}
-          disabled={!ocrText.trim() || llmStatus === 'loading'}
-        >
-          {llmStatus === 'loading' ? 'Generating...' : 'Generate Note'}
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            onClick={handleGenerateNote}
+            disabled={!ocrText.trim() || llmStatus === 'loading'}
+          >
+            {llmStatus === 'loading' ? 'Generating...' : 'Generate Note'}
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() => void handleAnalyze()}
+            disabled={!ocrText.trim() || analyzeStatus === 'loading'}
+          >
+            {analyzeStatus === 'loading' ? 'Detecting...' : 'Analyze Hand'}
+          </Button>
+        </div>
+      )}
+
+      {analyzeStatus === 'error' && (
+        <p className="text-sm text-red-400">Card/position detection failed. You can still use the analyzer manually.</p>
+      )}
+
+      {analyzeWarnings.length > 0 && (
+        <div className="text-sm text-yellow-400 space-y-1">
+          {analyzeWarnings.map((w, i) => (
+            <p key={i}>{w}</p>
+          ))}
+        </div>
       )}
 
       <NoteResult />
