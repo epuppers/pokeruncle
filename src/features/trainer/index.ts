@@ -1,9 +1,20 @@
 export { TrainerPage } from './components/TrainerPage'
 export { useRangeQuery } from './hooks/use-range-query'
 export { loadProvider, resolveCorrectAction } from './lib/range-loader'
-export { generateSmartSpot, generateSpot } from './lib/spot-generator'
-export { hasMixedStrategies, parseChartKey, enumerateCharts } from './lib/chart-utils'
-export { buildSpotTypeKey, buildSpotTypeKeyFromSpot } from './lib/spot-type-key'
+export { generateSmartSpot, generateSpot, generatePushFoldSpot, generateSmartPushFoldSpot } from './lib/spot-generator'
+export { hasMixedStrategies, parseChartKey, parseTournamentChartKey, enumerateCharts, enumerateTournamentCharts } from './lib/chart-utils'
+export { buildSpotTypeKey, buildSpotTypeKeyFromSpot, buildTournamentSpotTypeKey } from './lib/spot-type-key'
 export { evToQualityScore, estimateEvLoss, updateMastery, createInitialMastery } from './lib/sm2'
 export { recordSpotResult, getMasteryRecordsForProvider, getMasteryRecord } from './lib/mastery-persistence'
-export type { Spot, SpotResult, TrainerPhase, SessionStats, SpotFilters, TrainerMode, ProviderCharts } from './types'
+export type {
+  Spot,
+  SpotResult,
+  TrainerPhase,
+  SessionStats,
+  SpotFilters,
+  TrainerMode,
+  ProviderCharts,
+  StackDepth,
+  TournamentScenario,
+  ParsedTournamentChartKey,
+} from './types'

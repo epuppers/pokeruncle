@@ -10,6 +10,10 @@ interface FeedbackViewProps {
 }
 
 function getExplanation(spot: Spot): string {
+  if (spot.kind === 'push-fold') {
+    return getPushFoldExplanation(spot)
+  }
+
   const villain = spot.kind === 'response' ? ` vs ${spot.villain}` : ''
   const base = `${spot.heroHand} from ${spot.hero}${villain}`
 
@@ -27,6 +31,24 @@ function getExplanation(spot: Spot): string {
     case 'allin':
       return `${base}: push all-in for maximum pressure.`
   }
+}
+
+function getPushFoldExplanation(spot: Spot & { kind: 'push-fold' }): string {
+  const villainStr = spot.villain ? ` vs ${spot.villain}` : ''
+  const base = `${spot.heroHand} from ${spot.hero}${villainStr} at ${spot.stackDepth}bb`
+
+  if (spot.scenario === 'push') {
+    if (spot.correctAction === 'allin') {
+      return `${base}: push all-in. At ${spot.stackDepth}bb, this hand has enough equity to shove profitably.`
+    }
+    return `${base}: fold. Not enough equity to push profitably at this stack depth.`
+  }
+
+  // vs-push
+  if (spot.correctAction === 'call') {
+    return `${base}: call the push. Your hand has sufficient equity against the pushing range.`
+  }
+  return `${base}: fold. Not enough equity to profitably call this push.`
 }
 
 export function FeedbackView({ spot, result }: FeedbackViewProps) {

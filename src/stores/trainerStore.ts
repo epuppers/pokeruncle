@@ -5,7 +5,17 @@ import { POSITIONS, PROVIDERS } from '@/types/poker'
 import type { Action, Position, Provider, Scenario } from '@/types/poker'
 
 import { recordSpotResult } from '@/features/trainer/lib/mastery-persistence'
-import type { SessionStats, Spot, SpotFilters, SpotResult, TrainerMode, TrainerPhase } from '@/features/trainer/types'
+import { STACK_DEPTHS } from '@/features/trainer/types'
+import type {
+  SessionStats,
+  Spot,
+  SpotFilters,
+  SpotResult,
+  StackDepth,
+  TournamentScenario,
+  TrainerMode,
+  TrainerPhase,
+} from '@/features/trainer/types'
 
 const SCENARIOS = ['RFI', 'vs-open', 'vs-3bet', 'vs-4bet', '3bet-defense'] as const
 const HAND_TYPES = ['pair', 'suited', 'offsuit'] as const
@@ -16,6 +26,7 @@ const trainerStateSchema = z.object({
     positions: z.array(z.enum(POSITIONS)),
     scenarios: z.array(z.enum(SCENARIOS)),
     handTypes: z.array(z.enum(HAND_TYPES)),
+    stackDepths: z.array(z.number()).optional(),
   }),
 })
 
@@ -37,6 +48,13 @@ interface TrainerState {
   nextSpot: () => void
   resetSession: () => void
   startDrill: (scenario: Scenario, hero: Position, total: number, villain?: Position) => void
+  startPushFoldDrill: (
+    scenario: TournamentScenario,
+    hero: Position,
+    total: number,
+    stackDepth: StackDepth,
+    villain?: Position,
+  ) => void
   endDrill: () => void
 }
 
@@ -50,6 +68,7 @@ const INITIAL_FILTERS: SpotFilters = {
   positions: [],
   scenarios: [],
   handTypes: [],
+  stackDepths: [],
 }
 
 export const useTrainerStore = create(
@@ -91,10 +110,12 @@ export const useTrainerStore = create(
         })
 
         // Decrement drill counter if in drill mode
-        const nextMode: TrainerMode =
-          trainerMode.mode === 'drill'
-            ? { ...trainerMode, remaining: trainerMode.remaining - 1 }
-            : trainerMode
+        let nextMode: TrainerMode = trainerMode
+        if (trainerMode.mode === 'drill') {
+          nextMode = { ...trainerMode, remaining: trainerMode.remaining - 1 }
+        } else if (trainerMode.mode === 'push-fold-drill') {
+          nextMode = { ...trainerMode, remaining: trainerMode.remaining - 1 }
+        }
 
         set({
           trainerPhase: { phase: 'feedback', spot, result },
@@ -110,7 +131,10 @@ export const useTrainerStore = create(
       nextSpot: () => {
         const { trainerMode } = get()
         // End drill if no spots remaining
-        if (trainerMode.mode === 'drill' && trainerMode.remaining <= 0) {
+        if (
+          (trainerMode.mode === 'drill' || trainerMode.mode === 'push-fold-drill') &&
+          trainerMode.remaining <= 0
+        ) {
           set({ trainerPhase: { phase: 'idle' }, trainerMode: { mode: 'practice' } })
           return
         }
@@ -131,6 +155,21 @@ export const useTrainerStore = create(
           sessionStats: { ...INITIAL_STATS },
         }),
 
+      startPushFoldDrill: (scenario, hero, total, stackDepth, villain) =>
+        set({
+          trainerPhase: { phase: 'idle' },
+          trainerMode: {
+            mode: 'push-fold-drill',
+            scenario,
+            hero,
+            villain,
+            stackDepth,
+            remaining: total,
+            total,
+          },
+          sessionStats: { ...INITIAL_STATS },
+        }),
+
       endDrill: () =>
         set({
           trainerPhase: { phase: 'idle' },
@@ -146,7 +185,19 @@ export const useTrainerStore = create(
       merge: (persisted, current) => {
         const result = trainerStateSchema.safeParse(persisted)
         if (result.success) {
-          return { ...current, ...result.data }
+          const data = result.data
+          return {
+            ...current,
+            provider: data.provider,
+            filters: {
+              positions: data.filters.positions,
+              scenarios: data.filters.scenarios,
+              handTypes: data.filters.handTypes,
+              stackDepths: (data.filters.stackDepths ?? []).filter((d): d is StackDepth =>
+                STACK_DEPTHS.includes(d as StackDepth),
+              ),
+            },
+          }
         }
         console.warn('Invalid trainerStore state, using defaults')
         return current

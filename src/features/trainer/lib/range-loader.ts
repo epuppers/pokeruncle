@@ -34,6 +34,10 @@ async function loadProviderModule(provider: Provider): Promise<ProviderCharts> {
       const m = await import('@/data/ranges/gtowizard-gg-rc')
       return m.charts
     }
+    case 'nash-pushfold': {
+      const m = await import('@/data/ranges/nash-pushfold')
+      return m.charts
+    }
   }
 }
 

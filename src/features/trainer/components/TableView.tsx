@@ -2,6 +2,7 @@ import { POSITIONS, SCENARIOS } from '@/types/poker'
 import type { Position } from '@/types/poker'
 import { cn } from '@/lib/utils'
 
+import { TOURNAMENT_SCENARIO_CONFIGS } from '@/features/trainer/types'
 import type { Spot } from '@/features/trainer/types'
 
 interface TableViewProps {
@@ -18,6 +19,14 @@ const POSITION_ANGLES: Record<Position, { x: number; y: number }> = {
 }
 
 function getScenarioLabel(spot: Spot): string {
+  if (spot.kind === 'push-fold') {
+    const config = TOURNAMENT_SCENARIO_CONFIGS.find((s) => s.id === spot.scenario)
+    const label = config?.label ?? spot.scenario
+    const depthStr = `${spot.stackDepth}bb`
+    if (spot.villain) return `${label} (${spot.villain}) — ${depthStr}`
+    return `${label} — ${depthStr}`
+  }
+
   const config = SCENARIOS.find((s) => s.id === spot.scenario)
   if (!config) return spot.scenario
 
@@ -27,7 +36,16 @@ function getScenarioLabel(spot: Spot): string {
   return config.label
 }
 
+function getStackLabel(spot: Spot): string {
+  if (spot.kind === 'push-fold') return `${spot.stackDepth}bb`
+  return '100bb'
+}
+
 function getActionHistory(spot: Spot): string[] {
+  if (spot.kind === 'push-fold') {
+    return getPushFoldActionHistory(spot)
+  }
+
   const actions: string[] = ['SB posts 0.5bb', 'BB posts 1bb']
 
   switch (spot.scenario) {
@@ -68,8 +86,26 @@ function getActionHistory(spot: Spot): string[] {
   return actions
 }
 
+function getPushFoldActionHistory(spot: Spot & { kind: 'push-fold' }): string[] {
+  const actions: string[] = ['SB posts 0.5bb', 'BB posts 1bb']
+
+  if (spot.scenario === 'push') {
+    actions.push(`Folds to ${spot.hero}`)
+    actions.push(`Push or fold?`)
+  } else {
+    // vs-push
+    if (spot.villain) {
+      actions.push(`${spot.villain} pushes all-in`)
+    }
+    actions.push(`Action on ${spot.hero}`)
+  }
+
+  return actions
+}
+
 export function TableView({ spot }: TableViewProps) {
-  const villain = spot.kind === 'response' ? spot.villain : undefined
+  const villain = spot.kind === 'response' ? spot.villain : spot.kind === 'push-fold' ? spot.villain : undefined
+  const stackLabel = getStackLabel(spot)
 
   return (
     <div className="flex flex-col items-center gap-4">
@@ -101,7 +137,7 @@ export function TableView({ spot }: TableViewProps) {
                 )}
               >
                 <span>{pos}</span>
-                <span className="text-[10px] tabular-nums text-neutral-600">100bb</span>
+                <span className="text-[10px] tabular-nums text-neutral-600">{stackLabel}</span>
               </div>
             </div>
           )

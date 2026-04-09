@@ -1,7 +1,8 @@
 import { POSITIONS, SCENARIOS } from '@/types/poker'
 import type { Position } from '@/types/poker'
 
-import type { ParsedChartKey } from '@/features/trainer/types'
+import { STACK_DEPTHS, TOURNAMENT_SCENARIOS } from '@/features/trainer/types'
+import type { ParsedChartKey, ParsedTournamentChartKey, StackDepth } from '@/features/trainer/types'
 import type { ProviderCharts } from '@/features/trainer/lib/range-loader'
 
 /**
@@ -40,6 +41,55 @@ export function enumerateCharts(charts: ProviderCharts): ParsedChartKey[] {
   return Object.keys(charts)
     .map(parseChartKey)
     .filter((p): p is ParsedChartKey => p !== null)
+}
+
+/**
+ * Parse a tournament chart key like "BTN-push-10" or "BB-vs-push-10-BTN"
+ * into its components. Returns null if the key doesn't match.
+ */
+export function parseTournamentChartKey(key: string): ParsedTournamentChartKey | null {
+  const parts = key.split('-')
+  if (parts.length < 3) return null
+
+  const hero = parts[0] as Position
+  if (!POSITIONS.includes(hero)) return null
+
+  // Try matching tournament scenarios (sorted longest first)
+  const rest = parts.slice(1).join('-')
+  const scenarioIds = [...TOURNAMENT_SCENARIOS].sort((a, b) => b.length - a.length)
+
+  for (const scenarioId of scenarioIds) {
+    if (!rest.startsWith(scenarioId + '-')) continue
+
+    const afterScenario = rest.slice(scenarioId.length + 1)
+    const afterParts = afterScenario.split('-')
+
+    // First part after scenario must be a stack depth number
+    const depthNum = parseInt(afterParts[0], 10)
+    if (!STACK_DEPTHS.includes(depthNum as StackDepth)) continue
+
+    const stackDepth = depthNum as StackDepth
+
+    // Optional villain position after stack depth
+    if (afterParts.length === 1) {
+      return { hero, scenario: scenarioId, stackDepth }
+    }
+    if (afterParts.length === 2) {
+      const villain = afterParts[1] as Position
+      if (POSITIONS.includes(villain)) {
+        return { hero, scenario: scenarioId, stackDepth, villain }
+      }
+    }
+  }
+
+  return null
+}
+
+/** Enumerate all valid tournament chart entries from loaded provider data. */
+export function enumerateTournamentCharts(charts: ProviderCharts): ParsedTournamentChartKey[] {
+  return Object.keys(charts)
+    .map(parseTournamentChartKey)
+    .filter((p): p is ParsedTournamentChartKey => p !== null)
 }
 
 /**

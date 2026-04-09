@@ -31,7 +31,7 @@ export async function recordSpotResult(
     decisionTimeMs,
     provider: spot.provider,
     hero: spot.hero,
-    villain: spot.kind === 'response' ? spot.villain : null,
+    villain: spot.kind === 'response' ? spot.villain : spot.kind === 'push-fold' ? (spot.villain ?? null) : null,
     scenario: spot.scenario,
     heroHand: spot.heroHand,
     rolledNumber: spot.rolledNumber,

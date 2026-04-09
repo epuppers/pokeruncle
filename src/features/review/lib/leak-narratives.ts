@@ -17,12 +17,14 @@ const SEVERITY_ORDER: Record<LeakNarrative['severity'], number> = {
   info: 2,
 }
 
-const SCENARIO_LABELS: Record<Scenario, string> = {
+const SCENARIO_LABELS: Record<string, string> = {
   RFI: 'RFI',
   'vs-open': 'vs. open',
   'vs-3bet': 'vs. 3-bet',
   'vs-4bet': 'vs. 4-bet',
   '3bet-defense': '3-bet defense',
+  push: 'push/fold',
+  'vs-push': 'vs. push',
 }
 
 /**

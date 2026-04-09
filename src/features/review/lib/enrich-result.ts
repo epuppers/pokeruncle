@@ -4,7 +4,7 @@ import type { SpotResultRecord } from '@/lib/db'
 
 import type { EnrichedSpotResult } from '../types'
 
-const SCENARIO_SET = new Set(['RFI', 'vs-open', 'vs-3bet', 'vs-4bet', '3bet-defense'])
+const SCENARIO_SET = new Set(['RFI', 'vs-open', 'vs-3bet', 'vs-4bet', '3bet-defense', 'push', 'vs-push'])
 const POSITION_SET = new Set<string>(POSITIONS)
 const PROVIDER_SET = new Set<string>(PROVIDERS)
 const ACTION_SET = new Set<string>(ACTIONS)

@@ -47,7 +47,7 @@ export function TrainerPage() {
         <div className="flex flex-col gap-4">
           <TableView spot={trainerPhase.spot} />
           <RollDisplay rolledNumber={trainerPhase.spot.rolledNumber} />
-          <ActionBar onAction={submitAction} disabled={false} />
+          <ActionBar onAction={submitAction} disabled={false} spot={trainerPhase.spot} />
         </div>
       )}
 

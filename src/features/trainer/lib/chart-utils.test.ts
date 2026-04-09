@@ -1,6 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
-import { enumerateCharts, hasMixedStrategies, parseChartKey } from './chart-utils'
+import {
+  enumerateCharts,
+  enumerateTournamentCharts,
+  hasMixedStrategies,
+  parseChartKey,
+  parseTournamentChartKey,
+} from './chart-utils'
 import type { ProviderCharts } from './range-loader'
 
 describe('parseChartKey', () => {
@@ -58,6 +64,58 @@ describe('enumerateCharts', () => {
     }
     const result = enumerateCharts(charts)
     expect(result).toHaveLength(1)
+  })
+})
+
+describe('parseTournamentChartKey', () => {
+  it('parses a push key without villain', () => {
+    expect(parseTournamentChartKey('BTN-push-10')).toEqual({
+      hero: 'BTN',
+      scenario: 'push',
+      stackDepth: 10,
+    })
+  })
+
+  it('parses a vs-push key with villain', () => {
+    expect(parseTournamentChartKey('BB-vs-push-10-BTN')).toEqual({
+      hero: 'BB',
+      scenario: 'vs-push',
+      stackDepth: 10,
+      villain: 'BTN',
+    })
+  })
+
+  it('parses various stack depths', () => {
+    expect(parseTournamentChartKey('SB-push-5')?.stackDepth).toBe(5)
+    expect(parseTournamentChartKey('SB-push-25')?.stackDepth).toBe(25)
+  })
+
+  it('returns null for invalid stack depth', () => {
+    expect(parseTournamentChartKey('BTN-push-12')).toBeNull()
+  })
+
+  it('returns null for standard chart keys', () => {
+    expect(parseTournamentChartKey('UTG-RFI')).toBeNull()
+    expect(parseTournamentChartKey('BB-vs-open-BTN')).toBeNull()
+  })
+
+  it('returns null for invalid keys', () => {
+    expect(parseTournamentChartKey('')).toBeNull()
+    expect(parseTournamentChartKey('XX-push-10')).toBeNull()
+  })
+})
+
+describe('enumerateTournamentCharts', () => {
+  it('returns parsed entries for tournament chart keys', () => {
+    const charts: ProviderCharts = {
+      'BTN-push-10': { AA: 'allin' },
+      'BB-vs-push-10-BTN': { AA: 'call' },
+      'UTG-RFI': { AA: 'raise' },
+    }
+    const result = enumerateTournamentCharts(charts)
+    expect(result).toHaveLength(2)
+    expect(result).toContainEqual({ hero: 'BTN', scenario: 'push', stackDepth: 10 })
+    expect(result).toContainEqual({ hero: 'BB', scenario: 'vs-push', stackDepth: 10, villain: 'BTN' })
   })
 })
 

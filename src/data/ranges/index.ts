@@ -16,7 +16,9 @@ export function getChartKey(hero: Position, scenario: Scenario, villain?: Positi
   return `${hero}-${scenario}`
 }
 
-const providers: Record<Provider, Record<string, Chart>> = {
+// Static providers for the chart viewer. nash-pushfold is loaded
+// dynamically via the trainer's range-loader and is not included here.
+const providers: Partial<Record<Provider, Record<string, Chart>>> = {
   pekarstas,
   greenline,
   'gtowizard-gg-rc': gtowizardGgRc,

@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 
 import type { Spot } from '@/features/trainer/types'
 
-import { buildSpotTypeKey, buildSpotTypeKeyFromSpot } from './spot-type-key'
+import { buildSpotTypeKey, buildSpotTypeKeyFromSpot, buildTournamentSpotTypeKey } from './spot-type-key'
 
 describe('buildSpotTypeKey', () => {
   it('builds key for open spot (no villain)', () => {
@@ -30,6 +30,26 @@ describe('buildSpotTypeKey', () => {
   it('produces different keys for different providers', () => {
     const a = buildSpotTypeKey('pekarstas', 'UTG', 'RFI', 'AA')
     const b = buildSpotTypeKey('greenline', 'UTG', 'RFI', 'AA')
+    expect(a).not.toBe(b)
+  })
+})
+
+describe('buildTournamentSpotTypeKey', () => {
+  it('builds key for push spot', () => {
+    expect(buildTournamentSpotTypeKey('nash-pushfold', 'BTN', 'push', 'AKs', 10)).toBe(
+      'nash-pushfold:BTN:push:10:AKs',
+    )
+  })
+
+  it('builds key for vs-push spot with villain', () => {
+    expect(buildTournamentSpotTypeKey('nash-pushfold', 'BB', 'vs-push', '87s', 15, 'SB')).toBe(
+      'nash-pushfold:BB:vs-push:15:SB:87s',
+    )
+  })
+
+  it('encodes stack depth in key', () => {
+    const a = buildTournamentSpotTypeKey('nash-pushfold', 'BTN', 'push', 'AA', 5)
+    const b = buildTournamentSpotTypeKey('nash-pushfold', 'BTN', 'push', 'AA', 25)
     expect(a).not.toBe(b)
   })
 })
@@ -64,5 +84,38 @@ describe('buildSpotTypeKeyFromSpot', () => {
       correctAction: 'call',
     }
     expect(buildSpotTypeKeyFromSpot(spot)).toBe('greenline:BB:vs-open:BTN:87s')
+  })
+
+  it('includes stack depth for push-fold spots', () => {
+    const spot: Spot = {
+      kind: 'push-fold',
+      id: 'test-id',
+      provider: 'nash-pushfold',
+      hero: 'BTN',
+      scenario: 'push',
+      heroHand: 'AKs',
+      cell: 'allin',
+      rolledNumber: 50,
+      correctAction: 'allin',
+      stackDepth: 10,
+    }
+    expect(buildSpotTypeKeyFromSpot(spot)).toBe('nash-pushfold:BTN:push:10:AKs')
+  })
+
+  it('includes villain in push-fold vs-push key', () => {
+    const spot: Spot = {
+      kind: 'push-fold',
+      id: 'test-id',
+      provider: 'nash-pushfold',
+      hero: 'BB',
+      scenario: 'vs-push',
+      villain: 'SB',
+      heroHand: 'QQ',
+      cell: 'call',
+      rolledNumber: 50,
+      correctAction: 'call',
+      stackDepth: 15,
+    }
+    expect(buildSpotTypeKeyFromSpot(spot)).toBe('nash-pushfold:BB:vs-push:15:SB:QQ')
   })
 })

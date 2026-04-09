@@ -7,7 +7,11 @@ import { useTrainerStore } from '@/stores/trainerStore'
 import { POSITIONS, SCENARIOS } from '@/types/poker'
 import type { HandType, Position, Scenario } from '@/types/poker'
 
-import type { SpotFilters as SpotFiltersType } from '@/features/trainer/types'
+import {
+  STACK_DEPTHS,
+  TOURNAMENT_SCENARIO_CONFIGS,
+} from '@/features/trainer/types'
+import type { SpotFilters as SpotFiltersType, StackDepth, TournamentScenario } from '@/features/trainer/types'
 
 const HAND_TYPES: { id: HandType; label: string }[] = [
   { id: 'pair', label: 'Pairs' },
@@ -16,22 +20,43 @@ const HAND_TYPES: { id: HandType; label: string }[] = [
 ]
 
 export function SpotFilters() {
+  const provider = useTrainerStore((s) => s.provider)
   const filters = useTrainerStore((s) => s.filters)
   const setFilters = useTrainerStore((s) => s.setFilters)
   const trainerMode = useTrainerStore((s) => s.trainerMode)
   const startDrill = useTrainerStore((s) => s.startDrill)
+  const startPushFoldDrill = useTrainerStore((s) => s.startPushFoldDrill)
   const endDrill = useTrainerStore((s) => s.endDrill)
   const [expanded, setExpanded] = useState(false)
   const [drillCount, setDrillCount] = useState('50')
 
+  const isTournament = provider === 'nash-pushfold'
+
   const hasActiveFilters =
-    filters.positions.length > 0 || filters.scenarios.length > 0 || filters.handTypes.length > 0
+    filters.positions.length > 0 ||
+    filters.scenarios.length > 0 ||
+    filters.handTypes.length > 0 ||
+    filters.stackDepths.length > 0
 
   if (trainerMode.mode === 'drill') {
     return (
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <span>
           Drilling: {trainerMode.hero} {trainerMode.scenario}
+          {trainerMode.villain ? ` vs ${trainerMode.villain}` : ''}
+        </span>
+        <Button variant="ghost" size="sm" onClick={endDrill}>
+          Stop
+        </Button>
+      </div>
+    )
+  }
+
+  if (trainerMode.mode === 'push-fold-drill') {
+    return (
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <span>
+          Drilling: {trainerMode.hero} {trainerMode.scenario} at {trainerMode.stackDepth}bb
           {trainerMode.villain ? ` vs ${trainerMode.villain}` : ''}
         </span>
         <Button variant="ghost" size="sm" onClick={endDrill}>
@@ -55,7 +80,9 @@ export function SpotFilters() {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => setFilters({ positions: [], scenarios: [], handTypes: [] })}
+            onClick={() =>
+              setFilters({ positions: [], scenarios: [], handTypes: [], stackDepths: [] })
+            }
           >
             Clear
           </Button>
@@ -75,16 +102,44 @@ export function SpotFilters() {
             ))}
           </FilterSection>
 
-          <FilterSection label="Scenario">
-            {SCENARIOS.map((s) => (
-              <ToggleChip
-                key={s.id}
-                label={s.label}
-                active={filters.scenarios.includes(s.id)}
-                onClick={() => toggleFilter(filters, setFilters, 'scenarios', s.id)}
-              />
-            ))}
-          </FilterSection>
+          {isTournament ? (
+            <>
+              <FilterSection label="Scenario">
+                {TOURNAMENT_SCENARIO_CONFIGS.map((s) => (
+                  <ToggleChip
+                    key={s.id}
+                    label={s.label}
+                    active={false}
+                    onClick={() => {
+                      /* Tournament scenario filtering is handled via drill mode */
+                    }}
+                  />
+                ))}
+              </FilterSection>
+
+              <FilterSection label="Stack depth">
+                {STACK_DEPTHS.map((d) => (
+                  <ToggleChip
+                    key={d}
+                    label={`${d}bb`}
+                    active={filters.stackDepths.includes(d)}
+                    onClick={() => toggleFilter(filters, setFilters, 'stackDepths', d)}
+                  />
+                ))}
+              </FilterSection>
+            </>
+          ) : (
+            <FilterSection label="Scenario">
+              {SCENARIOS.map((s) => (
+                <ToggleChip
+                  key={s.id}
+                  label={s.label}
+                  active={filters.scenarios.includes(s.id)}
+                  onClick={() => toggleFilter(filters, setFilters, 'scenarios', s.id)}
+                />
+              ))}
+            </FilterSection>
+          )}
 
           <FilterSection label="Hand type">
             {HAND_TYPES.map((ht) => (
@@ -97,12 +152,21 @@ export function SpotFilters() {
             ))}
           </FilterSection>
 
-          <DrillLauncher
-            filters={filters}
-            drillCount={drillCount}
-            setDrillCount={setDrillCount}
-            startDrill={startDrill}
-          />
+          {isTournament ? (
+            <PushFoldDrillLauncher
+              filters={filters}
+              drillCount={drillCount}
+              setDrillCount={setDrillCount}
+              startPushFoldDrill={startPushFoldDrill}
+            />
+          ) : (
+            <DrillLauncher
+              filters={filters}
+              drillCount={drillCount}
+              setDrillCount={setDrillCount}
+              startDrill={startDrill}
+            />
+          )}
         </div>
       )}
     </div>
@@ -191,6 +255,54 @@ function DrillLauncher({
       </Button>
       {!canDrill && (
         <span className="text-xs text-muted-foreground">Select 1 position + 1 scenario</span>
+      )}
+    </div>
+  )
+}
+
+function PushFoldDrillLauncher({
+  filters,
+  drillCount,
+  setDrillCount,
+  startPushFoldDrill,
+}: {
+  filters: SpotFiltersType
+  drillCount: string
+  setDrillCount: (v: string) => void
+  startPushFoldDrill: (
+    scenario: TournamentScenario,
+    hero: Position,
+    total: number,
+    stackDepth: StackDepth,
+    villain?: Position,
+  ) => void
+}) {
+  const canDrill = filters.positions.length === 1 && filters.stackDepths.length === 1
+  const count = Math.max(1, parseInt(drillCount, 10) || 50)
+
+  return (
+    <div className="flex items-center gap-2 border-t pt-2">
+      <Input
+        type="number"
+        min={1}
+        max={500}
+        value={drillCount}
+        onChange={(e) => setDrillCount(e.target.value)}
+        className="h-8 w-20 text-xs"
+      />
+      <Button
+        variant="outline"
+        size="sm"
+        disabled={!canDrill}
+        onClick={() => {
+          if (!canDrill) return
+          startPushFoldDrill('push', filters.positions[0], count, filters.stackDepths[0])
+        }}
+      >
+        Start drill
+      </Button>
+      {!canDrill && (
+        <span className="text-xs text-muted-foreground">Select 1 position + 1 stack depth</span>
       )}
     </div>
   )

@@ -87,7 +87,7 @@ describe('generateSpot', () => {
   })
 })
 
-const emptyFilters: SpotFilters = { positions: [], scenarios: [], handTypes: [] }
+const emptyFilters: SpotFilters = { positions: [], scenarios: [], handTypes: [], stackDepths: [] }
 
 describe('generateSmartSpot', () => {
   it('generates a valid spot with no mastery records (all unseen)', () => {
@@ -136,7 +136,7 @@ describe('generateSmartSpot', () => {
   })
 
   it('respects position filter', () => {
-    const filters: SpotFilters = { positions: ['BB'], scenarios: [], handTypes: [] }
+    const filters: SpotFilters = { positions: ['BB'], scenarios: [], handTypes: [], stackDepths: [] }
     for (let i = 0; i < 10; i++) {
       const spot = generateSmartSpot(testCharts, 'pekarstas', [], filters)
       expect(spot.hero).toBe('BB')
@@ -144,7 +144,7 @@ describe('generateSmartSpot', () => {
   })
 
   it('respects scenario filter', () => {
-    const filters: SpotFilters = { positions: [], scenarios: ['RFI'], handTypes: [] }
+    const filters: SpotFilters = { positions: [], scenarios: ['RFI'], handTypes: [], stackDepths: [] }
     for (let i = 0; i < 10; i++) {
       const spot = generateSmartSpot(testCharts, 'pekarstas', [], filters)
       expect(spot.scenario).toBe('RFI')
@@ -152,7 +152,7 @@ describe('generateSmartSpot', () => {
   })
 
   it('respects hand type filter', () => {
-    const filters: SpotFilters = { positions: [], scenarios: [], handTypes: ['pair'] }
+    const filters: SpotFilters = { positions: [], scenarios: [], handTypes: ['pair'], stackDepths: [] }
     // Only pairs from testCharts: AA, KK (UTG-RFI), QQ (BB-vs-open-BTN)
     for (let i = 0; i < 10; i++) {
       const spot = generateSmartSpot(testCharts, 'pekarstas', [], filters)
@@ -161,7 +161,7 @@ describe('generateSmartSpot', () => {
   })
 
   it('throws when no spots match filters', () => {
-    const filters: SpotFilters = { positions: ['MP'], scenarios: [], handTypes: [] }
+    const filters: SpotFilters = { positions: ['MP'], scenarios: [], handTypes: [], stackDepths: [] }
     expect(() => generateSmartSpot(testCharts, 'pekarstas', [], filters)).toThrow(
       'No spots match the current filters',
     )
@@ -182,7 +182,7 @@ describe('generateSmartSpot', () => {
       lastReviewedAt: Date.now(),
     }))
 
-    const filters: SpotFilters = { positions: ['UTG'], scenarios: ['RFI'], handTypes: [] }
+    const filters: SpotFilters = { positions: ['UTG'], scenarios: ['RFI'], handTypes: [], stackDepths: [] }
     // Should pick the soonest-due (AA, index 0)
     const spot = generateSmartSpot(testCharts, 'pekarstas', records, filters)
     expect(spot.heroHand).toBe('AA')

@@ -62,7 +62,7 @@ export const CATEGORY_CONFIGS: CategoryConfig[] = [
 
 export type Grouping = 'simple' | 'standard' | 'detailed'
 
-export const PROVIDERS = ['pekarstas', 'greenline', 'gtowizard-gg-rc'] as const
+export const PROVIDERS = ['pekarstas', 'greenline', 'gtowizard-gg-rc', 'nash-pushfold'] as const
 export type Provider = (typeof PROVIDERS)[number]
 
 export interface ProviderConfig {
@@ -75,6 +75,7 @@ export const PROVIDER_CONFIGS: ProviderConfig[] = [
   { id: 'pekarstas', label: 'Pekarstas', description: 'GGPoker chart pack' },
   { id: 'greenline', label: 'Greenline' },
   { id: 'gtowizard-gg-rc', label: 'GTOWizard GG R&C' },
+  { id: 'nash-pushfold', label: 'Nash Push/Fold', description: 'Tournament push/fold charts' },
 ]
 
 export const POSITIONS = ['UTG', 'MP', 'CO', 'BTN', 'SB', 'BB'] as const
