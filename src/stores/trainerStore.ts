@@ -1,22 +1,34 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { z } from 'zod/v4'
-import { PROVIDERS } from '@/types/poker'
-import type { Action, Provider } from '@/types/poker'
+import { POSITIONS, PROVIDERS } from '@/types/poker'
+import type { Action, Position, Provider, Scenario } from '@/types/poker'
 
-import type { SessionStats, Spot, SpotResult, TrainerPhase } from '@/features/trainer/types'
+import { recordSpotResult } from '@/features/trainer/lib/mastery-persistence'
+import type { SessionStats, Spot, SpotFilters, SpotResult, TrainerMode, TrainerPhase } from '@/features/trainer/types'
+
+const SCENARIOS = ['RFI', 'vs-open', 'vs-3bet', 'vs-4bet', '3bet-defense'] as const
+const HAND_TYPES = ['pair', 'suited', 'offsuit'] as const
 
 const trainerStateSchema = z.object({
   provider: z.enum(PROVIDERS),
+  filters: z.object({
+    positions: z.array(z.enum(POSITIONS)),
+    scenarios: z.array(z.enum(SCENARIOS)),
+    handTypes: z.array(z.enum(HAND_TYPES)),
+  }),
 })
 
 interface TrainerState {
   // Persisted
   provider: Provider
+  filters: SpotFilters
   setProvider: (p: Provider) => void
+  setFilters: (f: SpotFilters) => void
 
   // Session-scoped (not persisted)
   trainerPhase: TrainerPhase
+  trainerMode: TrainerMode
   sessionStats: SessionStats
 
   // Actions
@@ -24,6 +36,8 @@ interface TrainerState {
   submitAction: (userAction: Action) => void
   nextSpot: () => void
   resetSession: () => void
+  startDrill: (scenario: Scenario, hero: Position, total: number, villain?: Position) => void
+  endDrill: () => void
 }
 
 const INITIAL_STATS: SessionStats = {
@@ -32,13 +46,22 @@ const INITIAL_STATS: SessionStats = {
   totalDecisionTimeMs: 0,
 }
 
+const INITIAL_FILTERS: SpotFilters = {
+  positions: [],
+  scenarios: [],
+  handTypes: [],
+}
+
 export const useTrainerStore = create(
   persist<TrainerState>(
     (set, get) => ({
       provider: 'pekarstas' as Provider,
+      filters: { ...INITIAL_FILTERS },
       setProvider: (provider) => set({ provider }),
+      setFilters: (filters) => set({ filters }),
 
       trainerPhase: { phase: 'idle' },
+      trainerMode: { mode: 'practice' },
       sessionStats: { ...INITIAL_STATS },
 
       dealSpot: (spot: Spot) =>
@@ -47,7 +70,7 @@ export const useTrainerStore = create(
         }),
 
       submitAction: (userAction: Action) => {
-        const { trainerPhase, sessionStats } = get()
+        const { trainerPhase, trainerMode, sessionStats } = get()
         if (trainerPhase.phase !== 'active') return
 
         const { spot, startedAt } = trainerPhase
@@ -62,8 +85,20 @@ export const useTrainerStore = create(
           timestamp: Date.now(),
         }
 
+        // Fire-and-forget DB persistence
+        recordSpotResult(spot, userAction, decisionTimeMs).catch((err: unknown) => {
+          console.error('Failed to persist spot result', err)
+        })
+
+        // Decrement drill counter if in drill mode
+        const nextMode: TrainerMode =
+          trainerMode.mode === 'drill'
+            ? { ...trainerMode, remaining: trainerMode.remaining - 1 }
+            : trainerMode
+
         set({
           trainerPhase: { phase: 'feedback', spot, result },
+          trainerMode: nextMode,
           sessionStats: {
             handsPlayed: sessionStats.handsPlayed + 1,
             correctCount: sessionStats.correctCount + (isCorrect ? 1 : 0),
@@ -72,18 +107,41 @@ export const useTrainerStore = create(
         })
       },
 
-      nextSpot: () => set({ trainerPhase: { phase: 'idle' } }),
+      nextSpot: () => {
+        const { trainerMode } = get()
+        // End drill if no spots remaining
+        if (trainerMode.mode === 'drill' && trainerMode.remaining <= 0) {
+          set({ trainerPhase: { phase: 'idle' }, trainerMode: { mode: 'practice' } })
+          return
+        }
+        set({ trainerPhase: { phase: 'idle' } })
+      },
 
       resetSession: () =>
         set({
           trainerPhase: { phase: 'idle' },
+          trainerMode: { mode: 'practice' },
           sessionStats: { ...INITIAL_STATS },
+        }),
+
+      startDrill: (scenario, hero, total, villain) =>
+        set({
+          trainerPhase: { phase: 'idle' },
+          trainerMode: { mode: 'drill', scenario, hero, villain, remaining: total, total },
+          sessionStats: { ...INITIAL_STATS },
+        }),
+
+      endDrill: () =>
+        set({
+          trainerPhase: { phase: 'idle' },
+          trainerMode: { mode: 'practice' },
         }),
     }),
     {
       name: 'poker-trainer',
       partialize: (state) => ({
         provider: state.provider,
+        filters: state.filters,
       }) as TrainerState,
       merge: (persisted, current) => {
         const result = trainerStateSchema.safeParse(persisted)

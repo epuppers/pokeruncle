@@ -1,4 +1,4 @@
-import type { Action, Cell, Position, Provider, Scenario } from '@/types/poker'
+import type { Action, Cell, HandType, Position, Provider, Scenario } from '@/types/poker'
 
 export type { ProviderCharts } from './lib/range-loader'
 
@@ -61,3 +61,27 @@ export interface ParsedChartKey {
   scenario: Scenario
   villain?: Position
 }
+
+// --- Spot filters ---
+
+export interface SpotFilters {
+  /** Empty = all positions. */
+  positions: Position[]
+  /** Empty = all scenarios. */
+  scenarios: Scenario[]
+  /** Empty = all hand types. */
+  handTypes: HandType[]
+}
+
+// --- Trainer mode ---
+
+export type TrainerMode =
+  | { mode: 'practice' }
+  | {
+      mode: 'drill'
+      scenario: Scenario
+      hero: Position
+      villain?: Position
+      remaining: number
+      total: number
+    }

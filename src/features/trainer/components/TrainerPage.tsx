@@ -10,6 +10,7 @@ import { FeedbackView } from './FeedbackView'
 import { HonestyBanner } from './HonestyBanner'
 import { RollDisplay } from './RollDisplay'
 import { SessionHud } from './SessionHud'
+import { SpotFilters } from './SpotFilters'
 import { TableView } from './TableView'
 import { TrainerProviderSelector } from './TrainerProviderSelector'
 
@@ -28,7 +29,7 @@ export function TrainerPage() {
   // Auto-deal when entering idle phase (initial mount or after provider change)
   useEffect(() => {
     if (trainerPhase.phase === 'idle') {
-      dealNext()
+      void dealNext()
     }
   }, [trainerPhase.phase, dealNext])
 
@@ -38,6 +39,7 @@ export function TrainerPage() {
         <TrainerProviderSelector />
       </div>
 
+      <SpotFilters />
       <HonestyBanner charts={charts} />
       <SessionHud />
 

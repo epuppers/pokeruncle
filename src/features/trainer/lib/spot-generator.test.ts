@@ -2,8 +2,12 @@ import { describe, expect, it } from 'vitest'
 
 import { ACTIONS } from '@/types/poker'
 
+import type { MasteryRecord } from '@/lib/db'
+
+import type { SpotFilters } from '@/features/trainer/types'
+
 import { resolveCorrectAction } from './range-loader'
-import { generateSpot } from './spot-generator'
+import { generateSmartSpot, generateSpot } from './spot-generator'
 import type { ProviderCharts } from './range-loader'
 
 const testCharts: ProviderCharts = {
@@ -80,5 +84,107 @@ describe('generateSpot', () => {
 
   it('throws for unavailable scenario filter', () => {
     expect(() => generateSpot(testCharts, 'pekarstas', 'vs-4bet')).toThrow('No charts available')
+  })
+})
+
+const emptyFilters: SpotFilters = { positions: [], scenarios: [], handTypes: [] }
+
+describe('generateSmartSpot', () => {
+  it('generates a valid spot with no mastery records (all unseen)', () => {
+    const spot = generateSmartSpot(testCharts, 'pekarstas', [], emptyFilters)
+    expect(spot.id).toBeTruthy()
+    expect(spot.provider).toBe('pekarstas')
+    expect(ACTIONS).toContain(spot.correctAction)
+  })
+
+  it('prioritizes overdue spots over unseen ones', () => {
+    const pastDue: MasteryRecord = {
+      spotTypeKey: 'pekarstas:UTG:RFI:AA',
+      easeFactor: 2.5,
+      interval: 1,
+      repetitions: 1,
+      nextReviewAt: Date.now() - 100_000, // overdue
+      lastReviewedAt: Date.now() - 200_000,
+    }
+
+    // Run multiple times — should always pick the overdue spot
+    for (let i = 0; i < 10; i++) {
+      const spot = generateSmartSpot(testCharts, 'pekarstas', [pastDue], emptyFilters)
+      expect(spot.heroHand).toBe('AA')
+      expect(spot.hero).toBe('UTG')
+    }
+  })
+
+  it('picks unseen spots when nothing is due', () => {
+    const future: MasteryRecord = {
+      spotTypeKey: 'pekarstas:UTG:RFI:AA',
+      easeFactor: 2.5,
+      interval: 30,
+      repetitions: 5,
+      nextReviewAt: Date.now() + 86_400_000 * 30, // 30 days from now
+      lastReviewedAt: Date.now(),
+    }
+
+    // With only AA mastered and far in the future, should pick other hands
+    for (let i = 0; i < 10; i++) {
+      const spot = generateSmartSpot(testCharts, 'pekarstas', [future], emptyFilters)
+      // Should not pick the mastered-and-not-due spot when unseen spots exist
+      if (spot.hero === 'UTG' && spot.scenario === 'RFI') {
+        expect(spot.heroHand).not.toBe('AA')
+      }
+    }
+  })
+
+  it('respects position filter', () => {
+    const filters: SpotFilters = { positions: ['BB'], scenarios: [], handTypes: [] }
+    for (let i = 0; i < 10; i++) {
+      const spot = generateSmartSpot(testCharts, 'pekarstas', [], filters)
+      expect(spot.hero).toBe('BB')
+    }
+  })
+
+  it('respects scenario filter', () => {
+    const filters: SpotFilters = { positions: [], scenarios: ['RFI'], handTypes: [] }
+    for (let i = 0; i < 10; i++) {
+      const spot = generateSmartSpot(testCharts, 'pekarstas', [], filters)
+      expect(spot.scenario).toBe('RFI')
+    }
+  })
+
+  it('respects hand type filter', () => {
+    const filters: SpotFilters = { positions: [], scenarios: [], handTypes: ['pair'] }
+    // Only pairs from testCharts: AA, KK (UTG-RFI), QQ (BB-vs-open-BTN)
+    for (let i = 0; i < 10; i++) {
+      const spot = generateSmartSpot(testCharts, 'pekarstas', [], filters)
+      expect(spot.heroHand).toMatch(/^[AKQJT98765432]{2}$/) // pair format: two same-rank chars
+    }
+  })
+
+  it('throws when no spots match filters', () => {
+    const filters: SpotFilters = { positions: ['MP'], scenarios: [], handTypes: [] }
+    expect(() => generateSmartSpot(testCharts, 'pekarstas', [], filters)).toThrow(
+      'No spots match the current filters',
+    )
+  })
+
+  it('crams soonest-due when all spots are seen and none due', () => {
+    const records: MasteryRecord[] = [
+      'pekarstas:UTG:RFI:AA',
+      'pekarstas:UTG:RFI:KK',
+      'pekarstas:UTG:RFI:AKs',
+      'pekarstas:UTG:RFI:72o',
+    ].map((key, i) => ({
+      spotTypeKey: key,
+      easeFactor: 2.5,
+      interval: 30,
+      repetitions: 5,
+      nextReviewAt: Date.now() + 86_400_000 * (i + 1), // staggered future
+      lastReviewedAt: Date.now(),
+    }))
+
+    const filters: SpotFilters = { positions: ['UTG'], scenarios: ['RFI'], handTypes: [] }
+    // Should pick the soonest-due (AA, index 0)
+    const spot = generateSmartSpot(testCharts, 'pekarstas', records, filters)
+    expect(spot.heroHand).toBe('AA')
   })
 })
