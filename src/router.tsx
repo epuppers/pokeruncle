@@ -12,13 +12,8 @@ import { useChartStore } from '@/stores/chartStore'
 import { POSITIONS, SCENARIOS, type Position, type Scenario } from '@/types/poker'
 
 // Lazy-loaded route components
-const LeaderboardPage = lazy(() => import('@/components/leaderboard/LeaderboardPage').then(m => ({ default: m.LeaderboardPage })))
-const LeaderboardPlayers = lazy(() => import('@/components/leaderboard/LeaderboardPage').then(m => ({ default: m.LeaderboardPlayers })))
-const LeaderboardArchive = lazy(() => import('@/components/leaderboard/LeaderboardPage').then(m => ({ default: m.LeaderboardArchive })))
-const LeaderboardRakeback = lazy(() => import('@/components/leaderboard/LeaderboardPage').then(m => ({ default: m.LeaderboardRakeback })))
 const AnalyzerPage = lazy(() => import('@/components/analyze/AnalyzerPage').then(m => ({ default: m.AnalyzerPage })))
 const DisclaimerPage = lazy(() => import('@/components/DisclaimerPage').then(m => ({ default: m.DisclaimerPage })))
-const NotesPage = lazy(() => import('@/features/notes').then(m => ({ default: m.NotesPage })))
 
 // Root layout component
 function RootLayout() {
@@ -35,15 +30,14 @@ function RootLayout() {
         <div className="flex items-center justify-between">
           <h1 className="text-base font-semibold tracking-wide">
             <span className="bg-gradient-to-r from-neutral-200 to-neutral-400 bg-clip-text text-transparent">
-              Poker Lab
+              Uncle's Table
             </span>
           </h1>
 
           {/* Navigation tabs */}
           <nav aria-label="Main navigation" className="flex gap-1">
-            <NavLink to="/" label="Preflop Ranges" exact />
-            <NavLink to="/leaderboard" label="GG Leaderboards" />
-            <NavLink to="/notes" label="Notes" />
+            <NavLink to="/" label="Ranges" exact />
+            <NavLink to="/analyze" label="Analyze" />
           </nav>
         </div>
       </header>
@@ -63,7 +57,7 @@ function RootLayout() {
 
       {/* Footer */}
       <footer className="relative z-10 px-4 py-3 border-t border-neutral-800/50 text-center text-xs text-neutral-600">
-        Off-the-table study tool only. Not for use during live play. Not affiliated with GGPoker or Natural8.
+        Off-the-table GTO study tool. Not for use during live play.
         {' '}<Link to="/disclaimer" className="underline underline-offset-2 hover:text-neutral-400">Disclaimer</Link>
       </footer>
     </div>
@@ -166,43 +160,6 @@ const indexRoute = createRoute({
   component: ChartsPage,
 })
 
-const leaderboardRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/leaderboard',
-  component: LeaderboardPage,
-})
-
-const leaderboardIndexRoute = createRoute({
-  getParentRoute: () => leaderboardRoute,
-  path: '/',
-  component: LeaderboardPlayers,
-  validateSearch: (search: Record<string, unknown>) => ({
-    q: (search.q as string) || '',
-  }),
-})
-
-const leaderboardArchiveRoute = createRoute({
-  getParentRoute: () => leaderboardRoute,
-  path: '/archive',
-  component: LeaderboardArchive,
-  validateSearch: (search: Record<string, unknown>) => ({
-    stake: (search.stake as string) || '',
-    game: (search.game as string) || '',
-    date: (search.date as string) || '',
-  }),
-})
-
-const leaderboardRakebackRoute = createRoute({
-  getParentRoute: () => leaderboardRoute,
-  path: '/rakeback',
-  component: LeaderboardRakeback,
-  validateSearch: (search: Record<string, unknown>) => ({
-    game: (search.game as string) || '',
-    stake: (search.stake as string) || '',
-    hph: (search.hph as string) || '',
-  }),
-})
-
 const disclaimerRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/disclaimer',
@@ -215,21 +172,9 @@ const analyzeRoute = createRoute({
   component: AnalyzerPage,
 })
 
-const notesRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: '/notes',
-  component: NotesPage,
-})
-
 const routeTree = rootRoute.addChildren([
   indexRoute,
-  leaderboardRoute.addChildren([
-    leaderboardIndexRoute,
-    leaderboardArchiveRoute,
-    leaderboardRakebackRoute,
-  ]),
   analyzeRoute,
-  notesRoute,
   disclaimerRoute,
 ])
 

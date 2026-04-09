@@ -19,7 +19,7 @@ The product owner is a non-engineer founder who codes agentically. She reads dif
 **Always use Bun. Never npm, yarn, or pnpm.** This is inherited from upstream and non-negotiable.
 
 ```bash
-bun dev              # start dev server (http://localhost:7272)
+bun dev              # start dev server (http://localhost:5173)
 bun run build        # type-check with tsc, then build with Vite
 bun run lint         # run ESLint
 bun run typecheck    # run tsc --noEmit

@@ -6,10 +6,9 @@ export function DisclaimerPage() {
       <section className="space-y-2">
         <h3 className="text-base font-medium text-white">Intended Use</h3>
         <p>
-          Poker Lab is an off-the-table study and research tool. It is designed
-          for reviewing preflop strategy and browsing historical leaderboard
-          results outside of live poker sessions. The author does not use this
-          tool during gameplay and does not recommend doing so.
+          Uncle's Table is an off-the-table GTO study and training tool. It is
+          designed for reviewing preflop strategy and practicing decisions
+          outside of live poker sessions. Do not use this tool during gameplay.
         </p>
         <p>
           Using third-party tools while playing may violate your poker
@@ -19,30 +18,11 @@ export function DisclaimerPage() {
       </section>
 
       <section className="space-y-2">
-        <h3 className="text-base font-medium text-white">No Affiliation</h3>
-        <p>
-          This project is not affiliated with, endorsed by, or connected to
-          GGPoker, Natural8, the GG Poker Network, or any other poker operator.
-          All trademarks and brand names belong to their respective owners.
-        </p>
-      </section>
-
-      <section className="space-y-2">
         <h3 className="text-base font-medium text-white">Data Sources</h3>
         <p>
-          All leaderboard data displayed in this application is sourced
-          exclusively from publicly accessible promotion pages on the Natural8
-          website. These pages are available to any visitor without
-          authentication or login:
-        </p>
-        <ul className="list-disc list-inside text-neutral-400 space-y-1">
-          <li>Rush & Cash Daily Leaderboard</li>
-          <li>Hold'em Daily Leaderboard</li>
-        </ul>
-        <p>
-          No hand histories, private player information, PokerCraft data, or
-          in-game data is accessed, collected, or stored. Player nicknames shown
-          are publicly visible on these leaderboard pages.
+          Preflop range data is sourced from published GTO solver outputs and
+          open-source chart packs. No proprietary solver data is used. Range
+          data is provided as-is for educational purposes.
         </p>
       </section>
 
@@ -59,27 +39,25 @@ export function DisclaimerPage() {
         <h3 className="text-base font-medium text-white">User Responsibility</h3>
         <p>
           Players are solely responsible for ensuring their use of any tools
-          complies with the terms of service of their poker platform. The author
-          assumes no liability for any consequences arising from the use of this
-          application.
+          complies with the terms of service of their poker platform. The
+          authors assume no liability for any consequences arising from the use
+          of this application.
         </p>
       </section>
 
       <section className="space-y-2">
-        <h3 className="text-base font-medium text-white">Content Removal</h3>
+        <h3 className="text-base font-medium text-white">Open Source</h3>
         <p>
-          If you are a representative of a poker operator and have concerns
-          about any data or content displayed in this application, please open
-          an issue on the{' '}
+          Uncle's Table is open source and built on top of{' '}
           <a
-            href="https://github.com/AHTOOOXA/poker-charts/issues"
+            href="https://github.com/AHTOOOXA/poker-charts"
             target="_blank"
             rel="noopener noreferrer"
             className="text-neutral-200 underline underline-offset-2 hover:text-white"
           >
-            GitHub repository
-          </a>{' '}
-          and it will be addressed promptly.
+            AHTOOOXA/poker-charts
+          </a>
+          . Licensed under MIT.
         </p>
       </section>
     </div>
