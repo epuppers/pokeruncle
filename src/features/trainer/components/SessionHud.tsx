@@ -1,3 +1,5 @@
+import { Target, Clock, Zap, Hash } from 'lucide-react'
+
 import { useTrainerStore } from '@/stores/trainerStore'
 
 export function SessionHud() {
@@ -15,11 +17,11 @@ export function SessionHud() {
     elapsedMinutes > 0 ? (handsPlayed / elapsedMinutes).toFixed(1) : '—'
 
   return (
-    <div className="flex items-center justify-center gap-4 rounded-lg bg-neutral-900/50 px-4 py-2 text-xs">
-      <Stat label="Hands" value={handsPlayed} />
-      <Stat label="Accuracy" value={`${accuracy}%`} />
-      <Stat label="Avg time" value={avgTimeS} />
-      <Stat label="Hands/min" value={handsPerMinute} />
+    <div className="flex items-center justify-center gap-4 rounded-lg bg-secondary/50 px-4 py-2 text-xs">
+      <Stat label="Hands Played" value={handsPlayed} icon={Hash} />
+      <Stat label="Accuracy" value={`${accuracy}%`} icon={Target} />
+      <Stat label="Avg. Time" value={`${avgTimeS}s`} icon={Clock} />
+      <Stat label="Speed" value={`${handsPerMinute}/min`} icon={Zap} />
       {trainerMode.mode === 'drill' && (
         <Stat label="Remaining" value={trainerMode.remaining} />
       )}
@@ -27,11 +29,14 @@ export function SessionHud() {
   )
 }
 
-function Stat({ label, value }: { label: string; value: string | number }) {
+function Stat({ label, value, icon: Icon }: { label: string; value: string | number; icon?: typeof Target }) {
   return (
-    <div className="flex flex-col items-center">
-      <span className="tabular-nums font-medium text-white">{value}</span>
-      <span className="text-neutral-500">{label}</span>
+    <div className="flex flex-col items-center gap-0.5">
+      <div className="flex items-center gap-1">
+        {Icon && <Icon className="size-3 text-brass-dim" />}
+        <span className="tabular-nums font-medium text-foreground">{value}</span>
+      </div>
+      <span className="text-muted-foreground">{label}</span>
     </div>
   )
 }

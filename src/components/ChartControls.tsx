@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { useChartStore } from '@/stores/chartStore'
 import { type Position } from '@/types/poker'
 import { cn } from '@/lib/utils'
+import { POSITION_LABELS } from '@/lib/poker-glossary'
 
 // Custom order: UTG, MP, CO (top row), BB, SB, BTN (bottom row)
 const POSITION_ORDER: Position[] = ['UTG', 'MP', 'CO', 'BB', 'SB', 'BTN']
@@ -45,12 +46,13 @@ function PositionGrid({ label, selected, onSelect, disabled = [] }: PositionGrid
 
   return (
     <div className="flex flex-col gap-2" role="group" aria-label={label}>
-      <span className="text-neutral-500 text-xs uppercase tracking-wide text-center">{label}</span>
+      <span className="text-muted-foreground text-xs uppercase tracking-wide text-center">{label}</span>
       <div ref={gridRef} className="grid grid-cols-3 gap-1.5">
         {POSITION_ORDER.map((p, i) => {
           const isDisabled = disabled.includes(p)
           const isSelected = selected === p
           const isDealer = p === 'BTN'
+          const entry = POSITION_LABELS[p]
           return (
             <button
               key={p}
@@ -58,18 +60,19 @@ function PositionGrid({ label, selected, onSelect, disabled = [] }: PositionGrid
               onKeyDown={(e) => handleKeyDown(e, i)}
               disabled={isDisabled}
               aria-pressed={isSelected}
+              title={entry.tip}
               className={cn(
                 'relative px-4 py-2.5 rounded-lg text-sm font-semibold transition-all',
                 isDisabled && 'opacity-30 cursor-not-allowed',
-                isDealer && !isSelected && !isDisabled && 'ring-2 ring-amber-500/50',
+                isDealer && !isSelected && !isDisabled && 'ring-2 ring-brass/50',
                 isSelected
-                  ? 'bg-emerald-500 text-white shadow-lg shadow-emerald-500/25'
-                  : !isDisabled && 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
+                  ? 'bg-accent text-accent-foreground shadow-lg shadow-accent/25'
+                  : !isDisabled && 'bg-secondary text-secondary-foreground hover:bg-secondary/80'
               )}
             >
-              {p}
+              {entry.label}
               {isDealer && (
-                <span aria-label="Dealer" className="absolute -top-1 -right-1 w-4 h-4 bg-amber-500 rounded-full text-[9px] font-bold text-black flex items-center justify-center shadow">
+                <span aria-label="Dealer" className="absolute -top-1 -right-1 w-4 h-4 bg-brass rounded-full text-[9px] font-bold text-primary-foreground flex items-center justify-center shadow">
                   D
                 </span>
               )}
@@ -90,12 +93,12 @@ export function ChartControls() {
   return (
     <div className="flex items-start justify-center gap-8">
       <PositionGrid
-        label="Hero position"
+        label="Your seat"
         selected={position}
         onSelect={setPosition}
       />
       <PositionGrid
-        label="Villain position"
+        label="Opponent's seat"
         selected={villain}
         onSelect={setVillain}
         disabled={disabledVillains}

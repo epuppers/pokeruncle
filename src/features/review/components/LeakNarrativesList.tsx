@@ -15,15 +15,15 @@ interface LeakNarrativesListProps {
 export function LeakNarrativesList({ narratives }: LeakNarrativesListProps) {
   if (narratives.length === 0) {
     return (
-      <div className="text-neutral-500 text-sm text-center py-4">
-        Train at least 10 spots to unlock leak insights.
+      <div className="text-muted-foreground text-sm text-center py-4">
+        Play at least 10 hands to unlock strategy insights.
       </div>
     )
   }
 
   return (
     <div className="space-y-2">
-      <div className="font-semibold text-white text-sm">Leak Insights</div>
+      <div className="font-semibold text-foreground text-sm">Strategy Insights</div>
       {narratives.map((n, i) => {
         const style = SEVERITY_STYLES[n.severity]
         return (
@@ -31,7 +31,7 @@ export function LeakNarrativesList({ narratives }: LeakNarrativesListProps) {
             key={i}
             className={cn(
               'rounded-md border px-3 py-2 text-sm',
-              'bg-neutral-900/50',
+              'bg-card/50',
               style.border,
               style.text,
             )}

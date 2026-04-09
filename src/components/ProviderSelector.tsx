@@ -13,7 +13,7 @@ export function ProviderSelector() {
 
   return (
     <Select value={provider} onValueChange={(v) => setProvider(v as Provider)}>
-      <SelectTrigger size="sm" className="w-[140px] bg-neutral-900/50 border-neutral-800">
+      <SelectTrigger size="sm" className="w-[160px]">
         <SelectValue />
       </SelectTrigger>
       <SelectContent>

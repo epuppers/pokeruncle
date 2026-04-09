@@ -34,7 +34,7 @@ export function TrainerPage() {
   }, [trainerPhase.phase, dealNext])
 
   return (
-    <div className="flex-1 flex flex-col gap-4 max-w-md mx-auto w-full">
+    <div className="flex-1 flex flex-col gap-4 max-w-lg mx-auto w-full">
       <div className="flex items-center justify-between">
         <TrainerProviderSelector />
       </div>

@@ -5,7 +5,7 @@ import { HandBrowser } from './HandBrowser'
 import { StatsDashboard } from './StatsDashboard'
 
 const TABS = [
-  { id: 'dashboard', label: 'Dashboard' },
+  { id: 'dashboard', label: 'Your Stats' },
   { id: 'history', label: 'Hand History' },
 ] as const
 
@@ -15,7 +15,7 @@ export function ReviewPage() {
   return (
     <div className="flex-1 flex flex-col gap-4 max-w-4xl mx-auto w-full">
       {/* Tab switcher */}
-      <div className="flex gap-1 border-b border-neutral-800/50 pb-1">
+      <div className="flex gap-1 border-b border-border/50 pb-1">
         {TABS.map((tab) => (
           <button
             key={tab.id}
@@ -23,8 +23,8 @@ export function ReviewPage() {
             className={cn(
               'px-3 py-1.5 rounded-t-md text-sm font-medium transition-colors',
               activeTab === tab.id
-                ? 'text-white bg-neutral-800/50'
-                : 'text-neutral-500 hover:text-neutral-300',
+                ? 'text-brass bg-secondary/50'
+                : 'text-muted-foreground hover:text-foreground',
             )}
           >
             {tab.label}

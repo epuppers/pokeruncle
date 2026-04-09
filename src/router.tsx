@@ -1,7 +1,10 @@
 /* eslint-disable react-refresh/only-export-components */
 import { lazy, Suspense } from 'react'
 import { createRouter, createRootRoute, createRoute, Link, Outlet } from '@tanstack/react-router'
+import { Spade, Settings } from 'lucide-react'
 import { ErrorBoundary } from '@/components/ErrorBoundary'
+import { OnboardingOverlay } from '@/features/onboarding'
+import { useSettingsStore } from '@/stores/settingsStore'
 import { cn } from '@/lib/utils'
 import { HandGrid } from '@/components/chart/HandGrid'
 import { ChartControls } from '@/components/ChartControls'
@@ -16,42 +19,59 @@ const TrainerPage = lazy(() => import('@/features/trainer').then(m => ({ default
 const AnalyzerPage = lazy(() => import('@/components/analyze/AnalyzerPage').then(m => ({ default: m.AnalyzerPage })))
 const DisclaimerPage = lazy(() => import('@/components/DisclaimerPage').then(m => ({ default: m.DisclaimerPage })))
 const ReviewPage = lazy(() => import('@/features/review').then(m => ({ default: m.ReviewPage })))
+const SettingsPage = lazy(() => import('@/features/settings').then(m => ({ default: m.SettingsPage })))
 
 // Root layout component
 function RootLayout() {
+  const hasCompletedOnboarding = useSettingsStore((s) => s.hasCompletedOnboarding)
+
   return (
-    <div className="min-h-screen bg-neutral-950 text-white flex flex-col overflow-hidden">
-      {/* Ambient background gradients */}
+    <div className="min-h-screen bg-background text-foreground flex flex-col overflow-hidden">
+      {/* Ambient background gradients — warm lighting */}
       <div className="fixed inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-emerald-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-sky-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-emerald-500/3 rounded-full blur-3xl" />
       </div>
 
       {/* Header */}
-      <header className="relative z-10 px-4 py-3 border-b border-neutral-800/50 bg-neutral-950/80 backdrop-blur-md">
+      <header className="relative z-10 px-4 py-3 bg-background/80 backdrop-blur-md">
         <div className="flex items-center justify-between">
-          <h1 className="text-base font-semibold tracking-wide">
-            <span className="bg-gradient-to-r from-neutral-200 to-neutral-400 bg-clip-text text-transparent">
-              Uncle's Table
-            </span>
-          </h1>
+          <Link to="/train" className="flex items-center gap-2 group">
+            <Spade className="size-5 text-brass fill-brass/20 transition-transform group-hover:scale-110" />
+            <h1 className="font-display text-lg font-bold tracking-wide">
+              <span className="bg-gradient-to-r from-brass to-brass-dim bg-clip-text text-transparent">
+                Uncle&apos;s Table
+              </span>
+            </h1>
+          </Link>
 
           {/* Navigation tabs */}
-          <nav aria-label="Main navigation" className="flex gap-1">
+          <nav aria-label="Main navigation" className="flex items-center gap-1">
             <NavLink to="/train" label="Train" />
             <NavLink to="/review" label="Review" />
             <NavLink to="/" label="Ranges" exact />
             <NavLink to="/analyze" label="Analyze" />
+            <Link
+              to="/settings"
+              className="ml-1 p-1.5 rounded-md text-muted-foreground hover:text-foreground transition-colors"
+              activeProps={{ className: 'text-brass' }}
+              aria-label="Settings"
+            >
+              <Settings className="size-4" />
+            </Link>
           </nav>
         </div>
       </header>
+
+      {/* Brass rail divider */}
+      <div className="relative z-10 h-px bg-gradient-to-r from-transparent via-brass/30 to-transparent" />
 
       {/* Main content */}
       <main className="relative z-10 flex-1 p-4 flex flex-col overflow-auto">
         <ErrorBoundary>
           <Suspense fallback={
             <div className="flex-1 flex items-center justify-center">
-              <div className="w-6 h-6 border-2 border-neutral-700 border-t-neutral-400 rounded-full animate-spin" />
+              <div className="w-6 h-6 border-2 border-border border-t-brass rounded-full animate-spin" />
             </div>
           }>
             <Outlet />
@@ -60,10 +80,13 @@ function RootLayout() {
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 px-4 py-3 border-t border-neutral-800/50 text-center text-xs text-neutral-600">
-        Off-the-table GTO study tool. Not for use during live play.
-        {' '}<Link to="/disclaimer" className="underline underline-offset-2 hover:text-neutral-400">Disclaimer</Link>
+      <footer className="relative z-10 px-4 py-3 border-t border-border/50 text-center text-xs text-muted-foreground">
+        Poker strategy study tool. Not for use during live play.
+        {' '}<Link to="/disclaimer" className="underline underline-offset-2 hover:text-brass-dim transition-colors">Disclaimer</Link>
       </footer>
+
+      {/* Onboarding overlay (first-run only) */}
+      {!hasCompletedOnboarding && <OnboardingOverlay />}
     </div>
   )
 }
@@ -75,10 +98,10 @@ function NavLink({ to, label, exact }: { to: string; label: string; exact?: bool
       activeOptions={{ exact }}
       className={cn(
         'px-3 py-1.5 rounded-md text-sm font-medium transition-colors',
-        'text-neutral-500 hover:text-neutral-300'
+        'text-muted-foreground hover:text-foreground'
       )}
       activeProps={{
-        className: 'bg-neutral-800/50 text-white',
+        className: 'bg-secondary text-brass border-b-2 border-brass',
         'aria-current': 'page',
       }}
     >
@@ -188,11 +211,18 @@ const reviewRoute = createRoute({
   component: ReviewPage,
 })
 
+const settingsRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/settings',
+  component: SettingsPage,
+})
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   trainRoute,
   reviewRoute,
   analyzeRoute,
+  settingsRoute,
   disclaimerRoute,
 ])
 

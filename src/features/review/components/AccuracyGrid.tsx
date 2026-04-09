@@ -5,9 +5,9 @@ import { HAND_GRID, RANKS } from '@/types/poker'
 import type { StatsByHand } from '../types'
 
 function accuracyColor(accuracy: number): string {
-  if (accuracy >= 80) return 'bg-emerald-600'
+  if (accuracy >= 80) return 'bg-emerald-700'
   if (accuracy >= 60) return 'bg-amber-600'
-  return 'bg-rose-600'
+  return 'bg-rose-700'
 }
 
 function accuracyTextColor(accuracy: number): string {
@@ -24,14 +24,14 @@ export const AccuracyGrid = memo(function AccuracyGrid({ data }: AccuracyGridPro
   return (
     <div className="w-full max-w-[420px] mx-auto">
       <div className="mb-2">
-        <div className="font-semibold text-white text-sm">Accuracy by Hand</div>
-        <div className="text-neutral-500 text-xs">Green = 80%+, Yellow = 60-80%, Red = &lt;60%</div>
+        <div className="font-semibold text-foreground text-sm">Accuracy by Hand</div>
+        <div className="text-muted-foreground text-xs">Green = 80%+, Yellow = 60-80%, Red = below 60%</div>
       </div>
 
       <div
         role="grid"
         aria-label="Hand accuracy grid"
-        className="relative bg-neutral-900/50 backdrop-blur-sm rounded-lg border border-neutral-800/50 p-3"
+        className="relative bg-card/50 backdrop-blur-sm rounded-lg border border-border p-3"
       >
         {/* Column headers */}
         <div className="grid grid-cols-[auto_repeat(13,1fr)] gap-[2px] mb-[2px]">
@@ -39,7 +39,7 @@ export const AccuracyGrid = memo(function AccuracyGrid({ data }: AccuracyGridPro
           {RANKS.map((rank) => (
             <div
               key={rank}
-              className="aspect-square flex items-center justify-center text-neutral-500 font-medium text-[9px] sm:text-[10px]"
+              className="aspect-square flex items-center justify-center text-muted-foreground font-medium text-[9px] sm:text-[10px]"
             >
               {rank}
             </div>
@@ -49,7 +49,7 @@ export const AccuracyGrid = memo(function AccuracyGrid({ data }: AccuracyGridPro
         {/* Grid rows */}
         {HAND_GRID.map((row, rowIdx) => (
           <div key={rowIdx} className="grid grid-cols-[auto_repeat(13,1fr)] gap-[2px] mb-[2px]">
-            <div className="flex items-center justify-center text-neutral-500 font-medium w-5 sm:w-6 text-[9px] sm:text-[10px]">
+            <div className="flex items-center justify-center text-muted-foreground font-medium w-5 sm:w-6 text-[9px] sm:text-[10px]">
               {RANKS[rowIdx]}
             </div>
             {row.map((hand) => {
@@ -61,8 +61,8 @@ export const AccuracyGrid = memo(function AccuracyGrid({ data }: AccuracyGridPro
                   className={cn(
                     'aspect-square flex flex-col items-center justify-center rounded-[2px]',
                     'text-[8px] sm:text-[10px] font-semibold tracking-tight',
-                    hasData ? accuracyColor(stats.accuracy) : 'bg-neutral-800',
-                    hasData ? accuracyTextColor(stats.accuracy) : 'text-neutral-600',
+                    hasData ? accuracyColor(stats.accuracy) : 'bg-muted',
+                    hasData ? accuracyTextColor(stats.accuracy) : 'text-muted-foreground/50',
                   )}
                   title={
                     hasData

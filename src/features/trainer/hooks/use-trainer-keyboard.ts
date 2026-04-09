@@ -1,33 +1,41 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 
 import { useTrainerStore } from '@/stores/trainerStore'
+import { useSettingsStore } from '@/stores/settingsStore'
 import type { Action } from '@/types/poker'
 
 import type { Spot } from '@/features/trainer/types'
 
-const KEY_TO_ACTION: Record<string, Action> = {
-  '1': 'fold',
-  '2': 'call',
-  '3': 'raise',
-  '4': 'allin',
+function buildKeyMap(bindings: Record<string, string>): Record<string, Action> {
+  return {
+    [bindings.fold]: 'fold',
+    [bindings.call]: 'call',
+    [bindings.raise]: 'raise',
+    [bindings.allin]: 'allin',
+  }
 }
 
-function getPushFoldKeyMap(spot: Spot & { kind: 'push-fold' }): Record<string, Action> {
+function getPushFoldKeyMap(spot: Spot & { kind: 'push-fold' }, bindings: Record<string, string>): Record<string, Action> {
   if (spot.scenario === 'push') {
-    return { '1': 'fold', '2': 'allin' }
+    return { [bindings.fold]: 'fold', [bindings.call]: 'allin' }
   }
   // vs-push
-  return { '1': 'fold', '2': 'call' }
+  return { [bindings.fold]: 'fold', [bindings.call]: 'call' }
 }
 
 /**
  * Global keyboard listener for the training loop.
- * - 1/2/3/4 submit actions during the active phase
- * - Space advances to the next spot during feedback/idle
+ * Reads key bindings from the settings store.
+ * - Configured keys submit actions during the active phase
+ * - Next key advances to the next spot during feedback/idle
  */
 export function useTrainerKeyboard(onNextSpot: () => void) {
   const trainerPhase = useTrainerStore((s) => s.trainerPhase)
   const submitAction = useTrainerStore((s) => s.submitAction)
+  const keyBindings = useSettingsStore((s) => s.keyBindings)
+
+  const keyMap = useMemo(() => buildKeyMap(keyBindings), [keyBindings])
+  const nextKey = keyBindings.next
 
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
@@ -36,15 +44,15 @@ export function useTrainerKeyboard(onNextSpot: () => void) {
 
       if (trainerPhase.phase === 'active') {
         const spot = trainerPhase.spot
-        const keyMap = spot.kind === 'push-fold' ? getPushFoldKeyMap(spot) : KEY_TO_ACTION
-        const action = keyMap[e.key]
+        const activeKeyMap = spot.kind === 'push-fold' ? getPushFoldKeyMap(spot, keyBindings) : keyMap
+        const action = activeKeyMap[e.key]
         if (action) {
           e.preventDefault()
           submitAction(action)
         }
       }
 
-      if (e.key === ' ' || e.code === 'Space') {
+      if (e.key === nextKey || (nextKey === ' ' && e.code === 'Space')) {
         e.preventDefault()
         if (trainerPhase.phase === 'feedback' || trainerPhase.phase === 'idle') {
           onNextSpot()
@@ -54,5 +62,5 @@ export function useTrainerKeyboard(onNextSpot: () => void) {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [trainerPhase, submitAction, onNextSpot])
+  }, [trainerPhase, submitAction, onNextSpot, keyMap, keyBindings, nextKey])
 }

@@ -1,17 +1,19 @@
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { cn } from '@/lib/utils'
 import { useTrainerStore } from '@/stores/trainerStore'
 import { POSITIONS, SCENARIOS } from '@/types/poker'
-import type { HandType, Position, Scenario } from '@/types/poker'
+import type { HandType } from '@/types/poker'
+import { POSITION_LABELS, SCENARIO_LABELS, positionLabel, scenarioLabel, tournamentScenarioLabel } from '@/lib/poker-glossary'
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 
 import {
   STACK_DEPTHS,
   TOURNAMENT_SCENARIO_CONFIGS,
 } from '@/features/trainer/types'
-import type { SpotFilters as SpotFiltersType, StackDepth, TournamentScenario } from '@/features/trainer/types'
+import type { SpotFilters as SpotFiltersType } from '@/features/trainer/types'
+import { DrillLauncher, PushFoldDrillLauncher } from './DrillLauncher'
 
 const HAND_TYPES: { id: HandType; label: string }[] = [
   { id: 'pair', label: 'Pairs' },
@@ -42,8 +44,8 @@ export function SpotFilters() {
     return (
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <span>
-          Drilling: {trainerMode.hero} {trainerMode.scenario}
-          {trainerMode.villain ? ` vs ${trainerMode.villain}` : ''}
+          Drilling: {positionLabel(trainerMode.hero)} {scenarioLabel(trainerMode.scenario)}
+          {trainerMode.villain ? ` vs ${positionLabel(trainerMode.villain)}` : ''}
         </span>
         <Button variant="ghost" size="sm" onClick={endDrill}>
           Stop
@@ -56,8 +58,8 @@ export function SpotFilters() {
     return (
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
         <span>
-          Drilling: {trainerMode.hero} {trainerMode.scenario} at {trainerMode.stackDepth}bb
-          {trainerMode.villain ? ` vs ${trainerMode.villain}` : ''}
+          Drilling: {positionLabel(trainerMode.hero)} {tournamentScenarioLabel(trainerMode.scenario)} at {trainerMode.stackDepth} big blinds
+          {trainerMode.villain ? ` vs ${positionLabel(trainerMode.villain)}` : ''}
         </span>
         <Button variant="ghost" size="sm" onClick={endDrill}>
           Stop
@@ -74,7 +76,8 @@ export function SpotFilters() {
           size="sm"
           onClick={() => setExpanded(!expanded)}
         >
-          Filters{hasActiveFilters ? ' (active)' : ''}
+          {expanded ? 'Hide Options' : 'Choose What to Practice'}
+          {hasActiveFilters ? ' (filtered)' : ''}
         </Button>
         {hasActiveFilters && (
           <Button
@@ -90,16 +93,20 @@ export function SpotFilters() {
       </div>
 
       {expanded && (
-        <div className="space-y-3 rounded-md border p-3">
+        <div className="space-y-3 rounded-lg border border-border bg-card/50 p-3">
           <FilterSection label="Position">
-            {POSITIONS.map((pos) => (
-              <ToggleChip
-                key={pos}
-                label={pos}
-                active={filters.positions.includes(pos)}
-                onClick={() => toggleFilter(filters, setFilters, 'positions', pos)}
-              />
-            ))}
+            {POSITIONS.map((pos) => {
+              const entry = POSITION_LABELS[pos]
+              return (
+                <ToggleChipWithTip
+                  key={pos}
+                  label={entry.label}
+                  tip={entry.tip}
+                  active={filters.positions.includes(pos)}
+                  onClick={() => toggleFilter(filters, setFilters, 'positions', pos)}
+                />
+              )
+            })}
           </FilterSection>
 
           {isTournament ? (
@@ -108,7 +115,7 @@ export function SpotFilters() {
                 {TOURNAMENT_SCENARIO_CONFIGS.map((s) => (
                   <ToggleChip
                     key={s.id}
-                    label={s.label}
+                    label={tournamentScenarioLabel(s.id)}
                     active={false}
                     onClick={() => {
                       /* Tournament scenario filtering is handled via drill mode */
@@ -117,11 +124,11 @@ export function SpotFilters() {
                 ))}
               </FilterSection>
 
-              <FilterSection label="Stack depth">
+              <FilterSection label="Stack Size">
                 {STACK_DEPTHS.map((d) => (
                   <ToggleChip
                     key={d}
-                    label={`${d}bb`}
+                    label={`${d} blinds`}
                     active={filters.stackDepths.includes(d)}
                     onClick={() => toggleFilter(filters, setFilters, 'stackDepths', d)}
                   />
@@ -130,18 +137,22 @@ export function SpotFilters() {
             </>
           ) : (
             <FilterSection label="Scenario">
-              {SCENARIOS.map((s) => (
-                <ToggleChip
-                  key={s.id}
-                  label={s.label}
-                  active={filters.scenarios.includes(s.id)}
-                  onClick={() => toggleFilter(filters, setFilters, 'scenarios', s.id)}
-                />
-              ))}
+              {SCENARIOS.map((s) => {
+                const entry = SCENARIO_LABELS[s.id]
+                return (
+                  <ToggleChipWithTip
+                    key={s.id}
+                    label={entry.label}
+                    tip={entry.tip}
+                    active={filters.scenarios.includes(s.id)}
+                    onClick={() => toggleFilter(filters, setFilters, 'scenarios', s.id)}
+                  />
+                )
+              })}
             </FilterSection>
           )}
 
-          <FilterSection label="Hand type">
+          <FilterSection label="Hand Type">
             {HAND_TYPES.map((ht) => (
               <ToggleChip
                 key={ht.id}
@@ -198,12 +209,46 @@ function ToggleChip({
       className={cn(
         'rounded-md border px-2 py-0.5 text-xs transition-colors',
         active
-          ? 'border-primary bg-primary text-primary-foreground'
-          : 'border-border bg-background text-muted-foreground hover:bg-accent',
+          ? 'border-brass bg-brass/20 text-brass'
+          : 'border-border bg-background text-muted-foreground hover:bg-accent/30',
       )}
     >
       {label}
     </button>
+  )
+}
+
+function ToggleChipWithTip({
+  label,
+  tip,
+  active,
+  onClick,
+}: {
+  label: string
+  tip: string
+  active: boolean
+  onClick: () => void
+}) {
+  return (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <button
+          type="button"
+          onClick={onClick}
+          className={cn(
+            'rounded-md border px-2 py-0.5 text-xs transition-colors',
+            active
+              ? 'border-brass bg-brass/20 text-brass'
+              : 'border-border bg-background text-muted-foreground hover:bg-accent/30',
+          )}
+        >
+          {label}
+        </button>
+      </TooltipTrigger>
+      <TooltipContent className="max-w-[220px]">
+        <p>{tip}</p>
+      </TooltipContent>
+    </Tooltip>
   )
 }
 
@@ -216,94 +261,4 @@ function toggleFilter<K extends keyof SpotFiltersType>(
   const current = filters[key] as SpotFiltersType[K][number][]
   const next = current.includes(value) ? current.filter((v) => v !== value) : [...current, value]
   setFilters({ ...filters, [key]: next })
-}
-
-function DrillLauncher({
-  filters,
-  drillCount,
-  setDrillCount,
-  startDrill,
-}: {
-  filters: SpotFiltersType
-  drillCount: string
-  setDrillCount: (v: string) => void
-  startDrill: (scenario: Scenario, hero: Position, total: number, villain?: Position) => void
-}) {
-  const canDrill = filters.scenarios.length === 1 && filters.positions.length === 1
-  const count = Math.max(1, parseInt(drillCount, 10) || 50)
-
-  return (
-    <div className="flex items-center gap-2 border-t pt-2">
-      <Input
-        type="number"
-        min={1}
-        max={500}
-        value={drillCount}
-        onChange={(e) => setDrillCount(e.target.value)}
-        className="h-8 w-20 text-xs"
-      />
-      <Button
-        variant="outline"
-        size="sm"
-        disabled={!canDrill}
-        onClick={() => {
-          if (!canDrill) return
-          startDrill(filters.scenarios[0], filters.positions[0], count)
-        }}
-      >
-        Start drill
-      </Button>
-      {!canDrill && (
-        <span className="text-xs text-muted-foreground">Select 1 position + 1 scenario</span>
-      )}
-    </div>
-  )
-}
-
-function PushFoldDrillLauncher({
-  filters,
-  drillCount,
-  setDrillCount,
-  startPushFoldDrill,
-}: {
-  filters: SpotFiltersType
-  drillCount: string
-  setDrillCount: (v: string) => void
-  startPushFoldDrill: (
-    scenario: TournamentScenario,
-    hero: Position,
-    total: number,
-    stackDepth: StackDepth,
-    villain?: Position,
-  ) => void
-}) {
-  const canDrill = filters.positions.length === 1 && filters.stackDepths.length === 1
-  const count = Math.max(1, parseInt(drillCount, 10) || 50)
-
-  return (
-    <div className="flex items-center gap-2 border-t pt-2">
-      <Input
-        type="number"
-        min={1}
-        max={500}
-        value={drillCount}
-        onChange={(e) => setDrillCount(e.target.value)}
-        className="h-8 w-20 text-xs"
-      />
-      <Button
-        variant="outline"
-        size="sm"
-        disabled={!canDrill}
-        onClick={() => {
-          if (!canDrill) return
-          startPushFoldDrill('push', filters.positions[0], count, filters.stackDepths[0])
-        }}
-      >
-        Start drill
-      </Button>
-      {!canDrill && (
-        <span className="text-xs text-muted-foreground">Select 1 position + 1 stack depth</span>
-      )}
-    </div>
-  )
 }

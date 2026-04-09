@@ -1,5 +1,7 @@
 import { Button } from '@/components/ui/button'
 import { POSITIONS, PROVIDERS, SCENARIOS, type Position, type Scenario } from '@/types/poker'
+import { POSITION_LABELS, SCENARIO_LABELS } from '@/lib/poker-glossary'
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 
 import type { ReviewFilters as ReviewFiltersType, TimeRange } from '../types'
 
@@ -38,14 +40,14 @@ export function ReviewFilters({ filters, onFiltersChange, onReset }: ReviewFilte
 
   return (
     <div className="space-y-3">
-      {/* Row 1: Provider + Time range + Wrong only + Reset */}
+      {/* Row 1: Provider + Time range + Mistakes only + Reset */}
       <div className="flex flex-wrap items-center gap-2">
         <select
           value={filters.provider ?? ''}
           onChange={(e) => onFiltersChange({ provider: (e.target.value || null) as ReviewFiltersType['provider'] })}
-          className="h-8 rounded-md border border-neutral-700 bg-neutral-900 px-2 text-sm text-neutral-300"
+          className="h-8 rounded-md border border-border bg-input px-2 text-sm text-foreground"
         >
-          <option value="">All providers</option>
+          <option value="">All chart packs</option>
           {PROVIDERS.map((p) => (
             <option key={p} value={p}>{p}</option>
           ))}
@@ -54,7 +56,7 @@ export function ReviewFilters({ filters, onFiltersChange, onReset }: ReviewFilte
         <select
           value={filters.timeRange}
           onChange={(e) => onFiltersChange({ timeRange: e.target.value as TimeRange })}
-          className="h-8 rounded-md border border-neutral-700 bg-neutral-900 px-2 text-sm text-neutral-300"
+          className="h-8 rounded-md border border-border bg-input px-2 text-sm text-foreground"
         >
           {TIME_RANGE_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -66,11 +68,11 @@ export function ReviewFilters({ filters, onFiltersChange, onReset }: ReviewFilte
           size="sm"
           onClick={() => onFiltersChange({ onlyWrong: !filters.onlyWrong })}
         >
-          Wrong only
+          Mistakes Only
         </Button>
 
         {hasActiveFilters && (
-          <Button variant="ghost" size="sm" onClick={onReset} className="text-neutral-500">
+          <Button variant="ghost" size="sm" onClick={onReset} className="text-muted-foreground">
             Reset
           </Button>
         )}
@@ -78,32 +80,50 @@ export function ReviewFilters({ filters, onFiltersChange, onReset }: ReviewFilte
 
       {/* Row 2: Position toggles */}
       <div className="flex flex-wrap gap-1">
-        {POSITIONS.map((pos) => (
-          <Button
-            key={pos}
-            variant={filters.positions.includes(pos) ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => togglePosition(pos)}
-            className="h-7 px-2 text-xs"
-          >
-            {pos}
-          </Button>
-        ))}
+        {POSITIONS.map((pos) => {
+          const entry = POSITION_LABELS[pos]
+          return (
+            <Tooltip key={pos}>
+              <TooltipTrigger asChild>
+                <Button
+                  variant={filters.positions.includes(pos) ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => togglePosition(pos)}
+                  className="h-7 px-2 text-xs"
+                >
+                  {entry.label}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-[200px]">
+                <p>{entry.tip}</p>
+              </TooltipContent>
+            </Tooltip>
+          )
+        })}
       </div>
 
       {/* Row 3: Scenario toggles */}
       <div className="flex flex-wrap gap-1">
-        {SCENARIOS.map((sc) => (
-          <Button
-            key={sc.id}
-            variant={filters.scenarios.includes(sc.id) ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => toggleScenario(sc.id)}
-            className="h-7 px-2 text-xs"
-          >
-            {sc.label}
-          </Button>
-        ))}
+        {SCENARIOS.map((sc) => {
+          const entry = SCENARIO_LABELS[sc.id]
+          return (
+            <Tooltip key={sc.id}>
+              <TooltipTrigger asChild>
+                <Button
+                  variant={filters.scenarios.includes(sc.id) ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => toggleScenario(sc.id)}
+                  className="h-7 px-2 text-xs"
+                >
+                  {entry.label}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent className="max-w-[200px]">
+                <p>{entry.tip}</p>
+              </TooltipContent>
+            </Tooltip>
+          )
+        })}
       </div>
     </div>
   )

@@ -102,7 +102,7 @@ function HandCell({ hand, cell, compact, interactive, onMouseDown, onMouseEnter 
         )
       })}
       {/* Text overlay */}
-      <span className="relative z-10 font-semibold text-white">
+      <span className="relative z-10 font-semibold text-foreground">
         {hand.name}
       </span>
     </div>
@@ -126,9 +126,9 @@ export const HandGrid = memo(function HandGrid({ getCell, compact, title, subtit
       {/* Title */}
       {title && (
         <div className={cn('mb-2', compact ? 'text-center' : '')}>
-          <div className={cn('font-semibold text-white', compact ? 'text-xs' : 'text-sm')}>{title}</div>
+          <div className={cn('font-semibold text-foreground', compact ? 'text-xs' : 'text-sm')}>{title}</div>
           {subtitle && (
-            <div className={cn('text-neutral-500', compact ? 'text-[10px]' : 'text-xs')}>{subtitle}</div>
+            <div className={cn('text-muted-foreground', compact ? 'text-[10px]' : 'text-xs')}>{subtitle}</div>
           )}
         </div>
       )}
@@ -138,7 +138,7 @@ export const HandGrid = memo(function HandGrid({ getCell, compact, title, subtit
         role="grid"
         aria-label={title ? `${title} hand range grid` : 'Hand range grid'}
         className={cn(
-          'relative bg-neutral-900/50 backdrop-blur-sm rounded-lg border border-neutral-800/50',
+          'relative bg-card/50 backdrop-blur-sm rounded-lg border border-border',
           compact ? 'p-2' : 'p-3'
         )}
       >
@@ -149,7 +149,7 @@ export const HandGrid = memo(function HandGrid({ getCell, compact, title, subtit
             <div
               key={rank}
               className={cn(
-                'aspect-square flex items-center justify-center text-neutral-500 font-medium',
+                'aspect-square flex items-center justify-center text-muted-foreground font-medium',
                 compact ? 'text-[7px] sm:text-[9px]' : 'text-[9px] sm:text-[10px]'
               )}
             >
@@ -165,7 +165,7 @@ export const HandGrid = memo(function HandGrid({ getCell, compact, title, subtit
             className="grid grid-cols-[auto_repeat(13,1fr)] gap-[2px] mb-[2px]"
           >
             <div className={cn(
-              'flex items-center justify-center text-neutral-500 font-medium',
+              'flex items-center justify-center text-muted-foreground font-medium',
               compact ? 'w-4 sm:w-5 text-[7px] sm:text-[9px]' : 'w-5 sm:w-6 text-[9px] sm:text-[10px]'
             )}>
               {RANKS[rowIdx]}

@@ -18,7 +18,7 @@ export function HandBrowser() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <div className="w-6 h-6 border-2 border-neutral-700 border-t-neutral-400 rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-border border-t-brass rounded-full animate-spin" />
       </div>
     )
   }
@@ -27,16 +27,16 @@ export function HandBrowser() {
     <div className="space-y-4">
       <ReviewFilters filters={filters} onFiltersChange={(partial) => { setFilters(partial); setPage(0) }} onReset={() => { resetFilters(); setPage(0) }} />
 
-      <div className="text-neutral-500 text-xs">
-        {totalCount} spot{totalCount !== 1 ? 's' : ''} found
+      <div className="text-muted-foreground text-xs">
+        {totalCount} hand{totalCount !== 1 ? 's' : ''} found
       </div>
 
       {results.length === 0 ? (
-        <div className="text-neutral-500 text-sm text-center py-8">
-          No matching spots. Adjust your filters or train more.
+        <div className="text-muted-foreground text-sm text-center py-8">
+          No matching hands. Adjust your filters or play more.
         </div>
       ) : (
-        <div className="bg-neutral-900/50 border border-neutral-800/50 rounded-lg overflow-hidden">
+        <div className="bg-card/50 border border-border rounded-lg overflow-hidden">
           {results.map((r) => (
             <HandBrowserRow
               key={r.id}
@@ -59,7 +59,7 @@ export function HandBrowser() {
           >
             Prev
           </Button>
-          <span className="text-neutral-400 text-sm tabular-nums">
+          <span className="text-muted-foreground text-sm tabular-nums">
             {page + 1} / {totalPages}
           </span>
           <Button

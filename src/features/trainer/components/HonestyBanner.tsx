@@ -9,9 +9,9 @@ export function HonestyBanner({ charts }: HonestyBannerProps) {
   if (hasMixedStrategies(charts)) return null
 
   return (
-    <div className="rounded-lg border border-amber-900/30 bg-amber-950/20 px-4 py-2 text-xs text-amber-400/80">
-      This provider uses pure strategies. For mixed-strategy training, switch to a provider
-      with full GTO frequencies.
+    <div className="rounded-lg border border-brass/20 bg-brass/5 px-4 py-2 text-xs text-brass-dim">
+      This chart pack uses simple yes-or-no decisions. For practice with mixed strategies
+      (where the correct play varies each time), try a different chart pack.
     </div>
   )
 }

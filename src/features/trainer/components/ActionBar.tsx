@@ -1,3 +1,5 @@
+import { X, Coins, TrendingUp, Flame } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
 import type { Action } from '@/types/poker'
 import { cn } from '@/lib/utils'
@@ -10,27 +12,37 @@ interface ActionBarProps {
   spot?: Spot
 }
 
-const ALL_ACTION_BUTTONS: { action: Action; label: string; shortcut: string; color: string }[] = [
-  { action: 'fold', label: 'Fold', shortcut: '1', color: 'bg-neutral-700 hover:bg-neutral-600' },
-  { action: 'call', label: 'Call', shortcut: '2', color: 'bg-emerald-700 hover:bg-emerald-600' },
-  { action: 'raise', label: 'Raise', shortcut: '3', color: 'bg-sky-700 hover:bg-sky-600' },
-  { action: 'allin', label: 'All-in', shortcut: '4', color: 'bg-rose-700 hover:bg-rose-600' },
+type ActionVariant = 'action-fold' | 'action-call' | 'action-raise' | 'action-allin'
+
+interface ActionButton {
+  action: Action
+  label: string
+  shortcut: string
+  variant: ActionVariant
+  icon: typeof X
+}
+
+const ALL_ACTION_BUTTONS: ActionButton[] = [
+  { action: 'fold', label: 'Fold', shortcut: '1', variant: 'action-fold', icon: X },
+  { action: 'call', label: 'Call', shortcut: '2', variant: 'action-call', icon: Coins },
+  { action: 'raise', label: 'Raise', shortcut: '3', variant: 'action-raise', icon: TrendingUp },
+  { action: 'allin', label: 'All-in', shortcut: '4', variant: 'action-allin', icon: Flame },
 ]
 
-function getVisibleActions(spot?: Spot): typeof ALL_ACTION_BUTTONS {
+function getVisibleActions(spot?: Spot): ActionButton[] {
   if (spot?.kind !== 'push-fold') return ALL_ACTION_BUTTONS
 
   if (spot.scenario === 'push') {
     return [
-      { action: 'fold', label: 'Fold', shortcut: '1', color: 'bg-neutral-700 hover:bg-neutral-600' },
-      { action: 'allin', label: 'Push', shortcut: '2', color: 'bg-rose-700 hover:bg-rose-600' },
+      { action: 'fold', label: 'Fold', shortcut: '1', variant: 'action-fold', icon: X },
+      { action: 'allin', label: 'Push', shortcut: '2', variant: 'action-allin', icon: Flame },
     ]
   }
 
   // vs-push: call or fold
   return [
-    { action: 'fold', label: 'Fold', shortcut: '1', color: 'bg-neutral-700 hover:bg-neutral-600' },
-    { action: 'call', label: 'Call', shortcut: '2', color: 'bg-emerald-700 hover:bg-emerald-600' },
+    { action: 'fold', label: 'Fold', shortcut: '1', variant: 'action-fold', icon: X },
+    { action: 'call', label: 'Call', shortcut: '2', variant: 'action-call', icon: Coins },
   ]
 }
 
@@ -39,20 +51,20 @@ export function ActionBar({ onAction, disabled, spot }: ActionBarProps) {
 
   return (
     <div className="flex gap-2">
-      {buttons.map(({ action, label, shortcut, color }) => (
+      {buttons.map(({ action, label, shortcut, variant, icon: Icon }) => (
         <Button
           key={action}
-          variant="ghost"
+          variant={variant}
           className={cn(
-            'flex-1 h-12 text-white font-semibold text-base',
-            color,
+            'flex-1 h-14 text-base gap-2',
             disabled && 'opacity-40 pointer-events-none',
           )}
           disabled={disabled}
           onClick={() => onAction(action)}
         >
+          <Icon className="size-4" />
           {label}
-          <kbd className="ml-1.5 rounded bg-black/30 px-1.5 py-0.5 text-xs font-mono">
+          <kbd className="ml-1 rounded-sm bg-black/20 px-1.5 py-0.5 text-xs font-mono shadow-[0_1px_0_rgba(0,0,0,0.3)]">
             {shortcut}
           </kbd>
         </Button>

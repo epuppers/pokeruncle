@@ -1,6 +1,7 @@
 import type { Cell } from '@/types/poker'
 import { normalizeCell, getSortedActions } from '@/types/poker'
 import { ACTION_COLORS } from '@/constants/poker'
+import { actionLabel } from '@/lib/poker-glossary'
 import { cn } from '@/lib/utils'
 
 interface StrategyBarProps {
@@ -15,7 +16,7 @@ export function StrategyBar({ cell, rolledNumber }: StrategyBarProps) {
 
   return (
     <div className="w-full">
-      <div className="relative flex h-8 w-full overflow-hidden rounded">
+      <div className="relative flex h-10 w-full overflow-hidden rounded-lg">
         {sorted.map(([action, freq]) => (
           <div
             key={action}
@@ -27,23 +28,23 @@ export function StrategyBar({ cell, rolledNumber }: StrategyBarProps) {
           >
             {freq >= 15 && (
               <span>
-                {action} {freq}%
+                {actionLabel(action)} {freq}%
               </span>
             )}
           </div>
         ))}
         {rolledNumber !== undefined && (
           <div
-            className="absolute top-0 bottom-0 w-0.5 bg-amber-400"
+            className="absolute top-0 bottom-0 w-1 -translate-x-1/2 rounded-full bg-brass shadow-[0_0_6px_var(--color-brass)]"
             style={{ left: `${rolledNumber}%` }}
             aria-label={`Roll: ${rolledNumber}`}
           />
         )}
       </div>
-      <div className="mt-1 flex gap-3 text-xs text-neutral-400">
+      <div className="mt-1.5 flex gap-3 text-xs text-muted-foreground">
         {sorted.map(([action, freq]) => (
           <span key={action}>
-            {action}: {freq}%
+            {actionLabel(action)}: {freq}%
           </span>
         ))}
       </div>
