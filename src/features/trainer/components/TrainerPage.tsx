@@ -52,7 +52,7 @@ export function TrainerPage() {
       {trainerPhase.phase === 'feedback' && (
         <div className="flex flex-col gap-5">
           <TableView spot={trainerPhase.spot} />
-          <FeedbackView spot={trainerPhase.spot} result={trainerPhase.result} />
+          <FeedbackView spot={trainerPhase.spot} result={trainerPhase.result} onNext={nextSpot} />
         </div>
       )}
     </div>

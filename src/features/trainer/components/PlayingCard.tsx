@@ -14,6 +14,7 @@ interface PlayingCardProps {
 export function PlayingCard({ card, className }: PlayingCardProps) {
   const suitColor = SUIT_COLORS[card.suit]
   const symbol = SUIT_SYMBOLS[card.suit]
+  const displayRank = card.rank === 'T' ? '10' : card.rank
 
   return (
     <div
@@ -28,7 +29,7 @@ export function PlayingCard({ card, className }: PlayingCardProps) {
     >
       {/* Top-left corner: rank + suit */}
       <div className={cn('absolute top-1.5 left-2 flex flex-col items-center leading-none', suitColor)}>
-        <span className="text-sm sm:text-base font-bold">{card.rank}</span>
+        <span className="text-sm sm:text-base font-bold">{displayRank}</span>
         <span className="text-[10px] sm:text-xs">{symbol}</span>
       </div>
 
@@ -39,7 +40,7 @@ export function PlayingCard({ card, className }: PlayingCardProps) {
 
       {/* Bottom-right corner: rank + suit (rotated) */}
       <div className={cn('absolute bottom-1.5 right-2 flex flex-col items-center leading-none rotate-180', suitColor)}>
-        <span className="text-sm sm:text-base font-bold">{card.rank}</span>
+        <span className="text-sm sm:text-base font-bold">{displayRank}</span>
         <span className="text-[10px] sm:text-xs">{symbol}</span>
       </div>
     </div>

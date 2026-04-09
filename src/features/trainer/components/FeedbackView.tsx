@@ -1,6 +1,8 @@
 import { cn } from '@/lib/utils'
 import { ACTION_COLORS } from '@/constants/poker'
+import { normalizeCell, getSortedActions } from '@/types/poker'
 import { actionLabel, positionLabel } from '@/lib/poker-glossary'
+import { Button } from '@/components/ui/button'
 
 import { StrategyBar } from './StrategyBar'
 import type { Spot, SpotResult } from '@/features/trainer/types'
@@ -8,6 +10,7 @@ import type { Spot, SpotResult } from '@/features/trainer/types'
 interface FeedbackViewProps {
   spot: Spot
   result: SpotResult
+  onNext: () => void
 }
 
 function getExplanation(spot: Spot): string {
@@ -51,7 +54,16 @@ function getPushFoldExplanation(spot: Spot & { kind: 'push-fold' }): string {
   return `${base}: Fold. Not strong enough to call an all-in here.`
 }
 
-export function FeedbackView({ spot, result }: FeedbackViewProps) {
+/** Check if the cell has a pure (single-action) strategy. */
+function isPureStrategy(spot: Spot): boolean {
+  const { actions } = normalizeCell(spot.cell)
+  const sorted = getSortedActions(actions)
+  return sorted.length === 1
+}
+
+export function FeedbackView({ spot, result, onNext }: FeedbackViewProps) {
+  const pure = isPureStrategy(spot)
+
   return (
     <div className="flex flex-col gap-5">
       {/* Correct / Incorrect banner */}
@@ -69,7 +81,7 @@ export function FeedbackView({ spot, result }: FeedbackViewProps) {
       {/* Action comparison */}
       <div className="flex items-center justify-center gap-8 text-base">
         <div className="flex flex-col items-center gap-1.5">
-          <span className="text-sm text-muted-foreground">Your action</span>
+          <span className="text-sm text-muted-foreground">You chose</span>
           <span
             className={cn(
               'rounded-lg px-4 py-1.5 text-base font-semibold text-white',
@@ -81,7 +93,7 @@ export function FeedbackView({ spot, result }: FeedbackViewProps) {
         </div>
         <div className="text-muted-foreground text-lg">vs</div>
         <div className="flex flex-col items-center gap-1.5">
-          <span className="text-sm text-muted-foreground">Correct action</span>
+          <span className="text-sm text-muted-foreground">Correct play</span>
           <span
             className={cn(
               'rounded-lg px-4 py-1.5 text-base font-semibold text-white',
@@ -93,22 +105,29 @@ export function FeedbackView({ spot, result }: FeedbackViewProps) {
         </div>
       </div>
 
-      {/* Strategy distribution with roll explanation */}
-      <div className="flex flex-col gap-2">
-        <span className="text-sm font-medium text-muted-foreground">How to play this hand</span>
-        <StrategyBar cell={spot.cell} rolledNumber={spot.rolledNumber} />
-        <p className="text-sm text-muted-foreground">
-          Your number landed on <span className="font-bold text-brass">{spot.rolledNumber}</span> — that falls in the <span className="font-semibold text-foreground">{actionLabel(spot.correctAction)}</span> zone.
+      {/* Strategy explanation — pure vs mixed */}
+      {pure ? (
+        <p className="text-base text-foreground/80 text-center">
+          This hand always <span className="font-semibold">{actionLabel(spot.correctAction).toLowerCase()}s</span> in this spot.
         </p>
-      </div>
+      ) : (
+        <div className="flex flex-col gap-2">
+          <span className="text-sm font-medium text-muted-foreground">This hand uses a mixed strategy:</span>
+          <StrategyBar cell={spot.cell} rolledNumber={spot.rolledNumber} />
+          <p className="text-sm text-muted-foreground">
+            The correct play this time was <span className="font-semibold text-foreground">{actionLabel(spot.correctAction)}</span>.
+          </p>
+        </div>
+      )}
 
       {/* Explanation */}
       <p className="text-base text-foreground/80">{getExplanation(spot)}</p>
 
-      {/* Next spot prompt */}
-      <p className="text-center text-sm text-muted-foreground">
-        Press <kbd className="rounded-sm bg-secondary px-2 py-1 font-mono shadow-[0_1px_0_rgba(0,0,0,0.3)]">Space</kbd> for next hand
-      </p>
+      {/* Prominent next hand button */}
+      <Button onClick={onNext} size="lg" className="w-full text-lg h-14">
+        Next Hand
+        <kbd className="ml-2 rounded-sm bg-black/20 px-2 py-0.5 text-sm font-mono">Space</kbd>
+      </Button>
     </div>
   )
 }
