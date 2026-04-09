@@ -3,12 +3,30 @@ import { useCallback, useState } from 'react'
 import { Button } from '@/components/ui/button'
 
 import { useNotesStore } from '../store'
+import { useProgressMessages } from '../lib/useProgressMessages'
 
-export function NoteResult() {
+const LLM_MESSAGES = [
+  'Sending to AI...',
+  'Generating player note...',
+  'Almost done...',
+]
+const LLM_DELAYS = [1000, 3000]
+
+interface NoteResultProps {
+  onRetry?: () => void
+}
+
+export function NoteResult({ onRetry }: NoteResultProps) {
   const note = useNotesStore((s) => s.note)
   const llmStatus = useNotesStore((s) => s.llmStatus)
   const llmError = useNotesStore((s) => s.llmError)
   const [copied, setCopied] = useState(false)
+
+  const loadingMessage = useProgressMessages(
+    llmStatus === 'loading',
+    LLM_MESSAGES,
+    LLM_DELAYS,
+  )
 
   const handleCopy = useCallback(() => {
     void navigator.clipboard.writeText(note).then(() => {
@@ -23,15 +41,20 @@ export function NoteResult() {
     return (
       <div className="flex items-center gap-2 rounded-lg bg-neutral-900 p-4 text-sm text-neutral-400">
         <div className="h-4 w-4 animate-spin rounded-full border-2 border-neutral-600 border-t-neutral-300" />
-        Generating player note...
+        {loadingMessage}
       </div>
     )
   }
 
   if (llmStatus === 'error') {
     return (
-      <div className="rounded-lg bg-red-950/50 p-4 text-sm text-red-400">
-        {llmError ?? 'Failed to generate note. Try again.'}
+      <div className="flex items-center justify-between rounded-lg bg-red-950/50 p-4 text-sm text-red-400">
+        <span>{llmError ?? 'Failed to generate note. Try again.'}</span>
+        {onRetry && (
+          <Button variant="ghost" size="sm" onClick={onRetry} className="text-red-400 hover:text-red-300">
+            Retry
+          </Button>
+        )}
       </div>
     )
   }
