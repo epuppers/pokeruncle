@@ -1,9 +1,9 @@
 {
-  "name": "poker-lab",
+  "name": "uncles-table",
   "private": true,
   "version": "0.1.0",
-  "description": "Interactive poker study tools with GTO preflop charts and leaderboard analytics",
-  "repository": "https://github.com/AHTOOOXA/poker-charts",
+  "description": "Uncle's Table — free open-source GTO poker trainer",
+  "repository": "https://github.com/eliotpuplett/uncles-table",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -11,6 +11,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "typecheck": "tsc --noEmit",
     "test": "vitest",
     "test:run": "vitest run"
   },
@@ -21,12 +22,13 @@
     "@tanstack/react-router": "^1.157.14",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "dexie": "^4.4.2",
     "lucide-react": "^0.563.0",
+    "phe": "^0.6.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "recharts": "2.15.4",
     "tailwind-merge": "^3.4.0",
-    "tesseract.js": "^7.0.0",
     "zod": "^4.3.6",
     "zustand": "^5.0.9"
   },
