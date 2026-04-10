@@ -4,7 +4,30 @@
 
 The existing range data (pekarstas, greenline) only contains **hero strategies** — what the hero should do in a given preflop spot. For postflop training (Phase 7), we also need to know **what hands the villain shows up with** on the flop. Without this, we can't construct postflop spots.
 
-For example, when BTN opens and BB calls, we know BTN's opening range from the pekarstas data. But to drill BB's postflop play, we need BTN's range on the flop — which is their opening range minus hands that would have been 4-bet or folded to a 3-bet.
+For example, when BTN opens and BB calls, we know BTN's opening range from the pekarstas data. But to drill BB's postflop play, we need to know what hands BB shows up with on the flop — which is their calling range from the `vs-open` chart.
+
+## Derivation approach
+
+**We derive villain ranges directly from the existing chart data.** No external solver is needed for preflop ranges.
+
+The logic is straightforward:
+
+- **SRP nodes** (e.g., BTN opens, BB calls): Look at the caller's `vs-open` chart facing the opener. Extract hands where the action is `call`.
+- **3-bet pot nodes** (e.g., BTN opens, BB 3bets, BTN calls): Look at the caller's `vs-3bet` chart facing the 3-bettor. Extract hands where the action is `call`.
+
+This produces ranges that are **exactly consistent** with the hero ranges (same data source) and can be regenerated instantly when new provider data is added.
+
+### Running the derivation
+
+```bash
+bun run scripts/derive-villain-ranges.ts [--provider pekarstas] [--dry-run]
+```
+
+Options:
+- `--provider`: Which range provider to derive from (default: `pekarstas`)
+- `--dry-run`: Print the derived ranges without writing to disk
+
+The script overwrites `src/data/villain-ranges/cash-100bb.ts` with the derived data.
 
 ## Priority nodes
 
@@ -12,113 +35,27 @@ We target **12 high-frequency preflop nodes** that cover the vast majority of po
 
 ### Single Raised Pots (8 nodes)
 
-| Node Key | Opener | Caller | Why |
-|----------|--------|--------|-----|
-| `BTN-open_BB-call` | BTN | BB | Most common SRP |
-| `CO-open_BB-call` | CO | BB | Second most common |
-| `CO-open_BTN-call` | CO | BTN | Common positional battle |
-| `BTN-open_SB-call` | BTN | SB | SB cold-call range is tricky |
-| `MP-open_BB-call` | MP | BB | Wide caller vs tight opener |
-| `UTG-open_BB-call` | UTG | BB | Tightest opener |
-| `SB-open_BB-call` | SB | BB | Blind vs blind |
-| `UTG-open_BTN-call` | UTG | BTN | IP vs tight range |
+| Node Key | Opener | Caller | Hand Classes |
+|----------|--------|--------|:------------:|
+| `BTN-open_BB-call` | BTN | BB | ~77 |
+| `CO-open_BB-call` | CO | BB | ~59 |
+| `CO-open_BTN-call` | CO | BTN | ~2* |
+| `BTN-open_SB-call` | BTN | SB | ~11* |
+| `MP-open_BB-call` | MP | BB | ~47 |
+| `UTG-open_BB-call` | UTG | BB | ~48 |
+| `SB-open_BB-call` | SB | BB | ~86 |
+| `UTG-open_BTN-call` | UTG | BTN | ~2* |
 
 ### 3-Bet Pots (4 nodes)
 
-| Node Key | Opener | 3-Bettor | Caller | Why |
-|----------|--------|----------|--------|-----|
-| `BTN-open_BB-3bet_BTN-call` | BTN | BB | BTN | Most common 3bet pot |
-| `CO-open_BTN-3bet_CO-call` | CO | BTN | CO | IP 3bet |
-| `BTN-open_SB-3bet_BTN-call` | BTN | SB | BTN | OOP 3bet pot |
-| `CO-open_BB-3bet_CO-call` | CO | BB | CO | OOP 3bet vs EP |
+| Node Key | Opener | 3-Bettor | Caller | Hand Classes |
+|----------|--------|----------|--------|:------------:|
+| `BTN-open_BB-3bet_BTN-call` | BTN | BB | BTN | ~38 |
+| `CO-open_BTN-3bet_CO-call` | CO | BTN | CO | ~27 |
+| `BTN-open_SB-3bet_BTN-call` | BTN | SB | BTN | ~39 |
+| `CO-open_BB-3bet_CO-call` | CO | BB | CO | ~24 |
 
-## Solver: TexasSolver
-
-We use [TexasSolver](https://github.com/bupticybee/TexasSolver) — a free, open-source poker solver. It's C++-based, runs on Mac/Windows/Linux, and outputs JSON.
-
-### Installing TexasSolver
-
-1. Download the latest release from [GitHub Releases](https://github.com/bupticybee/TexasSolver/releases)
-2. For the console version (required for our scripts), check the `console` branch
-3. Extract and ensure `console_solver` is on your PATH
-
-### Generating configs
-
-```bash
-bun run scripts/generate-solver-configs.ts --provider pekarstas --output solver-configs/
-```
-
-This creates one `.txt` config file per node in `solver-configs/`. Each config:
-- Loads the opener's range from the specified provider
-- Sets up 100bb stacks with standard bet sizing
-- Configures solve accuracy and threading
-
-**Review each config before running.** You may want to adjust:
-- Bet sizes (the defaults are reasonable but not universal)
-- Rake structure
-- Stack depth (configs default to 100bb)
-- Accuracy (0.3% exploitability is fine for ranges; lower is slower)
-
-### Running the solver
-
-For each config file:
-
-```bash
-console_solver -i solver-configs/BTN-open_BB-call.txt
-```
-
-This will:
-1. Build the game tree
-2. Solve to the specified accuracy
-3. Dump results to a JSON file in the output directory
-
-Solve times vary: ~30s–5min per node depending on tree complexity and hardware.
-
-### Converting solver output
-
-```bash
-bun run scripts/convert-texassolver.ts \
-  --input solver-output/BTN-open_BB-call_result.json \
-  --node "BTN-open_BB-call" \
-  > output.txt
-```
-
-The converter:
-1. Reads the solver's JSON output
-2. Extracts the villain's strategy at the relevant decision node
-3. Converts combo notation (e.g., `AHKD`) to hand classes (e.g., `AKo`)
-4. Averages frequencies across all combos in each hand class
-5. Outputs a TypeScript `Chart` object
-
-### Adding ranges to the codebase
-
-After converting, paste the output into `cash-100bb.ts` as a new entry:
-
-```typescript
-{
-  node: { potType: 'srp', opener: 'BTN', caller: 'BB' },
-  range: {
-    // paste converted chart here
-  },
-  metadata: {
-    solver: 'TexasSolver 0.2.0',
-    solveDate: '2026-04-09',
-    stackDepthBB: 100,
-    rake: '5% 0.5bb cap',
-    exploitability: '0.3%',
-  },
-},
-```
-
-## Adding new nodes
-
-To add nodes beyond the initial 12:
-
-1. Add the node definition to `PRIORITY_NODES` in `scripts/generate-solver-configs.ts`
-2. Re-run the config generator
-3. Run the solver for the new node
-4. Convert and add to `cash-100bb.ts`
-5. The query API (`getVillainRange`) will automatically pick up new entries
+*\*Low hand counts reflect pekarstas' pure-strategy data — BTN and UTG cold-call very few hands in GTO, preferring to 3-bet or fold. These counts will increase with providers that have mixed-strategy data.*
 
 ## Data format
 
@@ -127,11 +64,31 @@ Villain ranges use the same `Chart` type as hero ranges: `Record<string, Cell>`.
 - **Mixed strategies:** `{ weight: 75, actions: { call: 100 } }` (villain continues 75% of the time)
 - **Sparse maps:** hands not listed are assumed to fold
 
-The `weight` field represents the probability that the villain continues with this hand class. For example, `weight: 60` on `ATo` means the villain calls/raises with ATo 60% of the time and folds 40%.
+The `weight` field represents the probability that the villain continues with this hand class. For example, `weight: 50` on `44` means the villain calls with pocket fours 50% of the time and folds 50%.
 
 ## Limitations
 
 - **Preflop only.** These ranges represent villain's preflop continuing range, not their postflop strategy.
-- **Averaged across combos.** Individual combos (e.g., AhTs vs AcTs) may have different frequencies in the solver output. We average to the hand class level for simplicity.
-- **Sensitive to inputs.** The ranges depend on the opener's range we feed the solver. Different providers or custom ranges will produce different villain ranges.
-- **100bb cash only.** Tournament stack depths would need separate solver runs.
+- **Averaged across combos.** Individual combos (e.g., AhTs vs AcTs) may have slightly different frequencies; the chart data operates at the hand class level.
+- **Sensitive to provider data.** Different providers will produce different villain ranges. The derivation is only as good as the input data.
+- **100bb cash only.** Tournament stack depths would need separate derivation from tournament-specific providers.
+- **Pure-strategy bias.** Pekarstas uses mostly pure strategies, so calling ranges may be narrower than true GTO (where more hands would call at a frequency). Greenline has some 50/50 splits that partially address this.
+
+## TexasSolver (for Phase 7 postflop)
+
+TexasSolver is a **postflop** solver. It takes two preflop ranges as input and solves postflop play on a given board. It is NOT needed for generating preflop villain ranges (which is what this file describes).
+
+TexasSolver is built and available at `/Users/eliotpuplett/Documents/TexasSolver/build/console_solver` for Phase 7 work, where it will be used to:
+1. Take the opener's range + caller's derived range as inputs
+2. Solve postflop play for specific board textures
+3. Generate postflop training solutions
+
+See `scripts/generate-solver-configs.ts` for the config generation workflow.
+
+## Adding new nodes
+
+To add nodes beyond the initial 12:
+
+1. Add the node definition to `PRIORITY_NODES` in `scripts/derive-villain-ranges.ts`
+2. Re-run the derivation script
+3. The query API (`getVillainRange`) will automatically pick up new entries
