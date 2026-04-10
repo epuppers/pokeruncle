@@ -1,0 +1,372 @@
+{
+  "solutionKey": "BTN-open_BB-call_6h5h3h_flop",
+  "nodeKey": "BTN-open_BB-call",
+  "boardString": "6h 5h 3h",
+  "street": "flop",
+  "potSizeBB": 6.5,
+  "effectiveStackBB": 97,
+  "strategies": {
+    "22": {
+      "check": 82,
+      "bet-small": 18
+    },
+    "33": {
+      "bet-medium": 40,
+      "check": 35,
+      "bet-large": 25
+    },
+    "44": {
+      "check": 82,
+      "bet-small": 18
+    },
+    "55": {
+      "bet-medium": 40,
+      "check": 35,
+      "bet-large": 25
+    },
+    "66": {
+      "bet-medium": 40,
+      "check": 35,
+      "bet-large": 25
+    },
+    "32s": {
+      "check": 82,
+      "bet-small": 18
+    },
+    "42s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "43s": {
+      "check": 82,
+      "bet-small": 18
+    },
+    "52s": {
+      "check": 69,
+      "bet-small": 31
+    },
+    "53s": {
+      "bet-medium": 40,
+      "check": 35,
+      "bet-large": 25
+    },
+    "63s": {
+      "bet-medium": 40,
+      "check": 35,
+      "bet-large": 25
+    },
+    "64s": {
+      "check": 69,
+      "bet-small": 31
+    },
+    "74s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "75s": {
+      "check": 69,
+      "bet-small": 31
+    },
+    "76o": {
+      "check": 69,
+      "bet-small": 31
+    },
+    "85s": {
+      "check": 69,
+      "bet-small": 31
+    },
+    "87o": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "95s": {
+      "check": 69,
+      "bet-small": 31
+    },
+    "96s": {
+      "check": 69,
+      "bet-small": 31
+    },
+    "98o": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "A2o": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "A2s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "A3o": {
+      "check": 82,
+      "bet-small": 18
+    },
+    "A3s": {
+      "check": 82,
+      "bet-small": 18
+    },
+    "A4o": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "A5o": {
+      "check": 69,
+      "bet-small": 31
+    },
+    "A6o": {
+      "check": 45,
+      "bet-medium": 26,
+      "bet-small": 24,
+      "bet-large": 5
+    },
+    "A6s": {
+      "check": 45,
+      "bet-medium": 26,
+      "bet-small": 24,
+      "bet-large": 5
+    },
+    "A7o": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "A7s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "A8o": {
+      "check": 85,
+      "bet-small": 15
+    },
+    "A8s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "A9o": {
+      "check": 85,
+      "bet-small": 15
+    },
+    "A9s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "ATo": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "J2s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "J3s": {
+      "check": 82,
+      "bet-small": 18
+    },
+    "J4s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "J5s": {
+      "check": 69,
+      "bet-small": 31
+    },
+    "J6s": {
+      "check": 45,
+      "bet-medium": 26,
+      "bet-small": 24,
+      "bet-large": 5
+    },
+    "J7s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "J8o": {
+      "check": 85,
+      "bet-small": 15
+    },
+    "J8s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "J9o": {
+      "check": 85,
+      "bet-small": 15
+    },
+    "JTo": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "K2s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "K3s": {
+      "check": 82,
+      "bet-small": 18
+    },
+    "K4s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "K5s": {
+      "check": 69,
+      "bet-small": 31
+    },
+    "K6s": {
+      "check": 45,
+      "bet-medium": 26,
+      "bet-small": 24,
+      "bet-large": 5
+    },
+    "K7o": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "K7s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "K8o": {
+      "check": 85,
+      "bet-small": 15
+    },
+    "K8s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "K9o": {
+      "check": 85,
+      "bet-small": 15
+    },
+    "K9s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "KJo": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "KQo": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "KTo": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "Q2s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "Q3s": {
+      "check": 82,
+      "bet-small": 18
+    },
+    "Q4s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "Q5s": {
+      "check": 69,
+      "bet-small": 31
+    },
+    "Q6s": {
+      "check": 45,
+      "bet-medium": 26,
+      "bet-small": 24,
+      "bet-large": 5
+    },
+    "Q7s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "Q8o": {
+      "check": 85,
+      "bet-small": 15
+    },
+    "Q8s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "Q9o": {
+      "check": 85,
+      "bet-small": 15
+    },
+    "Q9s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "QJo": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "QTo": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "T4s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "T5s": {
+      "check": 69,
+      "bet-small": 31
+    },
+    "T6s": {
+      "check": 45,
+      "bet-medium": 26,
+      "bet-small": 24,
+      "bet-large": 5
+    },
+    "T7s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "T8o": {
+      "check": 85,
+      "bet-small": 15
+    },
+    "T9o": {
+      "check": 85,
+      "bet-small": 15
+    }
+  },
+  "exploitability": 0.5,
+  "solvedAt": 1775864634730
+}

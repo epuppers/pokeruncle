@@ -1,0 +1,239 @@
+{
+  "solutionKey": "MP-open_BB-call_6h5h3h_flop",
+  "nodeKey": "MP-open_BB-call",
+  "boardString": "6h 5h 3h",
+  "street": "flop",
+  "potSizeBB": 6.5,
+  "effectiveStackBB": 97,
+  "strategies": {
+    "22": {
+      "check": 82,
+      "bet-small": 18
+    },
+    "33": {
+      "bet-medium": 40,
+      "check": 35,
+      "bet-large": 25
+    },
+    "44": {
+      "check": 82,
+      "bet-small": 18
+    },
+    "55": {
+      "bet-medium": 40,
+      "check": 35,
+      "bet-large": 25
+    },
+    "66": {
+      "bet-medium": 40,
+      "check": 35,
+      "bet-large": 25
+    },
+    "77": {
+      "check": 40,
+      "bet-small": 35,
+      "bet-medium": 25
+    },
+    "88": {
+      "check": 40,
+      "bet-small": 35,
+      "bet-medium": 25
+    },
+    "99": {
+      "check": 40,
+      "bet-small": 35,
+      "bet-medium": 25
+    },
+    "43s": {
+      "check": 82,
+      "bet-small": 18
+    },
+    "53s": {
+      "bet-medium": 40,
+      "check": 35,
+      "bet-large": 25
+    },
+    "64s": {
+      "check": 69,
+      "bet-small": 31
+    },
+    "75s": {
+      "check": 69,
+      "bet-small": 31
+    },
+    "86s": {
+      "check": 69,
+      "bet-small": 31
+    },
+    "96s": {
+      "check": 69,
+      "bet-small": 31
+    },
+    "97s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "98s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "A2s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "A3s": {
+      "check": 82,
+      "bet-small": 18
+    },
+    "A6s": {
+      "check": 45,
+      "bet-medium": 26,
+      "bet-small": 24,
+      "bet-large": 5
+    },
+    "A7s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "A8s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "A9s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "AJo": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "AQo": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "ATo": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "J8s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "J9s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "JTs": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "K2s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "K3s": {
+      "check": 82,
+      "bet-small": 18
+    },
+    "K4s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "K5s": {
+      "check": 69,
+      "bet-small": 31
+    },
+    "K6s": {
+      "check": 45,
+      "bet-medium": 26,
+      "bet-small": 24,
+      "bet-large": 5
+    },
+    "K7s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "K8s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "K9s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "KJo": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "KQo": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "KTs": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "Q7s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "Q8s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "Q9s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "QJo": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "QTs": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "T7s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "T8s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    },
+    "T9s": {
+      "check": 46,
+      "bet-small": 34,
+      "bet-medium": 20
+    }
+  },
+  "exploitability": 0.5,
+  "solvedAt": 1775864634736
+}

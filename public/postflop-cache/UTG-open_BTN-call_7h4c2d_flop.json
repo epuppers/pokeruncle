@@ -1,0 +1,22 @@
+{
+  "solutionKey": "UTG-open_BTN-call_7h4c2d_flop",
+  "nodeKey": "UTG-open_BTN-call",
+  "boardString": "7h 4c 2d",
+  "street": "flop",
+  "potSizeBB": 6.5,
+  "effectiveStackBB": 97,
+  "strategies": {
+    "55": {
+      "check": 41,
+      "bet-small": 40,
+      "bet-medium": 19
+    },
+    "66": {
+      "check": 41,
+      "bet-small": 40,
+      "bet-medium": 19
+    }
+  },
+  "exploitability": 0.5,
+  "solvedAt": 1775864634738
+}

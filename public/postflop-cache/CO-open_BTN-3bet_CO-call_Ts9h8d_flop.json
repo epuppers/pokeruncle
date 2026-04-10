@@ -1,0 +1,144 @@
+{
+  "solutionKey": "CO-open_BTN-3bet_CO-call_Ts9h8d_flop",
+  "nodeKey": "CO-open_BTN-3bet_CO-call",
+  "boardString": "Ts 9h 8d",
+  "street": "flop",
+  "potSizeBB": 20.5,
+  "effectiveStackBB": 89.75,
+  "strategies": {
+    "55": {
+      "check": 81,
+      "bet-small": 19
+    },
+    "66": {
+      "check": 81,
+      "bet-small": 19
+    },
+    "77": {
+      "check": 81,
+      "bet-small": 19
+    },
+    "88": {
+      "bet-medium": 40,
+      "check": 35,
+      "bet-large": 25
+    },
+    "99": {
+      "bet-medium": 40,
+      "check": 35,
+      "bet-large": 25
+    },
+    "54s": {
+      "check": 83,
+      "bet-small": 17
+    },
+    "65s": {
+      "check": 51,
+      "bet-small": 31,
+      "bet-medium": 18
+    },
+    "76s": {
+      "check": 51,
+      "bet-small": 31,
+      "bet-medium": 18
+    },
+    "87s": {
+      "check": 81,
+      "bet-small": 19
+    },
+    "98s": {
+      "bet-medium": 40,
+      "check": 35,
+      "bet-large": 25
+    },
+    "A6s": {
+      "check": 51,
+      "bet-small": 31,
+      "bet-medium": 18
+    },
+    "A7s": {
+      "check": 51,
+      "bet-small": 31,
+      "bet-medium": 18
+    },
+    "A9s": {
+      "check": 73,
+      "bet-small": 27
+    },
+    "AJo": {
+      "check": 51,
+      "bet-small": 31,
+      "bet-medium": 18
+    },
+    "AJs": {
+      "check": 51,
+      "bet-small": 31,
+      "bet-medium": 18
+    },
+    "AQs": {
+      "check": 51,
+      "bet-small": 31,
+      "bet-medium": 18
+    },
+    "ATs": {
+      "check": 45,
+      "bet-small": 26,
+      "bet-medium": 24,
+      "bet-large": 5
+    },
+    "J9s": {
+      "check": 73,
+      "bet-small": 27
+    },
+    "JTs": {
+      "check": 45,
+      "bet-small": 26,
+      "bet-medium": 24,
+      "bet-large": 5
+    },
+    "KJs": {
+      "check": 51,
+      "bet-small": 31,
+      "bet-medium": 18
+    },
+    "KQo": {
+      "check": 51,
+      "bet-small": 31,
+      "bet-medium": 18
+    },
+    "KQs": {
+      "check": 51,
+      "bet-small": 31,
+      "bet-medium": 18
+    },
+    "KTs": {
+      "check": 45,
+      "bet-small": 26,
+      "bet-medium": 24,
+      "bet-large": 5
+    },
+    "QJs": {
+      "check": 51,
+      "bet-small": 31,
+      "bet-medium": 18
+    },
+    "QTs": {
+      "check": 45,
+      "bet-small": 26,
+      "bet-medium": 24,
+      "bet-large": 5
+    },
+    "T9s": {
+      "bet-medium": 40,
+      "check": 35,
+      "bet-large": 25
+    },
+    "TT": {
+      "bet-medium": 40,
+      "check": 35,
+      "bet-large": 25
+    }
+  },
+  "exploitability": 0.5,
+  "solvedAt": 1775864634739
+}

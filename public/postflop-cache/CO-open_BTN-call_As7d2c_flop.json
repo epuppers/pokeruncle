@@ -1,0 +1,20 @@
+{
+  "solutionKey": "CO-open_BTN-call_As7d2c_flop",
+  "nodeKey": "CO-open_BTN-call",
+  "boardString": "As 7d 2c",
+  "street": "flop",
+  "potSizeBB": 6.5,
+  "effectiveStackBB": 97,
+  "strategies": {
+    "44": {
+      "check": 73,
+      "bet-small": 27
+    },
+    "55": {
+      "check": 73,
+      "bet-small": 27
+    }
+  },
+  "exploitability": 0.5,
+  "solvedAt": 1775864634738
+}

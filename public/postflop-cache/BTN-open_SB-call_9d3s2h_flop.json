@@ -1,0 +1,56 @@
+{
+  "solutionKey": "BTN-open_SB-call_9d3s2h_flop",
+  "nodeKey": "BTN-open_SB-call",
+  "boardString": "9d 3s 2h",
+  "street": "flop",
+  "potSizeBB": 6.5,
+  "effectiveStackBB": 97,
+  "strategies": {
+    "44": {
+      "check": 73,
+      "bet-small": 27
+    },
+    "55": {
+      "check": 73,
+      "bet-small": 27
+    },
+    "66": {
+      "check": 73,
+      "bet-small": 27
+    },
+    "J8s": {
+      "check": 83,
+      "bet-small": 17
+    },
+    "JTo": {
+      "check": 83,
+      "bet-small": 17
+    },
+    "K7s": {
+      "check": 83,
+      "bet-small": 17
+    },
+    "K8s": {
+      "check": 83,
+      "bet-small": 17
+    },
+    "KJo": {
+      "check": 83,
+      "bet-small": 17
+    },
+    "Q7s": {
+      "check": 83,
+      "bet-small": 17
+    },
+    "Q8s": {
+      "check": 83,
+      "bet-small": 17
+    },
+    "QJo": {
+      "check": 83,
+      "bet-small": 17
+    }
+  },
+  "exploitability": 0.5,
+  "solvedAt": 1775864634737
+}

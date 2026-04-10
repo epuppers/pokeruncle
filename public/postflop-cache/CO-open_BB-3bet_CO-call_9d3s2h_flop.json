@@ -1,0 +1,119 @@
+{
+  "solutionKey": "CO-open_BB-3bet_CO-call_9d3s2h_flop",
+  "nodeKey": "CO-open_BB-3bet_CO-call",
+  "boardString": "9d 3s 2h",
+  "street": "flop",
+  "potSizeBB": 20.5,
+  "effectiveStackBB": 89.75,
+  "strategies": {
+    "55": {
+      "check": 73,
+      "bet-small": 27
+    },
+    "66": {
+      "check": 73,
+      "bet-small": 27
+    },
+    "77": {
+      "check": 73,
+      "bet-small": 27
+    },
+    "88": {
+      "check": 73,
+      "bet-small": 27
+    },
+    "99": {
+      "bet-medium": 40,
+      "check": 35,
+      "bet-large": 25
+    },
+    "54s": {
+      "check": 54,
+      "bet-small": 28,
+      "bet-medium": 18
+    },
+    "65s": {
+      "check": 54,
+      "bet-small": 28,
+      "bet-medium": 18
+    },
+    "76s": {
+      "check": 83,
+      "bet-small": 17
+    },
+    "87s": {
+      "check": 83,
+      "bet-small": 17
+    },
+    "A9s": {
+      "check": 45,
+      "bet-small": 28,
+      "bet-medium": 22,
+      "bet-large": 5
+    },
+    "AJs": {
+      "check": 83,
+      "bet-small": 17
+    },
+    "AQo": {
+      "check": 83,
+      "bet-small": 17
+    },
+    "AQs": {
+      "check": 83,
+      "bet-small": 17
+    },
+    "ATs": {
+      "check": 83,
+      "bet-small": 17
+    },
+    "JJ": {
+      "check": 40,
+      "bet-small": 35,
+      "bet-medium": 25
+    },
+    "JTs": {
+      "check": 83,
+      "bet-small": 17
+    },
+    "K9s": {
+      "check": 45,
+      "bet-small": 28,
+      "bet-medium": 22,
+      "bet-large": 5
+    },
+    "KJs": {
+      "check": 83,
+      "bet-small": 17
+    },
+    "KQs": {
+      "check": 83,
+      "bet-small": 17
+    },
+    "KTs": {
+      "check": 83,
+      "bet-small": 17
+    },
+    "QJs": {
+      "check": 83,
+      "bet-small": 17
+    },
+    "QTs": {
+      "check": 83,
+      "bet-small": 17
+    },
+    "T9s": {
+      "check": 45,
+      "bet-small": 28,
+      "bet-medium": 22,
+      "bet-large": 5
+    },
+    "TT": {
+      "check": 40,
+      "bet-small": 35,
+      "bet-medium": 25
+    }
+  },
+  "exploitability": 0.5,
+  "solvedAt": 1775864634740
+}

@@ -1,7 +1,7 @@
 {
-  "solutionKey": "BTN-open_BB-call_QcJhTs_flop",
-  "nodeKey": "BTN-open_BB-call",
-  "boardString": "Qc Jh Ts",
+  "solutionKey": "CO-open_BB-call_KhJdTc_flop",
+  "nodeKey": "CO-open_BB-call",
+  "boardString": "Kh Jd Tc",
   "street": "flop",
   "potSizeBB": 6.5,
   "effectiveStackBB": 97,
@@ -26,23 +26,19 @@
       "check": 81,
       "bet-small": 19
     },
-    "32s": {
-      "check": 83,
-      "bet-small": 17
-    },
-    "42s": {
-      "check": 83,
-      "bet-small": 17
+    "77": {
+      "check": 81,
+      "bet-small": 19
     },
     "43s": {
       "check": 83,
       "bet-small": 17
     },
-    "52s": {
+    "53s": {
       "check": 83,
       "bet-small": 17
     },
-    "53s": {
+    "54s": {
       "check": 83,
       "bet-small": 17
     },
@@ -62,19 +58,17 @@
       "check": 83,
       "bet-small": 17
     },
-    "76o": {
+    "84s": {
       "check": 83,
       "bet-small": 17
     },
     "85s": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+      "check": 83,
+      "bet-small": 17
     },
-    "87o": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+    "86s": {
+      "check": 83,
+      "bet-small": 17
     },
     "95s": {
       "check": 51,
@@ -86,12 +80,7 @@
       "bet-small": 31,
       "bet-medium": 18
     },
-    "98o": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
-    },
-    "A2o": {
+    "97s": {
       "check": 51,
       "bet-small": 31,
       "bet-medium": 18
@@ -101,37 +90,12 @@
       "bet-small": 31,
       "bet-medium": 18
     },
-    "A3o": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
-    },
     "A3s": {
       "check": 51,
       "bet-small": 31,
       "bet-medium": 18
     },
-    "A4o": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
-    },
-    "A5o": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
-    },
-    "A6o": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
-    },
     "A6s": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
-    },
-    "A7o": {
       "check": 51,
       "bet-small": 31,
       "bet-medium": 18
@@ -189,151 +153,101 @@
       "check": 73,
       "bet-small": 27
     },
-    "J8o": {
-      "check": 73,
-      "bet-small": 27
-    },
     "J8s": {
       "check": 73,
       "bet-small": 27
     },
-    "J9o": {
+    "J9s": {
       "check": 73,
       "bet-small": 27
-    },
-    "JTo": {
-      "bet-medium": 40,
-      "check": 35,
-      "bet-large": 25
     },
     "K2s": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+      "check": 73,
+      "bet-small": 27
     },
     "K3s": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+      "check": 73,
+      "bet-small": 27
     },
     "K4s": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+      "check": 73,
+      "bet-small": 27
     },
     "K5s": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+      "check": 73,
+      "bet-small": 27
     },
     "K6s": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
-    },
-    "K7o": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+      "check": 73,
+      "bet-small": 27
     },
     "K7s": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
-    },
-    "K8o": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+      "check": 73,
+      "bet-small": 27
     },
     "K8s": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
-    },
-    "K9o": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+      "check": 73,
+      "bet-small": 27
     },
     "K9s": {
+      "check": 73,
+      "bet-small": 27
+    },
+    "KJo": {
+      "bet-medium": 40,
+      "check": 35,
+      "bet-large": 25
+    },
+    "KTo": {
+      "bet-medium": 40,
+      "check": 35,
+      "bet-large": 25
+    },
+    "Q2s": {
       "check": 51,
       "bet-small": 31,
       "bet-medium": 18
     },
-    "KJo": {
-      "check": 73,
-      "bet-small": 27
-    },
-    "KQo": {
-      "check": 45,
-      "bet-small": 26,
-      "bet-medium": 24,
-      "bet-large": 5
-    },
-    "KTo": {
-      "check": 81,
-      "bet-small": 19
-    },
-    "Q2s": {
-      "check": 73,
-      "bet-small": 27
-    },
     "Q3s": {
-      "check": 73,
-      "bet-small": 27
+      "check": 51,
+      "bet-small": 31,
+      "bet-medium": 18
     },
     "Q4s": {
-      "check": 73,
-      "bet-small": 27
+      "check": 51,
+      "bet-small": 31,
+      "bet-medium": 18
     },
     "Q5s": {
-      "check": 73,
-      "bet-small": 27
+      "check": 51,
+      "bet-small": 31,
+      "bet-medium": 18
     },
     "Q6s": {
-      "check": 73,
-      "bet-small": 27
+      "check": 51,
+      "bet-small": 31,
+      "bet-medium": 18
     },
     "Q7s": {
-      "check": 73,
-      "bet-small": 27
-    },
-    "Q8o": {
-      "check": 73,
-      "bet-small": 27
+      "check": 51,
+      "bet-small": 31,
+      "bet-medium": 18
     },
     "Q8s": {
-      "check": 73,
-      "bet-small": 27
-    },
-    "Q9o": {
-      "check": 73,
-      "bet-small": 27
+      "check": 51,
+      "bet-small": 31,
+      "bet-medium": 18
     },
     "Q9s": {
+      "check": 51,
+      "bet-small": 31,
+      "bet-medium": 18
+    },
+    "QJo": {
       "check": 73,
       "bet-small": 27
     },
-    "QJo": {
-      "bet-medium": 40,
-      "check": 35,
-      "bet-large": 25
-    },
     "QTo": {
-      "bet-medium": 40,
-      "check": 35,
-      "bet-large": 25
-    },
-    "T4s": {
-      "check": 81,
-      "bet-small": 19
-    },
-    "T5s": {
-      "check": 81,
-      "bet-small": 19
-    },
-    "T6s": {
       "check": 81,
       "bet-small": 19
     },
@@ -341,15 +255,15 @@
       "check": 81,
       "bet-small": 19
     },
-    "T8o": {
+    "T8s": {
       "check": 81,
       "bet-small": 19
     },
-    "T9o": {
+    "T9s": {
       "check": 81,
       "bet-small": 19
     }
   },
   "exploitability": 0.5,
-  "solvedAt": 1775864634731
+  "solvedAt": 1775864634736
 }

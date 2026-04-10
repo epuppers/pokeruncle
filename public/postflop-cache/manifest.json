@@ -1,61 +1,348 @@
 {
-  "version": 1,
+  "version": 2,
   "solutions": [
     {
-      "solutionKey": "BTN-open_BB-call_Ah7d2c_flop",
-      "nodeKey": "BTN-open_BB-call",
-      "boardString": "Ah 7d 2c",
+      "solutionKey": "BTN-open_BB-3bet_BTN-call_9d3s2h_flop",
+      "nodeKey": "BTN-open_BB-3bet_BTN-call",
+      "boardString": "9d 3s 2h",
       "street": "flop",
-      "handCount": 46
+      "handCount": 38
     },
     {
-      "solutionKey": "BTN-open_BB-call_Ts9h8h_flop",
-      "nodeKey": "BTN-open_BB-call",
-      "boardString": "Ts 9h 8h",
+      "solutionKey": "BTN-open_BB-3bet_BTN-call_9s8d7c_flop",
+      "nodeKey": "BTN-open_BB-3bet_BTN-call",
+      "boardString": "9s 8d 7c",
       "street": "flop",
-      "handCount": 31
+      "handCount": 38
     },
     {
-      "solutionKey": "CO-open_BB-call_6h5h3h_flop",
-      "nodeKey": "CO-open_BB-call",
+      "solutionKey": "BTN-open_BB-3bet_BTN-call_Kc8d3s_flop",
+      "nodeKey": "BTN-open_BB-3bet_BTN-call",
+      "boardString": "Kc 8d 3s",
+      "street": "flop",
+      "handCount": 38
+    },
+    {
+      "solutionKey": "BTN-open_BB-3bet_BTN-call_Qs9s3s_flop",
+      "nodeKey": "BTN-open_BB-3bet_BTN-call",
+      "boardString": "Qs 9s 3s",
+      "street": "flop",
+      "handCount": 38
+    },
+    {
+      "solutionKey": "BTN-open_BB-call_6h5h3h_flop",
+      "nodeKey": "BTN-open_BB-call",
       "boardString": "6h 5h 3h",
       "street": "flop",
-      "handCount": 25
+      "handCount": 77
+    },
+    {
+      "solutionKey": "BTN-open_BB-call_8d7s5c_flop",
+      "nodeKey": "BTN-open_BB-call",
+      "boardString": "8d 7s 5c",
+      "street": "flop",
+      "handCount": 77
+    },
+    {
+      "solutionKey": "BTN-open_BB-call_8s5d2c_flop",
+      "nodeKey": "BTN-open_BB-call",
+      "boardString": "8s 5d 2c",
+      "street": "flop",
+      "handCount": 77
+    },
+    {
+      "solutionKey": "BTN-open_BB-call_AhTd3c_flop",
+      "nodeKey": "BTN-open_BB-call",
+      "boardString": "Ah Td 3c",
+      "street": "flop",
+      "handCount": 77
+    },
+    {
+      "solutionKey": "BTN-open_BB-call_As7d2c_flop",
+      "nodeKey": "BTN-open_BB-call",
+      "boardString": "As 7d 2c",
+      "street": "flop",
+      "handCount": 77
     },
     {
       "solutionKey": "BTN-open_BB-call_KhKd7c_flop",
       "nodeKey": "BTN-open_BB-call",
       "boardString": "Kh Kd 7c",
       "street": "flop",
-      "handCount": 31
-    },
-    {
-      "solutionKey": "SB-open_BB-call_8s5d2c_flop",
-      "nodeKey": "SB-open_BB-call",
-      "boardString": "8s 5d 2c",
-      "street": "flop",
-      "handCount": 36
-    },
-    {
-      "solutionKey": "BTN-open_BB-3bet_BTN-call_KdQh7d_flop",
-      "nodeKey": "BTN-open_BB-3bet_BTN-call",
-      "boardString": "Kd Qh 7d",
-      "street": "flop",
-      "handCount": 26
-    },
-    {
-      "solutionKey": "CO-open_BB-call_8d7s5c_flop",
-      "nodeKey": "CO-open_BB-call",
-      "boardString": "8d 7s 5c",
-      "street": "flop",
-      "handCount": 27
+      "handCount": 77
     },
     {
       "solutionKey": "BTN-open_BB-call_QcJhTs_flop",
       "nodeKey": "BTN-open_BB-call",
       "boardString": "Qc Jh Ts",
       "street": "flop",
-      "handCount": 32
+      "handCount": 77
+    },
+    {
+      "solutionKey": "BTN-open_BB-call_Ts9h8d_flop",
+      "nodeKey": "BTN-open_BB-call",
+      "boardString": "Ts 9h 8d",
+      "street": "flop",
+      "handCount": 77
+    },
+    {
+      "solutionKey": "BTN-open_SB-3bet_BTN-call_7h4c2d_flop",
+      "nodeKey": "BTN-open_SB-3bet_BTN-call",
+      "boardString": "7h 4c 2d",
+      "street": "flop",
+      "handCount": 39
+    },
+    {
+      "solutionKey": "BTN-open_SB-3bet_BTN-call_AhTd3c_flop",
+      "nodeKey": "BTN-open_SB-3bet_BTN-call",
+      "boardString": "Ah Td 3c",
+      "street": "flop",
+      "handCount": 39
+    },
+    {
+      "solutionKey": "BTN-open_SB-3bet_BTN-call_JdTc9s_flop",
+      "nodeKey": "BTN-open_SB-3bet_BTN-call",
+      "boardString": "Jd Tc 9s",
+      "street": "flop",
+      "handCount": 39
+    },
+    {
+      "solutionKey": "BTN-open_SB-3bet_BTN-call_KdTd4d_flop",
+      "nodeKey": "BTN-open_SB-3bet_BTN-call",
+      "boardString": "Kd Td 4d",
+      "street": "flop",
+      "handCount": 39
+    },
+    {
+      "solutionKey": "BTN-open_SB-call_9d3s2h_flop",
+      "nodeKey": "BTN-open_SB-call",
+      "boardString": "9d 3s 2h",
+      "street": "flop",
+      "handCount": 11
+    },
+    {
+      "solutionKey": "BTN-open_SB-call_9s8d7c_flop",
+      "nodeKey": "BTN-open_SB-call",
+      "boardString": "9s 8d 7c",
+      "street": "flop",
+      "handCount": 11
+    },
+    {
+      "solutionKey": "BTN-open_SB-call_Kc8d3s_flop",
+      "nodeKey": "BTN-open_SB-call",
+      "boardString": "Kc 8d 3s",
+      "street": "flop",
+      "handCount": 11
+    },
+    {
+      "solutionKey": "CO-open_BB-3bet_CO-call_9d3s2h_flop",
+      "nodeKey": "CO-open_BB-3bet_CO-call",
+      "boardString": "9d 3s 2h",
+      "street": "flop",
+      "handCount": 24
+    },
+    {
+      "solutionKey": "CO-open_BB-3bet_CO-call_9s8d7c_flop",
+      "nodeKey": "CO-open_BB-3bet_CO-call",
+      "boardString": "9s 8d 7c",
+      "street": "flop",
+      "handCount": 24
+    },
+    {
+      "solutionKey": "CO-open_BB-3bet_CO-call_Kc8d3s_flop",
+      "nodeKey": "CO-open_BB-3bet_CO-call",
+      "boardString": "Kc 8d 3s",
+      "street": "flop",
+      "handCount": 24
+    },
+    {
+      "solutionKey": "CO-open_BB-call_9d3s2h_flop",
+      "nodeKey": "CO-open_BB-call",
+      "boardString": "9d 3s 2h",
+      "street": "flop",
+      "handCount": 59
+    },
+    {
+      "solutionKey": "CO-open_BB-call_9s8d7c_flop",
+      "nodeKey": "CO-open_BB-call",
+      "boardString": "9s 8d 7c",
+      "street": "flop",
+      "handCount": 59
+    },
+    {
+      "solutionKey": "CO-open_BB-call_Kc8d3s_flop",
+      "nodeKey": "CO-open_BB-call",
+      "boardString": "Kc 8d 3s",
+      "street": "flop",
+      "handCount": 59
+    },
+    {
+      "solutionKey": "CO-open_BB-call_KhJdTc_flop",
+      "nodeKey": "CO-open_BB-call",
+      "boardString": "Kh Jd Tc",
+      "street": "flop",
+      "handCount": 59
+    },
+    {
+      "solutionKey": "CO-open_BB-call_Qs9s3s_flop",
+      "nodeKey": "CO-open_BB-call",
+      "boardString": "Qs 9s 3s",
+      "street": "flop",
+      "handCount": 59
+    },
+    {
+      "solutionKey": "CO-open_BB-call_QsQh5d_flop",
+      "nodeKey": "CO-open_BB-call",
+      "boardString": "Qs Qh 5d",
+      "street": "flop",
+      "handCount": 59
+    },
+    {
+      "solutionKey": "CO-open_BTN-3bet_CO-call_8s5d2c_flop",
+      "nodeKey": "CO-open_BTN-3bet_CO-call",
+      "boardString": "8s 5d 2c",
+      "street": "flop",
+      "handCount": 27
+    },
+    {
+      "solutionKey": "CO-open_BTN-3bet_CO-call_As7d2c_flop",
+      "nodeKey": "CO-open_BTN-3bet_CO-call",
+      "boardString": "As 7d 2c",
+      "street": "flop",
+      "handCount": 27
+    },
+    {
+      "solutionKey": "CO-open_BTN-3bet_CO-call_Ts9h8d_flop",
+      "nodeKey": "CO-open_BTN-3bet_CO-call",
+      "boardString": "Ts 9h 8d",
+      "street": "flop",
+      "handCount": 27
+    },
+    {
+      "solutionKey": "CO-open_BTN-call_8s5d2c_flop",
+      "nodeKey": "CO-open_BTN-call",
+      "boardString": "8s 5d 2c",
+      "street": "flop",
+      "handCount": 2
+    },
+    {
+      "solutionKey": "CO-open_BTN-call_As7d2c_flop",
+      "nodeKey": "CO-open_BTN-call",
+      "boardString": "As 7d 2c",
+      "street": "flop",
+      "handCount": 2
+    },
+    {
+      "solutionKey": "MP-open_BB-call_6h5h3h_flop",
+      "nodeKey": "MP-open_BB-call",
+      "boardString": "6h 5h 3h",
+      "street": "flop",
+      "handCount": 47
+    },
+    {
+      "solutionKey": "MP-open_BB-call_8s5d2c_flop",
+      "nodeKey": "MP-open_BB-call",
+      "boardString": "8s 5d 2c",
+      "street": "flop",
+      "handCount": 47
+    },
+    {
+      "solutionKey": "MP-open_BB-call_As7d2c_flop",
+      "nodeKey": "MP-open_BB-call",
+      "boardString": "As 7d 2c",
+      "street": "flop",
+      "handCount": 47
+    },
+    {
+      "solutionKey": "MP-open_BB-call_Ts9h8d_flop",
+      "nodeKey": "MP-open_BB-call",
+      "boardString": "Ts 9h 8d",
+      "street": "flop",
+      "handCount": 47
+    },
+    {
+      "solutionKey": "SB-open_BB-call_7h4c2d_flop",
+      "nodeKey": "SB-open_BB-call",
+      "boardString": "7h 4c 2d",
+      "street": "flop",
+      "handCount": 86
+    },
+    {
+      "solutionKey": "SB-open_BB-call_8s8d4c_flop",
+      "nodeKey": "SB-open_BB-call",
+      "boardString": "8s 8d 4c",
+      "street": "flop",
+      "handCount": 86
+    },
+    {
+      "solutionKey": "SB-open_BB-call_AhTd3c_flop",
+      "nodeKey": "SB-open_BB-call",
+      "boardString": "Ah Td 3c",
+      "street": "flop",
+      "handCount": 86
+    },
+    {
+      "solutionKey": "SB-open_BB-call_JdTc9s_flop",
+      "nodeKey": "SB-open_BB-call",
+      "boardString": "Jd Tc 9s",
+      "street": "flop",
+      "handCount": 86
+    },
+    {
+      "solutionKey": "SB-open_BB-call_KdQsJh_flop",
+      "nodeKey": "SB-open_BB-call",
+      "boardString": "Kd Qs Jh",
+      "street": "flop",
+      "handCount": 86
+    },
+    {
+      "solutionKey": "SB-open_BB-call_KdTd4d_flop",
+      "nodeKey": "SB-open_BB-call",
+      "boardString": "Kd Td 4d",
+      "street": "flop",
+      "handCount": 86
+    },
+    {
+      "solutionKey": "UTG-open_BB-call_7h4c2d_flop",
+      "nodeKey": "UTG-open_BB-call",
+      "boardString": "7h 4c 2d",
+      "street": "flop",
+      "handCount": 48
+    },
+    {
+      "solutionKey": "UTG-open_BB-call_AhTd3c_flop",
+      "nodeKey": "UTG-open_BB-call",
+      "boardString": "Ah Td 3c",
+      "street": "flop",
+      "handCount": 48
+    },
+    {
+      "solutionKey": "UTG-open_BB-call_JdTc9s_flop",
+      "nodeKey": "UTG-open_BB-call",
+      "boardString": "Jd Tc 9s",
+      "street": "flop",
+      "handCount": 48
+    },
+    {
+      "solutionKey": "UTG-open_BB-call_KdTd4d_flop",
+      "nodeKey": "UTG-open_BB-call",
+      "boardString": "Kd Td 4d",
+      "street": "flop",
+      "handCount": 48
+    },
+    {
+      "solutionKey": "UTG-open_BTN-call_7h4c2d_flop",
+      "nodeKey": "UTG-open_BTN-call",
+      "boardString": "7h 4c 2d",
+      "street": "flop",
+      "handCount": 2
+    },
+    {
+      "solutionKey": "UTG-open_BTN-call_AhTd3c_flop",
+      "nodeKey": "UTG-open_BTN-call",
+      "boardString": "Ah Td 3c",
+      "street": "flop",
+      "handCount": 2
     }
   ]
 }

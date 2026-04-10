@@ -1,0 +1,21 @@
+{
+  "solutionKey": "CO-open_BTN-call_8s5d2c_flop",
+  "nodeKey": "CO-open_BTN-call",
+  "boardString": "8s 5d 2c",
+  "street": "flop",
+  "potSizeBB": 6.5,
+  "effectiveStackBB": 97,
+  "strategies": {
+    "44": {
+      "check": 71,
+      "bet-small": 29
+    },
+    "55": {
+      "bet-medium": 48,
+      "bet-large": 30,
+      "check": 22
+    }
+  },
+  "exploitability": 0.5,
+  "solvedAt": 1775864634738
+}

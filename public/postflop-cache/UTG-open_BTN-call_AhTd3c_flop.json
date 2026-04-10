@@ -1,0 +1,20 @@
+{
+  "solutionKey": "UTG-open_BTN-call_AhTd3c_flop",
+  "nodeKey": "UTG-open_BTN-call",
+  "boardString": "Ah Td 3c",
+  "street": "flop",
+  "potSizeBB": 6.5,
+  "effectiveStackBB": 97,
+  "strategies": {
+    "55": {
+      "check": 73,
+      "bet-small": 27
+    },
+    "66": {
+      "check": 73,
+      "bet-small": 27
+    }
+  },
+  "exploitability": 0.5,
+  "solvedAt": 1775864634738
+}
