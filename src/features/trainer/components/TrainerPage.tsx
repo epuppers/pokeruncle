@@ -7,11 +7,8 @@ import { useSpotDealer } from '@/features/trainer/hooks/use-spot-dealer'
 import { useTrainerKeyboard } from '@/features/trainer/hooks/use-trainer-keyboard'
 import { ActionBar } from './ActionBar'
 import { FeedbackView } from './FeedbackView'
-import { HonestyBanner } from './HonestyBanner'
 import { SessionHud } from './SessionHud'
-import { SpotFilters } from './SpotFilters'
 import { TableView } from './TableView'
-import { TrainerProviderSelector } from './TrainerProviderSelector'
 
 export function TrainerPage() {
   const provider = useTrainerStore((s) => s.provider)
@@ -22,10 +19,8 @@ export function TrainerPage() {
   const { charts } = useRangeQuery(provider)
   const { dealNext } = useSpotDealer(charts)
 
-  // nextSpot sets phase to idle, which triggers the auto-deal effect below
   useTrainerKeyboard(nextSpot)
 
-  // Auto-deal when entering idle phase (initial mount or after provider change)
   useEffect(() => {
     if (trainerPhase.phase === 'idle') {
       void dealNext()
@@ -34,12 +29,6 @@ export function TrainerPage() {
 
   return (
     <div className="flex-1 flex flex-col gap-5 max-w-2xl mx-auto w-full">
-      <div className="flex items-center justify-between">
-        <TrainerProviderSelector />
-      </div>
-
-      <SpotFilters />
-      <HonestyBanner charts={charts} />
       <SessionHud />
 
       {trainerPhase.phase === 'active' && (

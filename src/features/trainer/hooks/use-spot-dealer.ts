@@ -9,7 +9,14 @@ import {
   generateSmartSpot,
   generateSpot,
 } from '@/features/trainer/lib/spot-generator'
-import type { ProviderCharts } from '@/features/trainer/types'
+import type { ProviderCharts, SpotFilters } from '@/features/trainer/types'
+
+const NO_FILTERS: SpotFilters = {
+  positions: [],
+  scenarios: [],
+  handTypes: [],
+  stackDepths: [],
+}
 
 /** Wraps the spot generator with store integration and mastery-aware selection. */
 export function useSpotDealer(charts: ProviderCharts) {
@@ -17,6 +24,8 @@ export function useSpotDealer(charts: ProviderCharts) {
   const filters = useTrainerStore((s) => s.filters)
   const trainerMode = useTrainerStore((s) => s.trainerMode)
   const dealSpot = useTrainerStore((s) => s.dealSpot)
+  const setProvider = useTrainerStore((s) => s.setProvider)
+  const setFilters = useTrainerStore((s) => s.setFilters)
 
   const dealNext = useCallback(
     async () => {
@@ -39,19 +48,35 @@ export function useSpotDealer(charts: ProviderCharts) {
         return
       }
 
-      // Practice mode: mastery-aware selection
-      if (isTournament) {
-        const masteryRecords = await getMasteryRecordsForProvider(provider)
-        const spot = generateSmartPushFoldSpot(charts, masteryRecords, filters)
-        dealSpot(spot)
-        return
+      let masteryRecords: Awaited<ReturnType<typeof getMasteryRecordsForProvider>> = []
+      try {
+        masteryRecords = await getMasteryRecordsForProvider(provider)
+      } catch {
+        // IndexedDB unavailable — use random selection
       }
 
-      const masteryRecords = await getMasteryRecordsForProvider(provider)
-      const spot = generateSmartSpot(charts, provider, masteryRecords, filters)
-      dealSpot(spot)
+      // Try current filters → no filters → reset provider to pekarstas
+      try {
+        if (isTournament) {
+          dealSpot(generateSmartPushFoldSpot(charts, masteryRecords, filters))
+        } else {
+          dealSpot(generateSmartSpot(charts, provider, masteryRecords, filters))
+        }
+      } catch {
+        try {
+          if (isTournament) {
+            dealSpot(generateSmartPushFoldSpot(charts, masteryRecords, NO_FILTERS))
+          } else {
+            dealSpot(generateSmartSpot(charts, provider, masteryRecords, NO_FILTERS))
+          }
+        } catch {
+          // Charts are empty for this provider — reset to default
+          setProvider('pekarstas')
+          setFilters(NO_FILTERS)
+        }
+      }
     },
-    [charts, provider, filters, trainerMode, dealSpot],
+    [charts, provider, filters, trainerMode, dealSpot, setProvider, setFilters],
   )
 
   return { dealNext }
