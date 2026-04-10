@@ -7,6 +7,7 @@ import type { PostflopAction, PostflopSpot, PostflopSpotResult } from '../types'
 import { POSTFLOP_ACTION_LABELS } from '../types'
 import { generatePostflopFeedback } from '../lib/feedback-engine'
 import { PostflopTableView } from './PostflopTableView'
+import { VillainRangeSummary } from './VillainRangeSummary'
 
 interface PostflopFeedbackViewProps {
   spot: PostflopSpot
@@ -89,6 +90,9 @@ export function PostflopFeedbackView({ spot, result, onNext }: PostflopFeedbackV
         <p className="text-sm text-foreground/90 font-medium">{feedback.reasoning}</p>
         <p className="text-xs text-brass/80 italic">{feedback.tip}</p>
       </div>
+
+      {/* Villain range */}
+      <VillainRangeSummary preflopNode={spot.preflopNode} />
 
       {/* Next button */}
       <Button
