@@ -21,7 +21,7 @@ const buttonVariants = cva(
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
         "action-fold":
-          "bg-muted text-muted-foreground hover:bg-muted/80 border border-border shadow-sm font-semibold",
+          "bg-muted text-foreground hover:bg-muted/80 border border-border shadow-sm font-semibold",
         "action-call":
           "bg-emerald-800 text-emerald-100 hover:bg-emerald-700 border border-emerald-700/50 shadow-sm shadow-emerald-900/30 font-semibold",
         "action-raise":

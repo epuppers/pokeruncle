@@ -16,9 +16,10 @@ export async function recordSpotResult(
   spot: Spot,
   userAction: Action,
   decisionTimeMs: number,
+  strictness: number = 5,
 ): Promise<void> {
   const evLoss = estimateEvLoss(spot.cell, userAction, spot.correctAction)
-  const qualityScore = evToQualityScore(evLoss)
+  const qualityScore = evToQualityScore(evLoss, strictness)
   const spotTypeKey = buildSpotTypeKeyFromSpot(spot)
 
   await db.spotResults.add({

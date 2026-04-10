@@ -200,6 +200,49 @@
   }
 }
 
+/* Card flies from dealer (BTN) to player seat */
+@keyframes dealFly {
+  0% {
+    opacity: 0.7;
+    transform: translate(var(--from-x, 0), var(--from-y, 0)) scale(0.5) rotate(var(--deal-rotate, 0deg));
+  }
+  60% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+}
+
+/* Fold flash — red pop then settle to dimmed */
+@keyframes foldFlash {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  30% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  100% {
+    opacity: 0.7;
+    transform: scale(0.95);
+  }
+}
+
+/* Card muck — cards tumble and fade out */
+@keyframes muckCards {
+  0% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.4) rotate(15deg) translateY(10px);
+  }
+}
+
 /* Bet chip sliding from seat toward center */
 @keyframes chipSlide {
   from {

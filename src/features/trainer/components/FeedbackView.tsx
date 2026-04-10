@@ -44,7 +44,7 @@ export function FeedbackView({ spot, result, onNext }: FeedbackViewProps) {
       {/* Action comparison */}
       <div className="flex items-center justify-center gap-8 text-base">
         <div className="flex flex-col items-center gap-1.5">
-          <span className="text-sm text-muted-foreground">You chose</span>
+          <span className="text-sm text-foreground/70">You chose</span>
           <span
             className={cn(
               'rounded-lg px-4 py-1.5 text-base font-semibold text-white',
@@ -54,9 +54,9 @@ export function FeedbackView({ spot, result, onNext }: FeedbackViewProps) {
             {actionLabel(result.userAction)}
           </span>
         </div>
-        <div className="text-muted-foreground text-lg">vs</div>
+        <div className="text-foreground/60 text-lg">vs</div>
         <div className="flex flex-col items-center gap-1.5">
-          <span className="text-sm text-muted-foreground">Correct play</span>
+          <span className="text-sm text-foreground/70">Correct play</span>
           <span
             className={cn(
               'rounded-lg px-4 py-1.5 text-base font-semibold text-white',
@@ -78,26 +78,26 @@ export function FeedbackView({ spot, result, onNext }: FeedbackViewProps) {
       </div>
 
       {/* Position + reasoning */}
-      <div className="space-y-2 text-sm text-foreground/80">
+      <div className="space-y-2 text-sm text-foreground/90">
         <p>{feedback.positionContext}</p>
         <p>{feedback.reasoning}</p>
       </div>
 
       {/* Strategy explanation — pure vs mixed */}
       {pure ? (
-        <p className="text-sm text-muted-foreground text-center italic">
+        <p className="text-sm text-foreground/70 text-center italic">
           This hand always {actionLabel(spot.correctAction).toLowerCase()}s in this spot.
         </p>
       ) : (
         <div className="flex flex-col gap-2">
-          <span className="text-sm font-medium text-muted-foreground">Mixed strategy:</span>
+          <span className="text-sm font-medium text-foreground/70">Mixed strategy:</span>
           <StrategyBar cell={spot.cell} rolledNumber={spot.rolledNumber} />
         </div>
       )}
 
       {/* Tip / takeaway */}
       <div className="rounded-lg border border-brass/20 bg-brass/5 px-4 py-3">
-        <p className="text-sm text-foreground/70">
+        <p className="text-sm text-foreground/85">
           <span className="font-semibold text-brass">Tip:</span> {feedback.tip}
         </p>
       </div>

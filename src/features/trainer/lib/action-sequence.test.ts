@@ -50,35 +50,42 @@ function makeSpot(overrides: Partial<Spot> & Pick<Spot, 'kind'>): Spot {
   } as Spot
 }
 
+// The sequence always starts: dealer(1) + blinds(2) + deal(6) = 9 preamble steps
+const PREAMBLE_LENGTH = 9
+
 describe('buildActionSequence', () => {
-  it('starts with SB and BB blinds for every spot', () => {
+  it('starts with dealer, then blinds, then deals cards', () => {
     const steps = buildActionSequence(makeSpot({ kind: 'open' }))
-    expect(steps[0].position).toBe('SB')
-    expect(steps[0].style).toBe('blind')
-    expect(steps[0].label).toBe('$1')
-    expect(steps[1].position).toBe('BB')
+    expect(steps[0].style).toBe('dealer')
+    expect(steps[0].position).toBe('BTN')
     expect(steps[1].style).toBe('blind')
-    expect(steps[1].label).toBe('$2')
+    expect(steps[1].position).toBe('SB')
+    expect(steps[2].style).toBe('blind')
+    expect(steps[2].position).toBe('BB')
+    // 6 deal steps (SB, BB, UTG, MP, CO, BTN)
+    for (let i = 3; i < 9; i++) {
+      expect(steps[i].style).toBe('deal')
+    }
   })
 
   it('builds correct sequence for RFI from CO', () => {
     const steps = buildActionSequence(makeSpot({ kind: 'open', hero: 'CO' as const }))
-    // SB, BB, UTG folds, MP folds, CO hero
-    expect(steps).toHaveLength(5)
-    expect(steps[2].position).toBe('UTG')
-    expect(steps[2].style).toBe('fold')
-    expect(steps[3].position).toBe('MP')
-    expect(steps[3].style).toBe('fold')
-    expect(steps[4].position).toBe('CO')
-    expect(steps[4].style).toBe('hero')
+    // preamble(9) + UTG folds + MP folds + CO hero = 12
+    expect(steps).toHaveLength(PREAMBLE_LENGTH + 3)
+    expect(steps[9].position).toBe('UTG')
+    expect(steps[9].style).toBe('fold')
+    expect(steps[10].position).toBe('MP')
+    expect(steps[10].style).toBe('fold')
+    expect(steps[11].position).toBe('CO')
+    expect(steps[11].style).toBe('hero')
   })
 
   it('builds correct sequence for RFI from UTG (no folds before hero)', () => {
     const steps = buildActionSequence(makeSpot({ kind: 'open', hero: 'UTG' as const }))
-    // SB, BB, UTG hero — no folds
-    expect(steps).toHaveLength(3)
-    expect(steps[2].position).toBe('UTG')
-    expect(steps[2].style).toBe('hero')
+    // preamble(9) + UTG hero = 10
+    expect(steps).toHaveLength(PREAMBLE_LENGTH + 1)
+    expect(steps[9].position).toBe('UTG')
+    expect(steps[9].style).toBe('hero')
   })
 
   it('includes villain raise for vs-open', () => {
@@ -102,20 +109,16 @@ describe('buildActionSequence', () => {
       scenario: 'vs-open',
     })
     const steps = buildActionSequence(spot)
-    // SB blind, BB blind, UTG folds, MP folds, CO raises, BTN folds, SB folds, BB hero
-    expect(steps).toHaveLength(8)
-    const positions = steps.map((s) => s.position)
-    expect(positions).toContain('BTN')
-    expect(positions).toContain('SB')
-    // BTN and SB should fold after CO raises
+    // preamble(9) + UTG folds + MP folds + CO raises + BTN folds + SB folds + BB hero = 15
+    expect(steps).toHaveLength(PREAMBLE_LENGTH + 6)
     const btnStep = steps.find((s) => s.position === 'BTN' && s.style === 'fold')
     expect(btnStep).toBeDefined()
   })
 
-  it('shows dollar amounts in narratives', () => {
+  it('shows dollar amounts in blind narratives', () => {
     const steps = buildActionSequence(makeSpot({ kind: 'open' }))
-    expect(steps[0].narrative).toContain('$1')
-    expect(steps[1].narrative).toContain('$2')
+    expect(steps[1].narrative).toContain('$1')
+    expect(steps[2].narrative).toContain('$2')
   })
 
   it('ends with hero turn for all spot types', () => {
@@ -134,6 +137,7 @@ describe('buildActionSequence', () => {
 describe('computeTotalSteps', () => {
   it('returns the length of the action sequence', () => {
     const spot = makeSpot({ kind: 'open', hero: 'CO' as const })
-    expect(computeTotalSteps(spot)).toBe(5)
+    // preamble(9) + UTG folds + MP folds + CO hero = 12
+    expect(computeTotalSteps(spot)).toBe(12)
   })
 })

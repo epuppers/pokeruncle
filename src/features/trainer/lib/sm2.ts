@@ -34,11 +34,11 @@ export function estimateEvLoss(cell: Cell, userAction: Action, correctAction: Ac
     return PURE_STRATEGY_EV_LOSS
   }
 
-  // Mixed strategy: loss proportional to frequency difference
+  // Mixed strategy: loss proportional to absolute frequency gap
   const correctFreq = actions[correctAction] ?? 0
   const userFreq = actions[userAction] ?? 0
-  // Scale the frequency gap (0-100) into a bb-range EV loss (0-1)
-  return ((correctFreq - userFreq) / 100) * 1.0
+  // Scale the absolute frequency gap (0-100) into a bb-range EV loss (0-1)
+  return (Math.abs(correctFreq - userFreq) / 100) * 1.0
 }
 
 /**
@@ -52,11 +52,11 @@ export function updateMastery(record: MasteryRecord, qualityScore: number): Mast
   let { easeFactor, interval, repetitions } = record
 
   if (q < 3) {
-    // Failed: reset repetitions, short interval
+    // Failed: reset repetitions, short interval. EF unchanged per standard SM-2.
     repetitions = 0
     interval = 1
   } else {
-    // Passed: advance interval
+    // Passed: advance interval and update ease factor
     if (repetitions === 0) {
       interval = 1
     } else if (repetitions === 1) {
@@ -65,11 +65,11 @@ export function updateMastery(record: MasteryRecord, qualityScore: number): Mast
       interval = Math.round(interval * easeFactor)
     }
     repetitions += 1
-  }
 
-  // Update ease factor: EF' = EF + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
-  easeFactor = easeFactor + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
-  easeFactor = Math.max(MIN_EASE_FACTOR, easeFactor)
+    // EF' = EF + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
+    easeFactor = easeFactor + (0.1 - (5 - q) * (0.08 + (5 - q) * 0.02))
+    easeFactor = Math.max(MIN_EASE_FACTOR, easeFactor)
+  }
 
   return {
     spotTypeKey: record.spotTypeKey,

@@ -10,18 +10,20 @@ export interface DealingStep {
   /** Beginner-friendly label shown on the badge: "$1", "folds", "raises to $6" */
   label: string
   /** Visual style for the badge */
-  style: 'blind' | 'fold' | 'raise' | 'call' | 'hero'
+  style: 'dealer' | 'deal' | 'blind' | 'fold' | 'raise' | 'call' | 'hero'
   /** Narrative sentence shown at top of table during dealing */
   narrative: string
 }
 
 /** Animation delay per step type in ms — includes spotlight travel + dwell time */
 export const STEP_TIMING_MS: Record<DealingStep['style'], number> = {
-  blind: 1200,
-  fold: 1200,
-  raise: 2000,
-  call: 2000,
-  hero: 1500,
+  dealer: 1800,
+  deal: 600,
+  blind: 2200,
+  fold: 2200,
+  raise: 3000,
+  call: 3000,
+  hero: 2500,
 }
 
 /** Preflop acting order (UTG first, BB last) */
@@ -35,7 +37,15 @@ const PREFLOP_ORDER: Position[] = ['UTG', 'MP', 'CO', 'BTN', 'SB', 'BB']
 export function buildActionSequence(spot: Spot): DealingStep[] {
   const steps: DealingStep[] = []
 
-  // Blinds always post first
+  // Start at the dealer button so the spotlight visually moves to the blinds
+  steps.push({
+    position: 'BTN',
+    label: 'dealer',
+    style: 'dealer',
+    narrative: `The Dealer button marks where the deal starts.`,
+  })
+
+  // Blinds post
   steps.push({
     position: 'SB',
     label: formatDollars(getBlindAmount('SB')),
@@ -48,6 +58,19 @@ export function buildActionSequence(spot: Spot): DealingStep[] {
     style: 'blind',
     narrative: `${positionLabel('BB')} posts ${formatDollars(getBlindAmount('BB'))}...`,
   })
+
+  // Deal cards to each seat (SB first, clockwise to BTN)
+  const DEAL_ORDER: Position[] = ['SB', 'BB', 'UTG', 'MP', 'CO', 'BTN']
+  for (const pos of DEAL_ORDER) {
+    steps.push({
+      position: pos,
+      label: '',
+      style: 'deal',
+      narrative: pos === DEAL_ORDER[0]
+        ? 'Dealing cards to each player...'
+        : `Dealing to ${positionLabel(pos)}...`,
+    })
+  }
 
   if (spot.kind === 'push-fold') {
     return buildPushFoldSequence(spot, steps)
@@ -73,16 +96,19 @@ function getPositionsBetween(from: Position, to: Position): Position[] {
   return between
 }
 
-/** Add fold steps for positions between two seats (exclusive of both) */
+/** Add fold steps for positions between two seats (exclusive of both), skipping already-folded positions */
 function addFoldsBetween(
   from: Position,
   to: Position,
   steps: DealingStep[],
+  folded: Set<Position>,
 ): void {
   for (const pos of getPositionsBetween(from, to)) {
+    if (folded.has(pos)) continue
+    folded.add(pos)
     steps.push({
       position: pos,
-      label: 'folds',
+      label: 'FOLD',
       style: 'fold',
       narrative: `${positionLabel(pos)} folds...`,
     })
@@ -140,7 +166,8 @@ function buildCashSequence(
         narrative: `${villainName} raises to ${raiseAmt}...`,
       })
       // Positions between villain and hero fold
-      addFoldsBetween(villain, hero, steps)
+      const vsOpenFolded = new Set<Position>()
+      addFoldsBetween(villain, hero, steps, vsOpenFolded)
       // Hero's turn
       steps.push({
         position: hero,
@@ -155,6 +182,7 @@ function buildCashSequence(
       const villainName = positionLabel(villain)
       const openAmt = formatDollars(getRaiseAmount('RFI'))
       const threeBetAmt = formatDollars(getRaiseAmount('vs-open'))
+      const folded = new Set<Position>()
       // Hero opened
       steps.push({
         position: hero,
@@ -163,7 +191,7 @@ function buildCashSequence(
         narrative: `You raised to ${openAmt}...`,
       })
       // Positions between hero and villain fold
-      addFoldsBetween(hero, villain, steps)
+      addFoldsBetween(hero, villain, steps, folded)
       // Villain 3-bets
       steps.push({
         position: villain,
@@ -172,7 +200,7 @@ function buildCashSequence(
         narrative: `${villainName} re-raises to ${threeBetAmt}!`,
       })
       // Everyone else between villain and hero folds
-      addFoldsBetween(villain, hero, steps)
+      addFoldsBetween(villain, hero, steps, folded)
       // Hero's turn again
       steps.push({
         position: hero,
@@ -186,6 +214,7 @@ function buildCashSequence(
       const villain = spot.villain
       const villainName = positionLabel(villain)
       const fourBetAmt = formatDollars(getRaiseAmount('vs-3bet'))
+      const folded = new Set<Position>()
       // Villain raised, everyone else folds, hero 3-bet, villain 4-bets
       steps.push({
         position: villain,
@@ -193,7 +222,7 @@ function buildCashSequence(
         style: 'raise',
         narrative: `${villainName} raised...`,
       })
-      addFoldsBetween(villain, hero, steps)
+      addFoldsBetween(villain, hero, steps, folded)
       steps.push({
         position: hero,
         label: `re-raised`,
@@ -201,7 +230,7 @@ function buildCashSequence(
         narrative: `You re-raised...`,
       })
       // Remaining positions between hero and villain fold
-      addFoldsBetween(hero, villain, steps)
+      addFoldsBetween(hero, villain, steps, folded)
       steps.push({
         position: villain,
         label: `4-bets to ${fourBetAmt}`,
@@ -219,6 +248,7 @@ function buildCashSequence(
     case '3bet-defense': {
       const villain = spot.villain
       const villainName = positionLabel(villain)
+      const folded = new Set<Position>()
       // Villain opened, everyone else folds, hero 3-bet, villain called
       steps.push({
         position: villain,
@@ -226,14 +256,14 @@ function buildCashSequence(
         style: 'raise',
         narrative: `${villainName} raised...`,
       })
-      addFoldsBetween(villain, hero, steps)
+      addFoldsBetween(villain, hero, steps, folded)
       steps.push({
         position: hero,
         label: 're-raised',
         style: 'raise',
         narrative: `You re-raised...`,
       })
-      addFoldsBetween(hero, villain, steps)
+      addFoldsBetween(hero, villain, steps, folded)
       steps.push({
         position: villain,
         label: 'calls',

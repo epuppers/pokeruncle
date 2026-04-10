@@ -21,14 +21,14 @@ export function HeroHand({ cards, animate }: HeroHandProps) {
           card={cards[0]}
           className={cn(
             '-rotate-6 hover:rotate-0 transition-transform',
-            animate && 'opacity-0 animate-[dealCard_0.4s_ease-out_forwards]',
+            animate ? 'opacity-0 animate-[dealCard_0.4s_ease-out_forwards]' : 'opacity-100',
           )}
         />
         <PlayingCard
           card={cards[1]}
           className={cn(
             'rotate-6 hover:rotate-0 transition-transform',
-            animate && 'opacity-0 animate-[dealCard_0.4s_ease-out_0.15s_forwards]',
+            animate ? 'opacity-0 animate-[dealCard_0.4s_ease-out_0.15s_forwards]' : 'opacity-100',
           )}
         />
       </div>

@@ -66,6 +66,17 @@ describe('estimateEvLoss', () => {
     const loss = estimateEvLoss(cell, 'fold', 'raise')
     expect(loss).toBeCloseTo(0.5)
   })
+
+  it('returns positive EV loss even when user picks higher-frequency action', () => {
+    const cell: WeightedCell = {
+      weight: 100,
+      actions: { raise: 70, call: 30 },
+    }
+    // RNG rolled correct = call (30%), user picks raise (70%) — still wrong
+    const loss = estimateEvLoss(cell, 'raise', 'call')
+    expect(loss).toBeGreaterThan(0)
+    expect(loss).toBeCloseTo(0.4)
+  })
 })
 
 describe('updateMastery', () => {
@@ -107,10 +118,16 @@ describe('updateMastery', () => {
     expect(updated.interval).toBe(1)
   })
 
-  it('floors ease factor at 1.3', () => {
-    const record = makeRecord({ easeFactor: 1.3 })
+  it('does not change ease factor on failure (Q < 3)', () => {
+    const record = makeRecord({ easeFactor: 2.5 })
     const updated = updateMastery(record, 0)
-    expect(updated.easeFactor).toBe(1.3)
+    expect(updated.easeFactor).toBe(2.5)
+  })
+
+  it('floors ease factor at 1.3 on success', () => {
+    const record = makeRecord({ easeFactor: 1.3 })
+    const updated = updateMastery(record, 3)
+    expect(updated.easeFactor).toBeGreaterThanOrEqual(1.3)
   })
 
   it('increases ease factor for Q=5', () => {

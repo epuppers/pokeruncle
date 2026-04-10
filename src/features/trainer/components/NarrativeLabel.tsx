@@ -24,18 +24,42 @@ export function NarrativeLabel({ steps, revealedCount, fallbackLabel }: Narrativ
     return <NarrativeText text="A new hand begins..." />
   }
 
-  // Show the narrative of the most recently revealed step
+  // Show the previous step (dimmed) and the current step
   const currentStep = steps[revealedCount - 1]
-  const text = currentStep?.narrative ?? 'A new hand begins...'
+  const currentText = currentStep?.narrative ?? 'A new hand begins...'
+  const prevStep = revealedCount >= 2 ? steps[revealedCount - 2] : null
 
-  return <NarrativeText key={revealedCount} text={text} />
+  return (
+    <div className="flex flex-col items-center gap-0.5">
+      {prevStep && (
+        <p
+          key={`prev-${revealedCount}`}
+          className={cn(
+            'text-sm text-foreground/70 text-center',
+            'animate-in fade-in duration-200',
+          )}
+        >
+          {prevStep.narrative}
+        </p>
+      )}
+      <p
+        key={`curr-${revealedCount}`}
+        className={cn(
+          'text-lg font-semibold text-foreground text-center',
+          'animate-in fade-in duration-300',
+        )}
+      >
+        {currentText}
+      </p>
+    </div>
+  )
 }
 
 function NarrativeText({ text }: { text: string }) {
   return (
     <p
       className={cn(
-        'text-lg font-medium text-foreground/80 text-center',
+        'text-lg font-semibold text-foreground text-center',
         'animate-in fade-in duration-300',
       )}
     >

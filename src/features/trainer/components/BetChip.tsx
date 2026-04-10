@@ -34,7 +34,7 @@ export function BetChip({ position, amount, style, animate }: BetChipProps) {
       className={cn(
         'absolute -translate-x-1/2 -translate-y-1/2 z-10 pointer-events-none',
         'flex flex-col items-center gap-0',
-        animate && 'animate-[chipSlide_0.35s_ease-out_forwards]',
+        animate ? 'animate-[chipSlide_0.35s_ease-out_forwards]' : 'opacity-100',
       )}
       style={{
         left: `${chip.x}%`,
@@ -62,7 +62,7 @@ export function BetChip({ position, amount, style, animate }: BetChipProps) {
         ))}
       </div>
       {/* Dollar label */}
-      <span className="text-[10px] font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] mt-0.5">
+      <span className="text-xs font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.8)] mt-0.5">
         {formatDollars(amount)}
       </span>
     </div>

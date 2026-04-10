@@ -6,6 +6,7 @@ import type { Action, Position, Provider, Scenario } from '@/types/poker'
 
 import { computeTotalSteps } from '@/features/trainer/lib/action-sequence'
 import { recordSpotResult } from '@/features/trainer/lib/mastery-persistence'
+import { useSettingsStore } from '@/stores/settingsStore'
 import { STACK_DEPTHS } from '@/features/trainer/types'
 import type {
   SessionStats,
@@ -141,7 +142,8 @@ export const useTrainerStore = create(
         }
 
         // Fire-and-forget DB persistence
-        recordSpotResult(spot, userAction, decisionTimeMs).catch((err: unknown) => {
+        const { trainingStrictness } = useSettingsStore.getState()
+        recordSpotResult(spot, userAction, decisionTimeMs, trainingStrictness).catch((err: unknown) => {
           console.error('Failed to persist spot result', err)
         })
 

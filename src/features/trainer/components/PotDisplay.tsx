@@ -25,7 +25,7 @@ export function PotDisplay({ totalPot, visible }: PotDisplayProps) {
     >
       {/* Mini chip icon */}
       <div className="w-3.5 h-3.5 rounded-full bg-gradient-to-br from-amber-300 to-amber-500 border border-amber-200 ring-1 ring-inset ring-white/30 shadow-sm" />
-      <span className="text-sm font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
+      <span className="text-base font-bold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,0.6)]">
         Pot: {formatDollars(totalPot)}
       </span>
     </div>

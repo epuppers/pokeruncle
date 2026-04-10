@@ -50,7 +50,8 @@ export function TrainerPage() {
       ? trainerPhase.spot
       : null
 
-  const revealedSteps = trainerPhase.phase === 'dealing' ? trainerPhase.stepIndex : undefined
+  // +1 so the step whose timer is currently running is visible (not lagged by one)
+  const revealedSteps = trainerPhase.phase === 'dealing' ? trainerPhase.stepIndex + 1 : undefined
 
   const { steps, revealedCount, fallbackLabel } = useNarrativeData(spot, revealedSteps)
 
@@ -58,26 +59,22 @@ export function TrainerPage() {
     <div className="flex-1 flex flex-col gap-5 max-w-2xl mx-auto w-full">
       <SessionHud />
 
+      {/* TableView stays mounted across all phases — no unmount/remount flashes */}
+      {spot && <TableView spot={spot} revealedSteps={revealedSteps} />}
+
       {trainerPhase.phase === 'dealing' && (
-        <div className="flex flex-col gap-5">
-          <TableView spot={trainerPhase.spot} revealedSteps={trainerPhase.stepIndex} />
-          <NarrativeLabel steps={steps} revealedCount={revealedCount} />
-        </div>
+        <NarrativeLabel steps={steps} revealedCount={revealedCount} />
       )}
 
       {trainerPhase.phase === 'active' && (
-        <div className="flex flex-col gap-5">
-          <TableView spot={trainerPhase.spot} />
+        <>
           <NarrativeLabel steps={steps} revealedCount={revealedCount} fallbackLabel={fallbackLabel} />
           <ActionBar onAction={submitAction} disabled={false} spot={trainerPhase.spot} />
-        </div>
+        </>
       )}
 
       {trainerPhase.phase === 'feedback' && (
-        <div className="flex flex-col gap-5">
-          <TableView spot={trainerPhase.spot} />
-          <FeedbackView spot={trainerPhase.spot} result={trainerPhase.result} onNext={nextSpot} />
-        </div>
+        <FeedbackView spot={trainerPhase.spot} result={trainerPhase.result} onNext={nextSpot} />
       )}
     </div>
   )

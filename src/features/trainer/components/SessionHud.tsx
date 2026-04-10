@@ -25,10 +25,10 @@ function Stat({ label, value, icon: Icon }: { label: string; value: string | num
   return (
     <div className="flex flex-col items-center gap-1">
       <div className="flex items-center gap-1">
-        {Icon && <Icon className="size-3 text-brass-dim" />}
+        {Icon && <Icon className="size-3 text-brass" />}
         <span className="tabular-nums font-medium text-base text-foreground">{value}</span>
       </div>
-      <span className="text-muted-foreground">{label}</span>
+      <span className="text-foreground/70">{label}</span>
     </div>
   )
 }

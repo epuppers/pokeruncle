@@ -21,10 +21,10 @@ export const RANK_NAMES: Record<Rank, string> = {
 }
 
 export const SUIT_COLORS: Record<Suit, string> = {
-  s: 'text-foreground',
-  h: 'text-red-400',
-  d: 'text-blue-400',
-  c: 'text-emerald-400',
+  s: 'text-gray-800',
+  h: 'text-red-500',
+  d: 'text-blue-600',
+  c: 'text-emerald-600',
 }
 
 export const SUIT_BG: Record<Suit, string> = {

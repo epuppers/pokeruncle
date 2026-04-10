@@ -60,7 +60,7 @@ export function ActionBar({ onAction, disabled, spot }: ActionBarProps) {
           variant={variant}
           className={cn(
             'flex-1 h-16 text-lg gap-2',
-            disabled && 'opacity-40 pointer-events-none',
+            disabled && 'opacity-50 pointer-events-none',
           )}
           disabled={disabled}
           onClick={() => onAction(action)}
