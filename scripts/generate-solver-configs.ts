@@ -14,9 +14,11 @@ import { parseArgs } from 'util'
 import { mkdirSync, writeFileSync } from 'fs'
 import { join } from 'path'
 
-import type { Position, Action } from '../src/types/poker'
-import { getChart, type Chart } from '../src/data/ranges'
+import type { Position } from '../src/types/poker'
+import { getChart } from '../src/data/ranges'
 import type { Provider } from '../src/types/poker'
+
+import { chartToRangeString, isIPPosition } from './lib/solver-utils'
 
 // --- Priority nodes ---
 
@@ -51,55 +53,6 @@ const PRIORITY_NODES: Node[] = [
   { potType: '3bet', opener: 'BTN', threeBettor: 'SB', caller: 'BTN' },
   { potType: '3bet', opener: 'CO', threeBettor: 'BB', caller: 'CO' },
 ]
-
-// --- Chart to TexasSolver range string ---
-
-/**
- * Convert a Chart to a TexasSolver range string.
- * Format: "AA:1.0,AKs:1.0,AKo:0.5,..."
- *
- * For pure strategy cells (single action like 'raise'), weight is 1.0.
- * For weighted cells, weight is the cell's weight / 100.
- * For fold actions, the hand is excluded entirely.
- */
-function chartToRangeString(chart: Chart, includeActions?: Action[]): string {
-  const parts: string[] = []
-
-  for (const [hand, cell] of Object.entries(chart)) {
-    let weight: number
-
-    if (typeof cell === 'string') {
-      // Simple action
-      if (cell === 'fold') continue
-      if (includeActions && !includeActions.includes(cell)) continue
-      weight = 1.0
-    } else if (Array.isArray(cell)) {
-      // Legacy tuple — include if either action matches
-      if (includeActions && !cell.some((a) => includeActions.includes(a))) continue
-      weight = 1.0
-    } else {
-      // WeightedCell
-      if (cell.weight <= 0) continue
-      if (includeActions) {
-        const matchingFreq = includeActions.reduce(
-          (sum, a) => sum + (cell.actions[a] ?? 0),
-          0
-        )
-        if (matchingFreq <= 0) continue
-        weight = (cell.weight / 100) * (matchingFreq / 100)
-      } else {
-        // Include all non-fold actions
-        const foldFreq = cell.actions.fold ?? 0
-        weight = (cell.weight / 100) * ((100 - foldFreq) / 100)
-      }
-    }
-
-    if (weight <= 0) continue
-    parts.push(`${hand}:${weight.toFixed(4)}`)
-  }
-
-  return parts.join(',')
-}
 
 function nodeKey(node: Node): string {
   if (node.potType === 'srp') {
@@ -208,12 +161,6 @@ dump_result ${join(outputDir, `${nodeKey(node)}_result.json`)}
 `
 
   return { filename, content }
-}
-
-/** Determine if position A is in position relative to position B postflop */
-function isIPPosition(posA: Position, posB: Position): boolean {
-  const order: Position[] = ['SB', 'BB', 'UTG', 'MP', 'CO', 'BTN']
-  return order.indexOf(posA) > order.indexOf(posB)
 }
 
 // --- Main ---
