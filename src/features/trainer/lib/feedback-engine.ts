@@ -46,7 +46,7 @@ function describePosition(pos: Position): string {
     case 'MP':
       return `From ${name}, four players still act after you, so you need a fairly strong hand.`
     case 'CO':
-      return `From the ${name}, you're in a strong late position — only two players act after you.`
+      return `From the ${name}, you're in a strong late position — only three players act after you.`
     case 'BTN':
       return `From the ${name} seat (the best position), you act last after the flop, so you can play more hands.`
     case 'SB':

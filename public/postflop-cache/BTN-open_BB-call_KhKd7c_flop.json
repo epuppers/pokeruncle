@@ -1,0 +1,165 @@
+{
+  "solutionKey": "BTN-open_BB-call_KhKd7c_flop",
+  "nodeKey": "BTN-open_BB-call",
+  "boardString": "Kh Kd 7c",
+  "street": "flop",
+  "potSizeBB": 6.5,
+  "effectiveStackBB": 97,
+  "strategies": {
+    "22": {
+      "check": 55,
+      "fold": 45
+    },
+    "33": {
+      "check": 55,
+      "fold": 45
+    },
+    "44": {
+      "check": 55,
+      "fold": 45
+    },
+    "55": {
+      "check": 60,
+      "fold": 40
+    },
+    "66": {
+      "check": 65,
+      "fold": 35
+    },
+    "77": {
+      "check": 15,
+      "bet-medium": 40,
+      "bet-large": 45
+    },
+    "88": {
+      "check": 60,
+      "bet-small": 20,
+      "fold": 20
+    },
+    "99": {
+      "check": 60,
+      "bet-small": 25,
+      "fold": 15
+    },
+    "AA": {
+      "check": 30,
+      "bet-small": 40,
+      "bet-medium": 30
+    },
+    "QQ": {
+      "check": 45,
+      "bet-small": 35,
+      "bet-medium": 20
+    },
+    "JJ": {
+      "check": 50,
+      "bet-small": 30,
+      "bet-medium": 20
+    },
+    "TT": {
+      "check": 55,
+      "bet-small": 25,
+      "bet-medium": 20
+    },
+    "AKs": {
+      "check": 15,
+      "bet-small": 35,
+      "bet-medium": 30,
+      "bet-large": 20
+    },
+    "AQs": {
+      "check": 50,
+      "bet-small": 30,
+      "bet-medium": 20
+    },
+    "AJs": {
+      "check": 50,
+      "bet-small": 30,
+      "bet-medium": 20
+    },
+    "ATs": {
+      "check": 55,
+      "bet-small": 25,
+      "bet-medium": 20
+    },
+    "A9s": {
+      "check": 60,
+      "bet-small": 20,
+      "fold": 20
+    },
+    "A8s": {
+      "check": 60,
+      "bet-small": 20,
+      "fold": 20
+    },
+    "A7s": {
+      "check": 35,
+      "bet-small": 35,
+      "bet-medium": 30
+    },
+    "KQs": {
+      "check": 15,
+      "bet-small": 30,
+      "bet-medium": 35,
+      "bet-large": 20
+    },
+    "KJs": {
+      "check": 15,
+      "bet-small": 30,
+      "bet-medium": 35,
+      "bet-large": 20
+    },
+    "KTs": {
+      "check": 20,
+      "bet-small": 35,
+      "bet-medium": 30,
+      "bet-large": 15
+    },
+    "K9s": {
+      "check": 25,
+      "bet-small": 35,
+      "bet-medium": 25,
+      "bet-large": 15
+    },
+    "QJs": {
+      "check": 65,
+      "bet-small": 15,
+      "fold": 20
+    },
+    "QTs": {
+      "check": 65,
+      "bet-small": 15,
+      "fold": 20
+    },
+    "JTs": {
+      "check": 65,
+      "fold": 35
+    },
+    "T9s": {
+      "check": 60,
+      "fold": 40
+    },
+    "98s": {
+      "check": 55,
+      "fold": 45
+    },
+    "87s": {
+      "check": 55,
+      "fold": 45
+    },
+    "AKo": {
+      "check": 15,
+      "bet-small": 35,
+      "bet-medium": 30,
+      "bet-large": 20
+    },
+    "KQo": {
+      "check": 20,
+      "bet-small": 30,
+      "bet-medium": 35,
+      "bet-large": 15
+    }
+  },
+  "exploitability": 0.3,
+  "solvedAt": 1775851244573
+}

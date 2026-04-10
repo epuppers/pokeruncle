@@ -279,7 +279,6 @@ function buildFilteredTournamentCandidates(
     if (!chartData) continue
 
     for (const hand of Object.keys(chartData)) {
-      if (filters.handTypes.length > 0 && !classifyHand(hand)) continue
       if (filters.handTypes.length > 0 && !filters.handTypes.includes(classifyHand(hand))) continue
       candidates.push({ chart, hand })
     }

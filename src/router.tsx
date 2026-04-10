@@ -20,6 +20,7 @@ const AnalyzerPage = lazy(() => import('@/components/analyze/AnalyzerPage').then
 const DisclaimerPage = lazy(() => import('@/components/DisclaimerPage').then(m => ({ default: m.DisclaimerPage })))
 const ReviewPage = lazy(() => import('@/features/review').then(m => ({ default: m.ReviewPage })))
 const SettingsPage = lazy(() => import('@/features/settings').then(m => ({ default: m.SettingsPage })))
+const PostflopTrainerPage = lazy(() => import('@/features/postflop').then(m => ({ default: m.PostflopTrainerPage })))
 
 // Root layout component
 function RootLayout() {
@@ -48,6 +49,7 @@ function RootLayout() {
           {/* Navigation tabs */}
           <nav aria-label="Main navigation" className="flex items-center gap-1">
             <NavLink to="/train" label="Train" />
+            <NavLink to="/train/postflop" label="Postflop" />
             <NavLink to="/review" label="Review" />
             <NavLink to="/" label="Ranges" exact />
             <NavLink to="/analyze" label="Analyze" />
@@ -211,6 +213,12 @@ const reviewRoute = createRoute({
   component: ReviewPage,
 })
 
+const postflopRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/train/postflop',
+  component: PostflopTrainerPage,
+})
+
 const settingsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/settings',
@@ -220,6 +228,7 @@ const settingsRoute = createRoute({
 const routeTree = rootRoute.addChildren([
   indexRoute,
   trainRoute,
+  postflopRoute,
   reviewRoute,
   analyzeRoute,
   settingsRoute,

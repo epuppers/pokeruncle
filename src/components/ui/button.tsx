@@ -28,6 +28,14 @@ const buttonVariants = cva(
           "bg-sky-800 text-sky-100 hover:bg-sky-700 border border-sky-700/50 shadow-sm shadow-sky-900/30 font-semibold",
         "action-allin":
           "bg-rose-800 text-rose-100 hover:bg-rose-700 border border-rose-700/50 shadow-sm shadow-rose-900/30 font-semibold",
+        "action-check":
+          "bg-slate-700 text-slate-100 hover:bg-slate-600 border border-slate-600/50 shadow-sm shadow-slate-900/30 font-semibold",
+        "action-bet-small":
+          "bg-amber-800 text-amber-100 hover:bg-amber-700 border border-amber-700/50 shadow-sm shadow-amber-900/30 font-semibold",
+        "action-bet-medium":
+          "bg-orange-800 text-orange-100 hover:bg-orange-700 border border-orange-700/50 shadow-sm shadow-orange-900/30 font-semibold",
+        "action-bet-large":
+          "bg-red-800 text-red-100 hover:bg-red-700 border border-red-700/50 shadow-sm shadow-red-900/30 font-semibold",
       },
       size: {
         default: "h-9 px-4 py-2 has-[>svg]:px-3",

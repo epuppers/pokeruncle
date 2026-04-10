@@ -36,6 +36,28 @@ export interface SpotResultRecord {
   correctAction: string
 }
 
+/** A cached postflop solution stored in IndexedDB. */
+export interface CachedSolutionRecord {
+  /** Primary key: deterministic hash of node + board + street. */
+  solutionKey: string
+  /** The preflop node key (e.g. 'BTN-open_BB-call'). */
+  nodeKey: string
+  /** Board as a compact string (e.g. 'Ah Kd 7c'). */
+  boardString: string
+  /** Which street this solution covers. */
+  street: string
+  /** Pot size in BB at the start of this street. */
+  potSizeBB: number
+  /** Effective stack in BB. */
+  effectiveStackBB: number
+  /** Strategy map: hand class → action frequencies (stored as JSON string). */
+  strategiesJson: string
+  /** Solver exploitability metric. */
+  exploitability: number
+  /** When this solution was generated (unix timestamp). */
+  solvedAt: number
+}
+
 /** Per-spot-type mastery state for spaced repetition (SM-2). */
 export interface MasteryRecord {
   /** Primary key: hash of (provider, hero, scenario, villain, hand_class). */
@@ -55,6 +77,7 @@ export interface MasteryRecord {
 export class PokerTrainerDB extends Dexie {
   spotResults!: Table<SpotResultRecord>
   masteryRecords!: Table<MasteryRecord>
+  cachedSolutions!: Table<CachedSolutionRecord>
 
   constructor() {
     super('uncles-table')
@@ -65,6 +88,11 @@ export class PokerTrainerDB extends Dexie {
     this.version(2).stores({
       spotResults: '++id, spotId, timestamp, isCorrect, provider, hero, scenario, [hero+scenario], heroHand',
       masteryRecords: 'spotTypeKey, nextReviewAt',
+    })
+    this.version(3).stores({
+      spotResults: '++id, spotId, timestamp, isCorrect, provider, hero, scenario, [hero+scenario], heroHand',
+      masteryRecords: 'spotTypeKey, nextReviewAt',
+      cachedSolutions: 'solutionKey, nodeKey, street',
     })
   }
 }

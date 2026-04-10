@@ -1,0 +1,226 @@
+{
+  "solutionKey": "BTN-open_BB-call_Ah7d2c_flop",
+  "nodeKey": "BTN-open_BB-call",
+  "boardString": "Ah 7d 2c",
+  "street": "flop",
+  "potSizeBB": 6.5,
+  "effectiveStackBB": 97,
+  "strategies": {
+    "22": {
+      "check": 20,
+      "bet-medium": 50,
+      "bet-large": 30
+    },
+    "33": {
+      "check": 100
+    },
+    "44": {
+      "check": 100
+    },
+    "55": {
+      "check": 100
+    },
+    "66": {
+      "check": 100
+    },
+    "77": {
+      "check": 20,
+      "bet-medium": 50,
+      "bet-large": 30
+    },
+    "88": {
+      "check": 75,
+      "bet-small": 20,
+      "fold": 5
+    },
+    "99": {
+      "check": 70,
+      "bet-small": 20,
+      "bet-medium": 10
+    },
+    "AA": {
+      "check": 70,
+      "bet-medium": 30
+    },
+    "AKs": {
+      "check": 55,
+      "bet-medium": 35,
+      "bet-large": 10
+    },
+    "AQs": {
+      "check": 50,
+      "bet-medium": 40,
+      "bet-small": 10
+    },
+    "AJs": {
+      "check": 45,
+      "bet-small": 40,
+      "bet-medium": 15
+    },
+    "ATs": {
+      "check": 50,
+      "bet-small": 35,
+      "bet-medium": 15
+    },
+    "A9s": {
+      "check": 55,
+      "bet-small": 30,
+      "bet-medium": 15
+    },
+    "A8s": {
+      "check": 60,
+      "bet-small": 30,
+      "bet-medium": 10
+    },
+    "A7s": {
+      "check": 30,
+      "bet-medium": 50,
+      "bet-large": 20
+    },
+    "A6s": {
+      "check": 60,
+      "bet-small": 30,
+      "bet-medium": 10
+    },
+    "A5s": {
+      "check": 55,
+      "bet-small": 35,
+      "bet-medium": 10
+    },
+    "A4s": {
+      "check": 55,
+      "bet-small": 35,
+      "bet-medium": 10
+    },
+    "A3s": {
+      "check": 55,
+      "bet-small": 35,
+      "bet-medium": 10
+    },
+    "A2s": {
+      "check": 25,
+      "bet-medium": 50,
+      "bet-large": 25
+    },
+    "AKo": {
+      "check": 50,
+      "bet-medium": 40,
+      "bet-small": 10
+    },
+    "AQo": {
+      "check": 50,
+      "bet-small": 35,
+      "bet-medium": 15
+    },
+    "AJo": {
+      "check": 50,
+      "bet-small": 35,
+      "bet-medium": 15
+    },
+    "ATo": {
+      "check": 55,
+      "bet-small": 35,
+      "bet-medium": 10
+    },
+    "A9o": {
+      "check": 60,
+      "bet-small": 30,
+      "bet-medium": 10
+    },
+    "KK": {
+      "check": 40,
+      "bet-medium": 40,
+      "bet-large": 20
+    },
+    "QQ": {
+      "check": 55,
+      "bet-small": 30,
+      "bet-medium": 15
+    },
+    "JJ": {
+      "check": 60,
+      "bet-small": 25,
+      "bet-medium": 15
+    },
+    "TT": {
+      "check": 65,
+      "bet-small": 25,
+      "bet-medium": 10
+    },
+    "KQs": {
+      "check": 60,
+      "bet-small": 30,
+      "bet-medium": 10
+    },
+    "KJs": {
+      "check": 65,
+      "bet-small": 25,
+      "bet-medium": 10
+    },
+    "KTs": {
+      "check": 65,
+      "bet-small": 25,
+      "bet-medium": 10
+    },
+    "QJs": {
+      "check": 75,
+      "bet-small": 20,
+      "fold": 5
+    },
+    "QTs": {
+      "check": 75,
+      "bet-small": 20,
+      "fold": 5
+    },
+    "JTs": {
+      "check": 70,
+      "bet-small": 20,
+      "fold": 10
+    },
+    "T9s": {
+      "check": 70,
+      "fold": 30
+    },
+    "98s": {
+      "check": 65,
+      "fold": 35
+    },
+    "87s": {
+      "check": 65,
+      "fold": 35
+    },
+    "76s": {
+      "check": 60,
+      "fold": 40
+    },
+    "65s": {
+      "check": 55,
+      "fold": 45
+    },
+    "54s": {
+      "check": 55,
+      "fold": 45
+    },
+    "KQo": {
+      "check": 60,
+      "bet-small": 30,
+      "bet-medium": 10
+    },
+    "KJo": {
+      "check": 65,
+      "bet-small": 25,
+      "fold": 10
+    },
+    "QJo": {
+      "check": 70,
+      "bet-small": 15,
+      "fold": 15
+    },
+    "JTo": {
+      "check": 65,
+      "fold": 35
+    }
+  },
+  "exploitability": 0.3,
+  "solvedAt": 1775851244573
+}

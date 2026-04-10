@@ -127,7 +127,6 @@ function buildCashSequence(
       // Positions before hero fold in order
       for (const pos of PREFLOP_ORDER) {
         if (pos === hero) break
-        if (pos === 'SB' || pos === 'BB') continue // already posted blinds
         steps.push({
           position: pos,
           label: 'folds',
@@ -150,7 +149,6 @@ function buildCashSequence(
       // Positions before villain fold
       for (const pos of PREFLOP_ORDER) {
         if (pos === villain) break
-        if (pos === 'SB' || pos === 'BB') continue
         steps.push({
           position: pos,
           label: 'folds',
