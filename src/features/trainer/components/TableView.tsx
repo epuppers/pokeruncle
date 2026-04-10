@@ -1,221 +1,176 @@
-import { POSITIONS, SCENARIOS } from '@/types/poker'
+import { POSITIONS } from '@/types/poker'
 import type { Position } from '@/types/poker'
 import { cn } from '@/lib/utils'
 import { PokerTerm } from '@/components/PokerTerm'
-import { POSITION_LABELS, SCENARIO_LABELS, TOURNAMENT_SCENARIO_LABELS, positionLabel } from '@/lib/poker-glossary'
+import { POSITION_LABELS } from '@/lib/poker-glossary'
 
-import { TOURNAMENT_SCENARIO_CONFIGS } from '@/features/trainer/types'
 import type { Spot } from '@/features/trainer/types'
+import { buildActionSequence } from '@/features/trainer/lib/action-sequence'
+import type { DealingStep } from '@/features/trainer/lib/action-sequence'
+import { POSITION_COORDS, computeRunningPot, parseDollarAmount } from '@/features/trainer/lib/chip-positions'
+import { getActingOrderLabel, getPositionIntro, hasSeenPosition, markPositionSeen } from '@/features/trainer/lib/position-education'
+import { ActionSpotlight } from './ActionSpotlight'
+import { BetChip } from './BetChip'
 import { HeroHand } from './HeroHand'
+import { PotDisplay } from './PotDisplay'
 
 interface TableViewProps {
   spot: Spot
+  /** Number of dealing steps revealed. undefined = show all (feedback/active). */
+  revealedSteps?: number
 }
 
-const POSITION_ANGLES: Record<Position, { x: number; y: number }> = {
-  UTG: { x: 20, y: 18 },
-  MP: { x: 80, y: 18 },
-  CO: { x: 95, y: 50 },
-  BTN: { x: 80, y: 82 },
-  SB: { x: 20, y: 82 },
-  BB: { x: 5, y: 50 },
-}
+export function TableView({ spot, revealedSteps }: TableViewProps) {
+  const steps = buildActionSequence(spot)
+  const revealedCount = revealedSteps ?? steps.length
+  const isDealing = revealedSteps !== undefined
+  const villain =
+    spot.kind === 'response' ? spot.villain : spot.kind === 'push-fold' ? spot.villain : undefined
 
-function getScenarioLabel(spot: Spot): { label: string; tip: string } {
-  if (spot.kind === 'push-fold') {
-    const config = TOURNAMENT_SCENARIO_CONFIGS.find((s) => s.id === spot.scenario)
-    const entry = TOURNAMENT_SCENARIO_LABELS[spot.scenario]
-    const label = entry?.label ?? config?.label ?? spot.scenario
-    const tip = entry?.tip ?? ''
-    const depthStr = `${spot.stackDepth} big blinds`
-    const villainStr = spot.villain ? ` vs ${positionLabel(spot.villain)}` : ''
-    return { label: `${label}${villainStr} — ${depthStr}`, tip }
+  // Current step for the spotlight
+  const currentStep = isDealing && revealedCount > 0 ? steps[revealedCount - 1] : null
+
+  // Pot total from revealed bets
+  const pot = computeRunningPot(steps, revealedCount)
+
+  // Position intro (first encounter)
+  const showPositionIntro = !isDealing && !hasSeenPosition(spot.hero)
+  if (!isDealing && !hasSeenPosition(spot.hero)) {
+    markPositionSeen(spot.hero)
   }
-
-  const entry = SCENARIO_LABELS[spot.scenario]
-  const config = SCENARIOS.find((s) => s.id === spot.scenario)
-  if (!entry && !config) return { label: spot.scenario, tip: '' }
-
-  const label = entry?.label ?? config?.label ?? spot.scenario
-  const tip = entry?.tip ?? ''
-
-  if (spot.kind === 'response') {
-    return { label: `${label} (${positionLabel(spot.villain)})`, tip }
-  }
-  return { label, tip }
-}
-
-function getStackLabel(spot: Spot): string {
-  if (spot.kind === 'push-fold') return `${spot.stackDepth} blinds`
-  return '100 blinds'
-}
-
-interface PositionAction {
-  action: string
-  style: 'bet' | 'fold' | 'raise' | 'hero'
-  /** Sequence order (0-based) — used for staggered animation delay */
-  seq: number
-}
-
-/**
- * Build an ordered sequence of what each position did.
- * Actions are numbered sequentially so badges can animate in one at a time.
- */
-function getPositionActions(spot: Spot): Map<Position, PositionAction> {
-  const actions = new Map<Position, PositionAction>()
-  let seq = 0
-
-  // Blinds always post first
-  actions.set('SB', { action: '½ bet', style: 'bet', seq: seq++ })
-  actions.set('BB', { action: '1 bet', style: 'bet', seq: seq++ })
-
-  if (spot.kind === 'push-fold') {
-    return getPushFoldPositionActions(spot, actions, seq)
-  }
-
-  const heroPos = spot.hero
-  const posOrder: Position[] = ['UTG', 'MP', 'CO', 'BTN', 'SB', 'BB']
-
-  switch (spot.scenario) {
-    case 'RFI': {
-      for (const pos of posOrder) {
-        if (pos === heroPos) break
-        if (pos !== 'SB' && pos !== 'BB') {
-          actions.set(pos, { action: 'folds', style: 'fold', seq: seq++ })
-        }
-      }
-      actions.set(heroPos, { action: 'YOUR TURN', style: 'hero', seq: seq++ })
-      break
-    }
-    case 'vs-open': {
-      if (spot.kind === 'response') {
-        actions.set(spot.villain, { action: 'raises', style: 'raise', seq: seq++ })
-        actions.set(heroPos, { action: 'YOUR TURN', style: 'hero', seq: seq++ })
-      }
-      break
-    }
-    case 'vs-3bet': {
-      if (spot.kind === 'response') {
-        actions.set(heroPos, { action: 'raised', style: 'raise', seq: seq++ })
-        actions.set(spot.villain, { action: 're-raises', style: 'raise', seq: seq++ })
-        actions.set(heroPos, { action: 'YOUR TURN', style: 'hero', seq: seq++ })
-      }
-      break
-    }
-    case 'vs-4bet': {
-      if (spot.kind === 'response') {
-        actions.set(spot.villain, { action: 'raised', style: 'raise', seq: seq++ })
-        actions.set(heroPos, { action: 'YOUR TURN', style: 'hero', seq: seq++ })
-      }
-      break
-    }
-    case '3bet-defense': {
-      if (spot.kind === 'response') {
-        actions.set(spot.villain, { action: 'calls', style: 'bet', seq: seq++ })
-        actions.set(heroPos, { action: 'YOUR TURN', style: 'hero', seq: seq++ })
-      }
-      break
-    }
-  }
-
-  return actions
-}
-
-function getPushFoldPositionActions(
-  spot: Spot & { kind: 'push-fold' },
-  actions: Map<Position, PositionAction>,
-  seq: number,
-): Map<Position, PositionAction> {
-  if (spot.scenario === 'push') {
-    actions.set(spot.hero, { action: 'YOUR TURN', style: 'hero', seq })
-  } else {
-    if (spot.villain) {
-      actions.set(spot.villain, { action: 'ALL-IN', style: 'raise', seq: seq++ })
-    }
-    actions.set(spot.hero, { action: 'YOUR TURN', style: 'hero', seq })
-  }
-  return actions
-}
-
-/** Delay per action step in ms */
-const STEP_DELAY_MS = 800
-
-export function TableView({ spot }: TableViewProps) {
-  const villain = spot.kind === 'response' ? spot.villain : spot.kind === 'push-fold' ? spot.villain : undefined
-  const stackLabel = getStackLabel(spot)
-  const scenarioInfo = getScenarioLabel(spot)
-  const positionActions = getPositionActions(spot)
 
   return (
-    <div className="flex flex-col items-center gap-5">
-      {/* Scenario label */}
-      <div className="text-base font-semibold text-muted-foreground">
-        <PokerTerm label={scenarioInfo.label} tip={scenarioInfo.tip} />
-      </div>
+    <div className="flex flex-col items-center gap-4">
+      {/* Position intro callout (first encounter only) */}
+      {showPositionIntro && (
+        <div className="rounded-lg bg-brass/10 border border-brass/20 px-4 py-3 text-sm text-foreground/80 max-w-md text-center animate-in fade-in slide-in-from-top-2 duration-300">
+          {getPositionIntro(spot.hero)}
+        </div>
+      )}
 
-      {/* Table */}
-      <div className="relative w-full max-w-lg aspect-[3/2] rounded-[40%] ring-4 ring-wood bg-[radial-gradient(ellipse_at_center,var(--color-felt-light),var(--color-felt))] shadow-[inset_0_2px_20px_rgba(0,0,0,0.4),0_4px_16px_rgba(0,0,0,0.3)]">
-        {/* Position labels with staggered action badges */}
+      {/* Table — the single focal point */}
+      <div className="relative w-full max-w-2xl aspect-[3/2] rounded-[40%] ring-4 ring-wood bg-[radial-gradient(ellipse_at_center,var(--color-felt-light),var(--color-felt))] shadow-[inset_0_2px_20px_rgba(0,0,0,0.4),0_4px_16px_rgba(0,0,0,0.3)]">
+
+        {/* Action spotlight — glowing ring that moves seat to seat */}
+        {isDealing && currentStep && (
+          <ActionSpotlight
+            position={currentStep.position}
+            stepStyle={currentStep.style}
+            visible={revealedCount > 0}
+          />
+        )}
+
+        {/* Pot display (center, above cards) */}
+        <PotDisplay totalPot={pot} visible={pot > 0} />
+
+        {/* Bet chips for each revealed blind/raise/call */}
+        {steps.map((step, i) => {
+          if (i >= revealedCount) return null
+          if (step.style === 'fold' || step.style === 'hero') return null
+          const amount = parseDollarAmount(step.label)
+          if (amount <= 0) return null
+          return (
+            <BetChip
+              key={`chip-${spot.id}-${i}`}
+              position={step.position}
+              amount={amount}
+              style={step.style}
+              animate={isDealing}
+            />
+          )
+        })}
+
+        {/* Seat badges */}
         {POSITIONS.map((pos) => {
-          const { x, y } = POSITION_ANGLES[pos]
-          const isHero = pos === spot.hero
-          const isVillain = pos === villain
-          const entry = POSITION_LABELS[pos]
-          const posAction = positionActions.get(pos)
-          const isFolded = posAction?.style === 'fold'
-          const delay = posAction ? posAction.seq * STEP_DELAY_MS : 0
+          const stepEntries = steps
+            .map((s, i) => ({ step: s, index: i }))
+            .filter((e) => e.step.position === pos)
+          const lastEntry = stepEntries[stepEntries.length - 1]
 
           return (
-            <div
+            <SeatBadge
               key={`${spot.id}-${pos}`}
-              className="absolute -translate-x-1/2 -translate-y-1/2"
-              style={{ left: `${x}%`, top: `${y}%` }}
-            >
-              <div
-                className={cn(
-                  'flex flex-col items-center gap-1 rounded-lg px-2.5 py-1.5 text-sm font-semibold transition-colors',
-                  isHero && 'bg-brass/25 text-brass ring-2 ring-brass/50 scale-110',
-                  isVillain && 'bg-rose-500/20 text-rose-300 ring-1 ring-rose-500/40',
-                  isFolded && 'animate-[fadeOut_0.3s_ease-out_forwards]',
-                  !isHero && !isVillain && !isFolded && 'text-muted-foreground',
-                )}
-                style={isFolded ? { animationDelay: `${delay + 400}ms` } : undefined}
-              >
-                {/* "YOU" badge for hero */}
-                {isHero && (
-                  <span className="text-[10px] font-black uppercase tracking-widest text-brass">
-                    You
-                  </span>
-                )}
-                <PokerTerm label={entry.label} tip={entry.tip} className="text-inherit border-0" />
-                {/* Action badge — fades in with staggered delay */}
-                {posAction && (
-                  <span
-                    className={cn(
-                      'text-[10px] font-bold uppercase tracking-wide rounded-full px-1.5 py-0.5',
-                      'opacity-0 animate-[fadeIn_0.4s_ease-out_forwards]',
-                      posAction.style === 'hero' && 'bg-brass/30 text-brass',
-                      posAction.style === 'raise' && 'bg-rose-500/20 text-rose-300',
-                      posAction.style === 'bet' && 'bg-foreground/10 text-muted-foreground',
-                      posAction.style === 'fold' && 'text-muted-foreground/50',
-                    )}
-                    style={{ animationDelay: `${delay}ms` }}
-                  >
-                    {posAction.action}
-                  </span>
-                )}
-                {!posAction && (
-                  <span className="text-[10px] tabular-nums opacity-40">{stackLabel}</span>
-                )}
-              </div>
-            </div>
+              position={pos}
+              isHero={pos === spot.hero}
+              isVillain={pos === villain}
+              stepInfo={lastEntry}
+              revealedCount={revealedCount}
+            />
           )
         })}
 
         {/* Hero cards (center) */}
-        <div className="absolute inset-0 flex items-center justify-center">
-          <HeroHand cards={spot.heroCards} />
-        </div>
+        {(!isDealing || heroStepRevealed(steps, spot.hero, revealedCount)) && (
+          <div className="absolute inset-0 flex items-center justify-center z-10">
+            <HeroHand cards={spot.heroCards} animate={isDealing} />
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+function heroStepRevealed(steps: DealingStep[], hero: Position, revealedCount: number): boolean {
+  let heroIndex = -1
+  for (let i = steps.length - 1; i >= 0; i--) {
+    if (steps[i].position === hero && steps[i].style === 'hero') {
+      heroIndex = i
+      break
+    }
+  }
+  return heroIndex >= 0 && heroIndex < revealedCount
+}
+
+interface SeatBadgeProps {
+  position: Position
+  isHero: boolean
+  isVillain: boolean
+  stepInfo?: { step: DealingStep; index: number }
+  revealedCount: number
+}
+
+function SeatBadge({ position, isHero, isVillain, stepInfo, revealedCount }: SeatBadgeProps) {
+  const coords = POSITION_COORDS[position]
+  const entry = POSITION_LABELS[position]
+  const actOrder = getActingOrderLabel(position)
+
+  const isRevealed = stepInfo ? stepInfo.index < revealedCount : false
+  const isFolded = isRevealed && stepInfo?.step.style === 'fold'
+
+  return (
+    <div
+      className="absolute -translate-x-1/2 -translate-y-1/2 z-10"
+      style={{ left: `${coords.x}%`, top: `${coords.y}%` }}
+    >
+      <div
+        className={cn(
+          'flex flex-col items-center gap-0.5 rounded-lg px-2.5 py-1.5 text-sm font-semibold',
+          'transition-all duration-500',
+          isHero && 'bg-brass/25 text-brass ring-2 ring-brass/50 scale-110',
+          isVillain && 'bg-rose-500/20 text-rose-300 ring-1 ring-rose-500/40',
+          isFolded && 'opacity-30 grayscale scale-95',
+          !isHero && !isVillain && !isFolded && 'text-muted-foreground',
+        )}
+      >
+        {isHero && (
+          <span className="text-[10px] font-black uppercase tracking-widest text-brass">You</span>
+        )}
+        <PokerTerm label={entry.label} tip={entry.tip} className="text-inherit border-0" />
+        <span className="text-[9px] tabular-nums opacity-40">{actOrder}</span>
+        {isRevealed && stepInfo && stepInfo.step.style !== 'blind' && (
+          <span
+            className={cn(
+              'text-[10px] font-bold uppercase tracking-wide rounded-full px-1.5 py-0.5',
+              'animate-in fade-in zoom-in-95 duration-200',
+              stepInfo.step.style === 'hero' && 'bg-brass/30 text-brass',
+              stepInfo.step.style === 'raise' && 'bg-rose-500/20 text-rose-300',
+              stepInfo.step.style === 'call' && 'bg-foreground/10 text-muted-foreground',
+              stepInfo.step.style === 'fold' && 'text-muted-foreground/50',
+            )}
+          >
+            {stepInfo.step.label}
+          </span>
+        )}
       </div>
     </div>
   )

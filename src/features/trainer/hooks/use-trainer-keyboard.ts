@@ -32,6 +32,7 @@ function getPushFoldKeyMap(spot: Spot & { kind: 'push-fold' }, bindings: Record<
 export function useTrainerKeyboard(onNextSpot: () => void) {
   const trainerPhase = useTrainerStore((s) => s.trainerPhase)
   const submitAction = useTrainerStore((s) => s.submitAction)
+  const skipDeal = useTrainerStore((s) => s.skipDeal)
   const keyBindings = useSettingsStore((s) => s.keyBindings)
 
   const keyMap = useMemo(() => buildKeyMap(keyBindings), [keyBindings])
@@ -41,6 +42,13 @@ export function useTrainerKeyboard(onNextSpot: () => void) {
     function handleKeyDown(e: KeyboardEvent) {
       // Ignore when typing in an input
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return
+
+      // Skip dealing animation on any key
+      if (trainerPhase.phase === 'dealing') {
+        e.preventDefault()
+        skipDeal()
+        return
+      }
 
       if (trainerPhase.phase === 'active') {
         const spot = trainerPhase.spot
@@ -62,5 +70,5 @@ export function useTrainerKeyboard(onNextSpot: () => void) {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [trainerPhase, submitAction, onNextSpot, keyMap, keyBindings, nextKey])
+  }, [trainerPhase, submitAction, skipDeal, onNextSpot, keyMap, keyBindings, nextKey])
 }

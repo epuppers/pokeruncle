@@ -5,6 +5,7 @@ import type { Action } from '@/types/poker'
 import { cn } from '@/lib/utils'
 
 import type { Spot } from '@/features/trainer/types'
+import { getActionButtonLabel } from '@/features/trainer/lib/money'
 
 interface ActionBarProps {
   onAction: (action: Action) => void
@@ -22,27 +23,29 @@ interface ActionButton {
   icon: typeof X
 }
 
-const ALL_ACTION_BUTTONS: ActionButton[] = [
-  { action: 'fold', label: 'Fold', shortcut: '1', variant: 'action-fold', icon: X },
-  { action: 'call', label: 'Call', shortcut: '2', variant: 'action-call', icon: Coins },
-  { action: 'raise', label: 'Raise', shortcut: '3', variant: 'action-raise', icon: TrendingUp },
-  { action: 'allin', label: 'All-in', shortcut: '4', variant: 'action-allin', icon: Flame },
-]
-
 function getVisibleActions(spot?: Spot): ActionButton[] {
-  if (spot?.kind !== 'push-fold') return ALL_ACTION_BUTTONS
+  const scenario = spot?.scenario ?? 'RFI'
+  const stackDepth = spot?.kind === 'push-fold' ? spot.stackDepth : undefined
 
-  if (spot.scenario === 'push') {
+  if (spot?.kind === 'push-fold') {
+    if (spot.scenario === 'push') {
+      return [
+        { action: 'fold', label: getActionButtonLabel('fold', scenario, stackDepth), shortcut: '1', variant: 'action-fold', icon: X },
+        { action: 'allin', label: getActionButtonLabel('allin', scenario, stackDepth), shortcut: '2', variant: 'action-allin', icon: Flame },
+      ]
+    }
+    // vs-push: call or fold
     return [
-      { action: 'fold', label: 'Fold', shortcut: '1', variant: 'action-fold', icon: X },
-      { action: 'allin', label: 'Push', shortcut: '2', variant: 'action-allin', icon: Flame },
+      { action: 'fold', label: getActionButtonLabel('fold', scenario, stackDepth), shortcut: '1', variant: 'action-fold', icon: X },
+      { action: 'call', label: getActionButtonLabel('call', scenario, stackDepth), shortcut: '2', variant: 'action-call', icon: Coins },
     ]
   }
 
-  // vs-push: call or fold
   return [
-    { action: 'fold', label: 'Fold', shortcut: '1', variant: 'action-fold', icon: X },
-    { action: 'call', label: 'Call', shortcut: '2', variant: 'action-call', icon: Coins },
+    { action: 'fold', label: getActionButtonLabel('fold', scenario, stackDepth), shortcut: '1', variant: 'action-fold', icon: X },
+    { action: 'call', label: getActionButtonLabel('call', scenario, stackDepth), shortcut: '2', variant: 'action-call', icon: Coins },
+    { action: 'raise', label: getActionButtonLabel('raise', scenario, stackDepth), shortcut: '3', variant: 'action-raise', icon: TrendingUp },
+    { action: 'allin', label: getActionButtonLabel('allin', scenario, stackDepth), shortcut: '4', variant: 'action-allin', icon: Flame },
   ]
 }
 
@@ -50,7 +53,7 @@ export function ActionBar({ onAction, disabled, spot }: ActionBarProps) {
   const buttons = getVisibleActions(spot)
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 animate-in slide-in-from-bottom-4 fade-in duration-300">
       {buttons.map(({ action, label, shortcut, variant, icon: Icon }) => (
         <Button
           key={action}

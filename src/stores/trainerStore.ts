@@ -4,6 +4,7 @@ import { z } from 'zod/v4'
 import { POSITIONS, PROVIDERS } from '@/types/poker'
 import type { Action, Position, Provider, Scenario } from '@/types/poker'
 
+import { computeTotalSteps } from '@/features/trainer/lib/action-sequence'
 import { recordSpotResult } from '@/features/trainer/lib/mastery-persistence'
 import { STACK_DEPTHS } from '@/features/trainer/types'
 import type {
@@ -44,6 +45,8 @@ interface TrainerState {
 
   // Actions
   dealSpot: (spot: Spot) => void
+  advanceDeal: () => void
+  skipDeal: () => void
   submitAction: (userAction: Action) => void
   nextSpot: () => void
   resetSession: () => void
@@ -83,10 +86,43 @@ export const useTrainerStore = create(
       trainerMode: { mode: 'practice' },
       sessionStats: { ...INITIAL_STATS },
 
-      dealSpot: (spot: Spot) =>
+      dealSpot: (spot: Spot) => {
+        const totalSteps = computeTotalSteps(spot)
         set({
-          trainerPhase: { phase: 'active', spot, startedAt: Date.now() },
-        }),
+          trainerPhase: { phase: 'dealing', spot, stepIndex: 0, totalSteps },
+        })
+      },
+
+      advanceDeal: () => {
+        const { trainerPhase } = get()
+        if (trainerPhase.phase !== 'dealing') return
+        const nextIndex = trainerPhase.stepIndex + 1
+        if (nextIndex >= trainerPhase.totalSteps) {
+          set({
+            trainerPhase: {
+              phase: 'active',
+              spot: trainerPhase.spot,
+              startedAt: Date.now(),
+            },
+          })
+        } else {
+          set({
+            trainerPhase: { ...trainerPhase, stepIndex: nextIndex },
+          })
+        }
+      },
+
+      skipDeal: () => {
+        const { trainerPhase } = get()
+        if (trainerPhase.phase !== 'dealing') return
+        set({
+          trainerPhase: {
+            phase: 'active',
+            spot: trainerPhase.spot,
+            startedAt: Date.now(),
+          },
+        })
+      },
 
       submitAction: (userAction: Action) => {
         const { trainerPhase, trainerMode, sessionStats } = get()

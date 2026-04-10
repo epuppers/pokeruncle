@@ -78,6 +78,7 @@ export interface SpotResult {
 
 export type TrainerPhase =
   | { phase: 'idle' }
+  | { phase: 'dealing'; spot: Spot; stepIndex: number; totalSteps: number }
   | { phase: 'active'; spot: Spot; startedAt: number }
   | { phase: 'feedback'; spot: Spot; result: SpotResult }
 

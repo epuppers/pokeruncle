@@ -11,12 +11,12 @@ export interface TermEntry {
 }
 
 export const POSITION_LABELS: Record<Position, TermEntry> = {
-  UTG: { short: 'UTG', label: 'Under the Gun', tip: 'First to act before the flop — the toughest seat at the table' },
-  MP: { short: 'MP', label: 'Middle Position', tip: 'Sits between the early and late positions' },
-  CO: { short: 'CO', label: 'Cutoff', tip: 'One seat before the dealer — a strong late position' },
-  BTN: { short: 'BTN', label: 'Dealer', tip: 'The best seat — you act last after the flop' },
-  SB: { short: 'SB', label: 'Small Blind', tip: 'Posts a half-bet before cards are dealt' },
-  BB: { short: 'BB', label: 'Big Blind', tip: 'Posts a full bet before cards are dealt' },
+  UTG: { short: 'UTG', label: 'Under the Gun', tip: 'First to act before the flop. You need a strong hand here because everyone acts after you.' },
+  MP: { short: 'MP', label: 'Middle Position', tip: 'Second to act. Four players still act after you, so play strong hands.' },
+  CO: { short: 'CO', label: 'Cutoff', tip: 'A strong late position — only the Dealer and blinds act after you.' },
+  BTN: { short: 'BTN', label: 'Dealer', tip: 'The best seat — you act last after the flop, so you see what everyone does first.' },
+  SB: { short: 'SB', label: 'Small Blind', tip: 'Posts a $1 forced bet before cards are dealt. Acts first after the flop — a tough spot.' },
+  BB: { short: 'BB', label: 'Big Blind', tip: 'Posts a $2 forced bet before cards are dealt. You get a discount to see the flop.' },
 }
 
 export const SCENARIO_LABELS: Record<Scenario, TermEntry> = {
