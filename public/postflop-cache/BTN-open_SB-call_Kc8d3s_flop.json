@@ -7,53 +7,39 @@
   "effectiveStackBB": 97,
   "strategies": {
     "44": {
-      "check": 80,
-      "bet-small": 20
+      "bet-large": 100
     },
     "55": {
-      "check": 80,
-      "bet-small": 20
+      "bet-large": 100
     },
     "66": {
-      "check": 80,
-      "bet-small": 20
+      "bet-large": 100
     },
     "J8s": {
-      "check": 77,
-      "bet-small": 23
+      "bet-large": 100
     },
     "JTo": {
-      "check": 81,
-      "bet-small": 19
+      "bet-large": 100
     },
     "K7s": {
-      "check": 77,
-      "bet-small": 23
-    },
-    "K8s": {
-      "bet-medium": 40,
-      "check": 35,
-      "bet-large": 25
+      "bet-large": 100
     },
     "KJo": {
-      "check": 45,
-      "bet-small": 30,
-      "bet-medium": 20,
-      "bet-large": 5
+      "bet-large": 100
+    },
+    "K8s": {
+      "bet-large": 100
     },
     "Q7s": {
-      "check": 81,
-      "bet-small": 19
+      "bet-large": 100
     },
     "Q8s": {
-      "check": 77,
-      "bet-small": 23
+      "bet-large": 100
     },
     "QJo": {
-      "check": 81,
-      "bet-small": 19
+      "bet-large": 100
     }
   },
-  "exploitability": 0.5,
-  "solvedAt": 1775864634737
+  "exploitability": 0.3,
+  "solvedAt": 1775922982586
 }

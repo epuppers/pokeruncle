@@ -6,28 +6,28 @@
       "nodeKey": "BTN-open_BB-3bet_BTN-call",
       "boardString": "9d 3s 2h",
       "street": "flop",
-      "handCount": 38
+      "handCount": 96
     },
     {
       "solutionKey": "BTN-open_BB-3bet_BTN-call_9s8d7c_flop",
       "nodeKey": "BTN-open_BB-3bet_BTN-call",
       "boardString": "9s 8d 7c",
       "street": "flop",
-      "handCount": 38
+      "handCount": 96
     },
     {
       "solutionKey": "BTN-open_BB-3bet_BTN-call_Kc8d3s_flop",
       "nodeKey": "BTN-open_BB-3bet_BTN-call",
       "boardString": "Kc 8d 3s",
       "street": "flop",
-      "handCount": 38
+      "handCount": 96
     },
     {
       "solutionKey": "BTN-open_BB-3bet_BTN-call_Qs9s3s_flop",
       "nodeKey": "BTN-open_BB-3bet_BTN-call",
       "boardString": "Qs 9s 3s",
       "street": "flop",
-      "handCount": 38
+      "handCount": 96
     },
     {
       "solutionKey": "BTN-open_BB-call_6h5h3h_flop",
@@ -90,28 +90,28 @@
       "nodeKey": "BTN-open_SB-3bet_BTN-call",
       "boardString": "7h 4c 2d",
       "street": "flop",
-      "handCount": 39
+      "handCount": 96
     },
     {
       "solutionKey": "BTN-open_SB-3bet_BTN-call_AhTd3c_flop",
       "nodeKey": "BTN-open_SB-3bet_BTN-call",
       "boardString": "Ah Td 3c",
       "street": "flop",
-      "handCount": 39
+      "handCount": 96
     },
     {
       "solutionKey": "BTN-open_SB-3bet_BTN-call_JdTc9s_flop",
       "nodeKey": "BTN-open_SB-3bet_BTN-call",
       "boardString": "Jd Tc 9s",
       "street": "flop",
-      "handCount": 39
+      "handCount": 96
     },
     {
       "solutionKey": "BTN-open_SB-3bet_BTN-call_KdTd4d_flop",
       "nodeKey": "BTN-open_SB-3bet_BTN-call",
       "boardString": "Kd Td 4d",
       "street": "flop",
-      "handCount": 39
+      "handCount": 96
     },
     {
       "solutionKey": "BTN-open_SB-call_9d3s2h_flop",
@@ -139,21 +139,21 @@
       "nodeKey": "CO-open_BB-3bet_CO-call",
       "boardString": "9d 3s 2h",
       "street": "flop",
-      "handCount": 24
+      "handCount": 65
     },
     {
       "solutionKey": "CO-open_BB-3bet_CO-call_9s8d7c_flop",
       "nodeKey": "CO-open_BB-3bet_CO-call",
       "boardString": "9s 8d 7c",
       "street": "flop",
-      "handCount": 24
+      "handCount": 65
     },
     {
       "solutionKey": "CO-open_BB-3bet_CO-call_Kc8d3s_flop",
       "nodeKey": "CO-open_BB-3bet_CO-call",
       "boardString": "Kc 8d 3s",
       "street": "flop",
-      "handCount": 24
+      "handCount": 65
     },
     {
       "solutionKey": "CO-open_BB-call_9d3s2h_flop",
@@ -202,21 +202,21 @@
       "nodeKey": "CO-open_BTN-3bet_CO-call",
       "boardString": "8s 5d 2c",
       "street": "flop",
-      "handCount": 27
+      "handCount": 65
     },
     {
       "solutionKey": "CO-open_BTN-3bet_CO-call_As7d2c_flop",
       "nodeKey": "CO-open_BTN-3bet_CO-call",
       "boardString": "As 7d 2c",
       "street": "flop",
-      "handCount": 27
+      "handCount": 65
     },
     {
       "solutionKey": "CO-open_BTN-3bet_CO-call_Ts9h8d_flop",
       "nodeKey": "CO-open_BTN-3bet_CO-call",
       "boardString": "Ts 9h 8d",
       "street": "flop",
-      "handCount": 27
+      "handCount": 65
     },
     {
       "solutionKey": "CO-open_BTN-call_8s5d2c_flop",

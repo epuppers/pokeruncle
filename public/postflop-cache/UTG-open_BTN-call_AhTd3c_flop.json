@@ -7,14 +7,18 @@
   "effectiveStackBB": 97,
   "strategies": {
     "55": {
-      "check": 73,
-      "bet-small": 27
+      "check": 18,
+      "bet-small": 28,
+      "bet-medium": 38,
+      "bet-large": 16
     },
     "66": {
-      "check": 73,
-      "bet-small": 27
+      "check": 18,
+      "bet-small": 28,
+      "bet-medium": 38,
+      "bet-large": 16
     }
   },
-  "exploitability": 0.5,
-  "solvedAt": 1775864634738
+  "exploitability": 0.3,
+  "solvedAt": 1775922982436
 }

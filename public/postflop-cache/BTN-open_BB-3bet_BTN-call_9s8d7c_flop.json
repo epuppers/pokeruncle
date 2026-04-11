@@ -7,186 +7,294 @@
   "effectiveStackBB": 89.75,
   "strategies": {
     "22": {
-      "check": 81,
-      "bet-small": 19
+      "bet-large": 100
     },
     "33": {
-      "check": 81,
-      "bet-small": 19
+      "bet-large": 100
     },
     "44": {
-      "check": 81,
-      "bet-small": 19
+      "bet-large": 100
     },
     "55": {
-      "check": 81,
-      "bet-small": 19
+      "bet-large": 100
     },
     "66": {
-      "check": 81,
-      "bet-small": 19
+      "bet-large": 100
     },
     "77": {
-      "bet-medium": 40,
-      "check": 35,
-      "bet-large": 25
+      "bet-large": 100
     },
     "88": {
-      "bet-medium": 40,
-      "check": 35,
-      "bet-large": 25
+      "bet-large": 100
     },
     "99": {
-      "bet-medium": 40,
-      "check": 35,
-      "bet-large": 25
+      "bet-large": 100
+    },
+    "43s": {
+      "bet-large": 100
+    },
+    "53s": {
+      "bet-large": 100
     },
     "54s": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+      "bet-large": 100
+    },
+    "63s": {
+      "bet-large": 100
+    },
+    "64s": {
+      "bet-large": 100
     },
     "65s": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+      "bet-large": 100
+    },
+    "74s": {
+      "bet-large": 100
+    },
+    "75s": {
+      "bet-large": 100
     },
     "76s": {
-      "check": 81,
-      "bet-small": 19
+      "bet-large": 100
+    },
+    "85s": {
+      "bet-large": 100
+    },
+    "86s": {
+      "bet-large": 100
     },
     "87s": {
-      "bet-medium": 40,
-      "check": 35,
-      "bet-large": 25
+      "bet-large": 100
+    },
+    "96s": {
+      "bet-large": 100
     },
     "98s": {
-      "bet-medium": 40,
-      "check": 35,
-      "bet-large": 25
+      "bet-large": 100
+    },
+    "98o": {
+      "bet-large": 100
+    },
+    "97s": {
+      "bet-large": 100
+    },
+    "A2s": {
+      "bet-large": 100
+    },
+    "A3s": {
+      "bet-large": 100
     },
     "A4s": {
-      "check": 83,
-      "bet-small": 17
+      "bet-large": 100
+    },
+    "A4o": {
+      "bet-large": 100
     },
     "A5s": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+      "bet-large": 100
+    },
+    "A5o": {
+      "bet-large": 100
     },
     "A6s": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+      "bet-large": 100
     },
-    "A7s": {
-      "check": 81,
-      "bet-small": 19
+    "A6o": {
+      "bet-large": 100
+    },
+    "A7o": {
+      "bet-large": 100
     },
     "A8s": {
-      "check": 73,
-      "bet-small": 27
+      "bet-large": 100
+    },
+    "A8o": {
+      "bet-large": 100
     },
     "A9s": {
-      "check": 45,
-      "bet-small": 26,
-      "bet-medium": 24,
-      "bet-large": 5
+      "bet-large": 100
+    },
+    "A9o": {
+      "bet-large": 100
     },
     "AJs": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+      "bet-large": 100
     },
-    "AQo": {
-      "check": 83,
-      "bet-small": 17
+    "AJo": {
+      "bet-large": 100
+    },
+    "AKs": {
+      "bet-large": 100
+    },
+    "AKo": {
+      "bet-large": 100
     },
     "AQs": {
-      "check": 83,
-      "bet-small": 17
+      "bet-large": 100
     },
-    "ATo": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+    "AQo": {
+      "bet-large": 100
     },
     "ATs": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+      "bet-large": 100
+    },
+    "ATo": {
+      "bet-large": 100
+    },
+    "A7s": {
+      "bet-large": 100
+    },
+    "AA": {
+      "bet-large": 100
+    },
+    "J5s": {
+      "bet-large": 100
+    },
+    "J6s": {
+      "bet-large": 100
     },
     "J8s": {
-      "check": 73,
-      "bet-small": 27
+      "bet-large": 100
+    },
+    "J8o": {
+      "bet-large": 100
     },
     "J9s": {
-      "check": 45,
-      "bet-small": 26,
-      "bet-medium": 24,
-      "bet-large": 5
+      "bet-large": 100
+    },
+    "J9o": {
+      "bet-large": 100
     },
     "JTs": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+      "bet-large": 100
+    },
+    "JTo": {
+      "bet-large": 100
+    },
+    "J7s": {
+      "bet-large": 100
+    },
+    "JJ": {
+      "bet-large": 100
+    },
+    "K2s": {
+      "bet-large": 100
+    },
+    "K3s": {
+      "bet-large": 100
+    },
+    "K4s": {
+      "bet-large": 100
+    },
+    "K5s": {
+      "bet-large": 100
+    },
+    "K6s": {
+      "bet-large": 100
     },
     "K8s": {
-      "check": 73,
-      "bet-small": 27
+      "bet-large": 100
+    },
+    "K8o": {
+      "bet-large": 100
     },
     "K9s": {
-      "check": 45,
-      "bet-small": 26,
-      "bet-medium": 24,
-      "bet-large": 5
+      "bet-large": 100
+    },
+    "K9o": {
+      "bet-large": 100
     },
     "KJs": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+      "bet-large": 100
+    },
+    "KJo": {
+      "bet-large": 100
     },
     "KQs": {
-      "check": 83,
-      "bet-small": 17
+      "bet-large": 100
+    },
+    "KQo": {
+      "bet-large": 100
     },
     "KTs": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+      "bet-large": 100
+    },
+    "KTo": {
+      "bet-large": 100
+    },
+    "K7s": {
+      "bet-large": 100
+    },
+    "KK": {
+      "bet-large": 100
+    },
+    "Q2s": {
+      "bet-large": 100
+    },
+    "Q3s": {
+      "bet-large": 100
+    },
+    "Q4s": {
+      "bet-large": 100
+    },
+    "Q5s": {
+      "bet-large": 100
+    },
+    "Q6s": {
+      "bet-large": 100
+    },
+    "Q8s": {
+      "bet-large": 100
+    },
+    "Q8o": {
+      "bet-large": 100
     },
     "Q9s": {
-      "check": 45,
-      "bet-small": 26,
-      "bet-medium": 24,
-      "bet-large": 5
+      "bet-large": 100
+    },
+    "Q9o": {
+      "bet-large": 100
     },
     "QJs": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+      "bet-large": 100
+    },
+    "QJo": {
+      "bet-large": 100
     },
     "QTs": {
-      "check": 51,
-      "bet-small": 31,
-      "bet-medium": 18
+      "bet-large": 100
+    },
+    "QTo": {
+      "bet-large": 100
+    },
+    "Q7s": {
+      "bet-large": 100
+    },
+    "QQ": {
+      "bet-large": 100
+    },
+    "T6s": {
+      "bet-large": 100
     },
     "T8s": {
-      "check": 73,
-      "bet-small": 27
+      "bet-large": 100
+    },
+    "T8o": {
+      "bet-large": 100
     },
     "T9s": {
-      "check": 45,
-      "bet-small": 26,
-      "bet-medium": 24,
-      "bet-large": 5
+      "bet-large": 100
+    },
+    "T9o": {
+      "bet-large": 100
+    },
+    "T7s": {
+      "bet-large": 100
     },
     "TT": {
-      "check": 40,
-      "bet-small": 35,
-      "bet-medium": 25
+      "bet-large": 100
     }
   },
-  "exploitability": 0.5,
-  "solvedAt": 1775864634738
+  "exploitability": 0.3,
+  "solvedAt": 1775922982504
 }

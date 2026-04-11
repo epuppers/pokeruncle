@@ -7,447 +7,522 @@
   "effectiveStackBB": 97.5,
   "strategies": {
     "22": {
-      "check": 67,
-      "bet-small": 33
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "33": {
-      "check": 67,
-      "bet-small": 33
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "44": {
-      "check": 67,
-      "bet-small": 33
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "55": {
-      "check": 67,
-      "bet-small": 33
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "32s": {
-      "check": 60,
-      "bet-small": 40
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "42s": {
-      "check": 60,
-      "bet-small": 40
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "43s": {
-      "check": 60,
-      "bet-small": 40
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "52s": {
-      "check": 60,
-      "bet-small": 40
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "53s": {
-      "check": 60,
-      "bet-small": 40
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "54o": {
-      "check": 60,
-      "bet-small": 40
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "62s": {
-      "check": 60,
-      "bet-small": 40
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "63s": {
-      "check": 60,
-      "bet-small": 40
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "65o": {
-      "check": 60,
-      "bet-small": 40
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "72s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "73s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "74s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "75o": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "76o": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "82s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "83s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "84s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "86o": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "87o": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "92s": {
-      "check": 67,
-      "bet-small": 33
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "93s": {
-      "check": 67,
-      "bet-small": 33
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "94s": {
-      "check": 67,
-      "bet-small": 33
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "95s": {
-      "check": 67,
-      "bet-small": 33
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "97o": {
-      "check": 67,
-      "bet-small": 33
-    },
-    "A6o": {
-      "check": 60,
-      "bet-small": 40
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "A6s": {
-      "check": 60,
-      "bet-small": 40
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
-    "A7o": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+    "A6o": {
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "A7s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
-    "A8o": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+    "A7o": {
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "A8s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
-    "A9o": {
-      "check": 67,
-      "bet-small": 33
+    "A8o": {
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "A9s": {
-      "check": 67,
-      "bet-small": 33
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
+    },
+    "A9o": {
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "ATo": {
-      "check": 41,
-      "bet-small": 40,
-      "bet-medium": 19
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "J2s": {
-      "check": 41,
-      "bet-small": 40,
-      "bet-medium": 19
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "J3s": {
-      "check": 41,
-      "bet-small": 40,
-      "bet-medium": 19
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "J4s": {
-      "check": 41,
-      "bet-small": 40,
-      "bet-medium": 19
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "J5s": {
-      "check": 41,
-      "bet-small": 40,
-      "bet-medium": 19
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "J6s": {
-      "check": 41,
-      "bet-small": 40,
-      "bet-medium": 19
-    },
-    "J7o": {
-      "check": 41,
-      "bet-small": 40,
-      "bet-medium": 19
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "J7s": {
-      "check": 41,
-      "bet-small": 40,
-      "bet-medium": 19
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
-    "J8o": {
-      "check": 41,
-      "bet-small": 40,
-      "bet-medium": 19
+    "J7o": {
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "J8s": {
-      "check": 41,
-      "bet-small": 40,
-      "bet-medium": 19
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
-    "J9o": {
-      "bet-medium": 53,
-      "bet-large": 33,
-      "check": 14
+    "J8o": {
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "J9s": {
-      "bet-medium": 53,
-      "bet-large": 33,
-      "check": 14
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
+    },
+    "J9o": {
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "JTo": {
-      "bet-medium": 53,
-      "bet-large": 33,
-      "check": 14
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "K2s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "K3s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "K4s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
-    },
-    "K5o": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "K5s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
-    "K6o": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+    "K5o": {
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "K6s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
-    "K7o": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+    "K6o": {
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "K7s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
-    "K8o": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+    "K7o": {
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "K8s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
-    "K9o": {
-      "check": 67,
-      "bet-small": 33
+    "K8o": {
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "K9s": {
-      "check": 67,
-      "bet-small": 33
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
+    },
+    "K9o": {
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "KJo": {
-      "bet-medium": 33,
-      "bet-small": 32,
-      "check": 26,
-      "bet-large": 9
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "KTo": {
-      "check": 41,
-      "bet-small": 40,
-      "bet-medium": 19
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "Q2s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "Q3s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "Q4s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "Q5s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
-    },
-    "Q6o": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "Q6s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
-    "Q7o": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+    "Q6o": {
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "Q7s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
-    "Q8o": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+    "Q7o": {
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "Q8s": {
-      "bet-medium": 37,
-      "bet-small": 34,
-      "check": 19,
-      "bet-large": 10
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
-    "Q9o": {
-      "check": 67,
-      "bet-small": 33
+    "Q8o": {
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "Q9s": {
-      "check": 67,
-      "bet-small": 33
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
+    },
+    "Q9o": {
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "QJo": {
-      "bet-medium": 33,
-      "bet-small": 32,
-      "check": 26,
-      "bet-large": 9
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "QTo": {
-      "check": 41,
-      "bet-small": 40,
-      "bet-medium": 19
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "T2s": {
-      "check": 41,
-      "bet-small": 40,
-      "bet-medium": 19
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "T3s": {
-      "check": 41,
-      "bet-small": 40,
-      "bet-medium": 19
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "T4s": {
-      "check": 41,
-      "bet-small": 40,
-      "bet-medium": 19
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "T5s": {
-      "check": 41,
-      "bet-small": 40,
-      "bet-medium": 19
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "T7o": {
-      "check": 41,
-      "bet-small": 40,
-      "bet-medium": 19
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "T8o": {
-      "check": 41,
-      "bet-small": 40,
-      "bet-medium": 19
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "T8s": {
-      "check": 41,
-      "bet-small": 40,
-      "bet-medium": 19
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     },
     "T9o": {
-      "bet-medium": 53,
-      "bet-large": 33,
-      "check": 14
+      "bet-medium": 39,
+      "bet-small": 28,
+      "check": 18,
+      "bet-large": 15
     }
   },
-  "exploitability": 0.5,
-  "solvedAt": 1775864634733
+  "exploitability": 0.3,
+  "solvedAt": 1775922982451
 }
