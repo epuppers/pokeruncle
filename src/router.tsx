@@ -50,7 +50,7 @@ function RootLayout() {
           {/* Navigation tabs */}
           <nav aria-label="Main navigation" className="flex items-center gap-1">
             <NavLink to="/play" label="Play" />
-            <NavLink to="/train" label="Train" />
+            <NavLink to="/train" label="Preflop" />
             <NavLink to="/train/postflop" label="Postflop" />
             <NavLink to="/review" label="Review" />
             <NavLink to="/" label="Ranges" exact />
