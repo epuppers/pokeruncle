@@ -1,6 +1,20 @@
 import type { Action, Card, Cell, HandType, Position, Provider, Scenario } from '@/types/poker'
+import type { PostflopSpot } from '@/features/postflop'
 
 export type { ProviderCharts } from './lib/range-loader'
+
+// --- Unified hand flow types ---
+
+/** Which street the hand is currently on */
+export type HandStreet = 'preflop' | 'flop'
+
+/** Carries context from preflop into postflop */
+export interface HandContinuation {
+  preflopSpot: Spot
+  preflopResult: SpotResult
+  postflopNodeKey: string
+  postflopSpot: PostflopSpot
+}
 
 // --- Tournament push/fold types ---
 

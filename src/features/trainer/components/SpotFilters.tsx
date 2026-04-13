@@ -1,19 +1,18 @@
 import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
-import { cn } from '@/lib/utils'
 import { useTrainerStore } from '@/stores/trainerStore'
 import { POSITIONS, SCENARIOS } from '@/types/poker'
 import type { HandType } from '@/types/poker'
 import { POSITION_LABELS, SCENARIO_LABELS, positionLabel, scenarioLabel, tournamentScenarioLabel } from '@/lib/poker-glossary'
-import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 
 import {
   STACK_DEPTHS,
   TOURNAMENT_SCENARIO_CONFIGS,
 } from '@/features/trainer/types'
-import type { SpotFilters as SpotFiltersType } from '@/features/trainer/types'
+import { toggleFilter } from '@/features/trainer/lib/filter-utils'
 import { DrillLauncher, PushFoldDrillLauncher } from './DrillLauncher'
+import { FilterSection, ToggleChip, ToggleChipWithTip } from './FilterChips'
 
 const HAND_TYPES: { id: HandType; label: string }[] = [
   { id: 'pair', label: 'Pairs' },
@@ -184,81 +183,3 @@ export function SpotFilters() {
   )
 }
 
-function FilterSection({ label, children }: { label: string; children: React.ReactNode }) {
-  return (
-    <div>
-      <div className="mb-1 text-xs font-medium text-muted-foreground">{label}</div>
-      <div className="flex flex-wrap gap-1">{children}</div>
-    </div>
-  )
-}
-
-function ToggleChip({
-  label,
-  active,
-  onClick,
-}: {
-  label: string
-  active: boolean
-  onClick: () => void
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={cn(
-        'rounded-md border px-3 py-1 text-sm transition-colors',
-        active
-          ? 'border-brass bg-brass/20 text-brass'
-          : 'border-border bg-background text-muted-foreground hover:bg-accent/30',
-      )}
-    >
-      {label}
-    </button>
-  )
-}
-
-function ToggleChipWithTip({
-  label,
-  tip,
-  active,
-  onClick,
-}: {
-  label: string
-  tip: string
-  active: boolean
-  onClick: () => void
-}) {
-  return (
-    <Tooltip>
-      <TooltipTrigger asChild>
-        <button
-          type="button"
-          onClick={onClick}
-          className={cn(
-            'rounded-md border px-3 py-1 text-sm transition-colors',
-            active
-              ? 'border-brass bg-brass/20 text-brass'
-              : 'border-border bg-background text-muted-foreground hover:bg-accent/30',
-          )}
-        >
-          {label}
-        </button>
-      </TooltipTrigger>
-      <TooltipContent className="max-w-[220px]">
-        <p>{tip}</p>
-      </TooltipContent>
-    </Tooltip>
-  )
-}
-
-function toggleFilter<K extends keyof SpotFiltersType>(
-  filters: SpotFiltersType,
-  setFilters: (f: SpotFiltersType) => void,
-  key: K,
-  value: SpotFiltersType[K][number],
-) {
-  const current = filters[key] as SpotFiltersType[K][number][]
-  const next = current.includes(value) ? current.filter((v) => v !== value) : [...current, value]
-  setFilters({ ...filters, [key]: next })
-}

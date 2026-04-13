@@ -1,4 +1,6 @@
 export { TrainerPage } from './components/TrainerPage'
+export { FilterSection, ToggleChip, ToggleChipWithTip } from './components/FilterChips'
+export { toggleFilter } from './lib/filter-utils'
 export { useRangeQuery } from './hooks/use-range-query'
 export { loadProvider, resolveCorrectAction } from './lib/range-loader'
 export { generateSmartSpot, generateSpot, generatePushFoldSpot, generateSmartPushFoldSpot } from './lib/spot-generator'
