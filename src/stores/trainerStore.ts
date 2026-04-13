@@ -143,7 +143,7 @@ export const useTrainerStore = create(
 
         // Fire-and-forget DB persistence
         const { trainingStrictness } = useSettingsStore.getState()
-        recordSpotResult(spot, userAction, decisionTimeMs, trainingStrictness).catch((err: unknown) => {
+        recordSpotResult(spot, userAction, decisionTimeMs, trainingStrictness, 'trainer').catch((err: unknown) => {
           console.error('Failed to persist spot result', err)
         })
 

@@ -1,5 +1,5 @@
 import { db } from '@/lib/db'
-import type { MasteryRecord } from '@/lib/db'
+import type { MasteryRecord, SpotResultRecord } from '@/lib/db'
 
 import {
   createInitialMastery,
@@ -45,6 +45,7 @@ export async function recordPostflopSpotResult(
   userAction: PostflopAction,
   decisionTimeMs: number,
   strictness: number = 5,
+  source?: SpotResultRecord['source'],
 ): Promise<void> {
   const evLoss = estimatePostflopEvLoss(spot, userAction)
   const qualityScore = evToQualityScore(evLoss, strictness)
@@ -66,6 +67,7 @@ export async function recordPostflopSpotResult(
     heroHand: spot.heroHand,
     rolledNumber: spot.rolledNumber,
     correctAction: spot.correctAction,
+    source,
   })
 
   // Update SM-2 mastery

@@ -34,6 +34,8 @@ export interface SpotResultRecord {
   rolledNumber: number
   /** The GTO-correct action for this spot. Added in v2. */
   correctAction: string
+  /** Which training mode produced this result. Added in v4. */
+  source?: 'trainer' | 'hand-flow' | 'postflop-trainer'
 }
 
 /** A cached postflop solution stored in IndexedDB. */
@@ -90,6 +92,11 @@ export class PokerTrainerDB extends Dexie {
       masteryRecords: 'spotTypeKey, nextReviewAt',
     })
     this.version(3).stores({
+      spotResults: '++id, spotId, timestamp, isCorrect, provider, hero, scenario, [hero+scenario], heroHand',
+      masteryRecords: 'spotTypeKey, nextReviewAt',
+      cachedSolutions: 'solutionKey, nodeKey, street',
+    })
+    this.version(4).stores({
       spotResults: '++id, spotId, timestamp, isCorrect, provider, hero, scenario, [hero+scenario], heroHand',
       masteryRecords: 'spotTypeKey, nextReviewAt',
       cachedSolutions: 'solutionKey, nodeKey, street',

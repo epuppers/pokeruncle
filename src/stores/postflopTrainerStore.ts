@@ -77,7 +77,7 @@ export const usePostflopTrainerStore = create(
 
         // Fire-and-forget DB persistence
         const { trainingStrictness } = useSettingsStore.getState()
-        recordPostflopSpotResult(spot, userAction, decisionTimeMs, trainingStrictness).catch(
+        recordPostflopSpotResult(spot, userAction, decisionTimeMs, trainingStrictness, 'postflop-trainer').catch(
           (err: unknown) => {
             console.error('Failed to persist postflop spot result', err)
           },

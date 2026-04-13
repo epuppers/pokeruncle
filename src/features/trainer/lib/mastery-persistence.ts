@@ -1,5 +1,6 @@
 import { db } from '@/lib/db'
 import type { Action, Provider } from '@/types/poker'
+import type { SpotResultRecord } from '@/lib/db'
 
 import type { Spot } from '@/features/trainer/types'
 
@@ -17,6 +18,7 @@ export async function recordSpotResult(
   userAction: Action,
   decisionTimeMs: number,
   strictness: number = 5,
+  source?: SpotResultRecord['source'],
 ): Promise<void> {
   const evLoss = estimateEvLoss(spot.cell, userAction, spot.correctAction)
   const qualityScore = evToQualityScore(evLoss, strictness)
@@ -37,6 +39,7 @@ export async function recordSpotResult(
     heroHand: spot.heroHand,
     rolledNumber: spot.rolledNumber,
     correctAction: spot.correctAction,
+    source,
   })
 
   await updateSpotMastery(spotTypeKey, qualityScore)
