@@ -64,6 +64,8 @@ export function useHandDealingSequence(): number | undefined {
     }
   }, [handPhase, stepIndex, startPreflopDecision])
 
+  const advanceAfterCorrect = useHandStore((s) => s.advanceAfterCorrect)
+
   // Auto-transition flop-dealing → flop-decision after a short delay
   useEffect(() => {
     if (handPhase.phase !== 'flop-dealing') return
@@ -74,6 +76,17 @@ export function useHandDealingSequence(): number | undefined {
 
     return () => clearTimeout(timer)
   }, [handPhase.phase, startFlopDecision])
+
+  // Auto-advance after correct-answer flash (600ms)
+  useEffect(() => {
+    if (handPhase.phase !== 'preflop-correct' && handPhase.phase !== 'flop-correct') return
+
+    const timer = setTimeout(() => {
+      advanceAfterCorrect()
+    }, 600)
+
+    return () => clearTimeout(timer)
+  }, [handPhase.phase, advanceAfterCorrect])
 
   if (handPhase.phase === 'preflop-dealing') {
     return stepIndex

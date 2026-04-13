@@ -58,6 +58,7 @@ function extractPreflopSpot(phase: HandPhase) {
   switch (phase.phase) {
     case 'preflop-dealing':
     case 'preflop-decision':
+    case 'preflop-correct':
     case 'preflop-correction':
       return phase.spot
     default:
@@ -69,6 +70,7 @@ function extractContinuation(phase: HandPhase) {
   switch (phase.phase) {
     case 'flop-dealing':
     case 'flop-decision':
+    case 'flop-correct':
     case 'flop-correction':
       return phase.continuation
     default:

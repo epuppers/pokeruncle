@@ -46,6 +46,12 @@ export function HandFlowPage() {
 
       <HandTable dealingStepIndex={dealingStepIndex} />
 
+      {(phase === 'preflop-correct' || phase === 'flop-correct') && (
+        <div className="rounded-lg border border-correct/30 bg-correct/10 px-4 py-3 text-center animate-in fade-in slide-in-from-top-2 duration-200">
+          <p className="text-sm font-medium text-correct">✓ Correct</p>
+        </div>
+      )}
+
       {phase === 'preflop-correction' && (
         <CorrectionBanner
           userActionLabel={actionLabel(handPhase.result.userAction)}

@@ -117,11 +117,21 @@ describe('handStore', () => {
   })
 
   describe('submitPreflopAction', () => {
-    it('goes to idle on correct answer without continuation', () => {
+    it('goes to preflop-correct on correct answer', () => {
       const spot = makeResponseSpot({ correctAction: 'call' })
       useHandStore.getState().dealPreflop(spot, false)
       useHandStore.getState().startPreflopDecision()
       useHandStore.getState().submitPreflopAction('call')
+
+      expect(useHandStore.getState().handPhase.phase).toBe('preflop-correct')
+    })
+
+    it('advances to idle from preflop-correct without continuation', () => {
+      const spot = makeResponseSpot({ correctAction: 'call' })
+      useHandStore.getState().dealPreflop(spot, false)
+      useHandStore.getState().startPreflopDecision()
+      useHandStore.getState().submitPreflopAction('call')
+      useHandStore.getState().advanceAfterCorrect()
 
       expect(useHandStore.getState().handPhase.phase).toBe('idle')
     })
@@ -202,7 +212,7 @@ describe('handStore', () => {
       useHandStore.getState().dealPreflop(spot, false)
       useHandStore.getState().startPreflopDecision()
       useHandStore.getState().submitPreflopAction('call')
-      useHandStore.getState().nextHand()
+      useHandStore.getState().advanceAfterCorrect()
 
       expect(useHandStore.getState().sessionStats.handsPlayed).toBe(1)
     })
@@ -224,11 +234,12 @@ describe('handStore', () => {
 
   describe('session stats accumulation', () => {
     it('accumulates across multiple hands', () => {
-      // Hand 1: correct
+      // Hand 1: correct → advance
       const spot1 = makeResponseSpot({ id: 'h1', correctAction: 'call' })
       useHandStore.getState().dealPreflop(spot1, false)
       useHandStore.getState().startPreflopDecision()
       useHandStore.getState().submitPreflopAction('call')
+      useHandStore.getState().advanceAfterCorrect()
 
       // Hand 2: incorrect → correction → next
       const spot2 = makeResponseSpot({ id: 'h2', correctAction: 'raise' })

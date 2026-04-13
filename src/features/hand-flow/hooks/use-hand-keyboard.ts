@@ -47,6 +47,7 @@ export function useHandKeyboard(): void {
   const submitPreflopAction = useHandStore((s) => s.submitPreflopAction)
   const submitFlopAction = useHandStore((s) => s.submitFlopAction)
   const acknowledgeCorrection = useHandStore((s) => s.acknowledgeCorrection)
+  const advanceAfterCorrect = useHandStore((s) => s.advanceAfterCorrect)
   const keyBindings = useSettingsStore((s) => s.keyBindings)
   const skipDealing = useSkipDealing()
 
@@ -58,10 +59,15 @@ export function useHandKeyboard(): void {
 
       const phase = handPhase.phase
 
-      // Skip dealing animation on any key
+      // Skip dealing animation or correct-answer flash on any key
       if (phase === 'preflop-dealing' || phase === 'flop-dealing') {
         e.preventDefault()
         skipDealing()
+        return
+      }
+      if (phase === 'preflop-correct' || phase === 'flop-correct') {
+        e.preventDefault()
+        advanceAfterCorrect()
         return
       }
 
@@ -118,6 +124,7 @@ export function useHandKeyboard(): void {
     submitPreflopAction,
     submitFlopAction,
     acknowledgeCorrection,
+    advanceAfterCorrect,
     skipDealing,
     keyBindings,
     preflopKeyMap,

@@ -26,9 +26,11 @@ export type HandPhase =
   | { phase: 'idle' }
   | { phase: 'preflop-dealing'; spot: Spot }
   | { phase: 'preflop-decision'; spot: Spot; startedAt: number }
+  | { phase: 'preflop-correct'; spot: Spot; canContinue: boolean }
   | { phase: 'preflop-correction'; spot: Spot; result: SpotResult; canContinue: boolean }
   | { phase: 'flop-dealing'; continuation: HandContinuation }
   | { phase: 'flop-decision'; continuation: HandContinuation; startedAt: number }
+  | { phase: 'flop-correct'; continuation: HandContinuation }
   | { phase: 'flop-correction'; continuation: HandContinuation; result: PostflopSpotResult }
 
 // ─── Session stats ──────────────────────────────────────────
@@ -66,6 +68,7 @@ interface HandState {
   submitPreflopAction: (userAction: Action) => void
   startFlopDecision: () => void
   submitFlopAction: (userAction: PostflopAction) => void
+  advanceAfterCorrect: () => void
   acknowledgeCorrection: () => void
   nextHand: () => void
   resetSession: () => void
@@ -170,21 +173,11 @@ export const useHandStore = create<HandState>()((set, get) => ({
     }
 
     if (isCorrect) {
-      if (canContinue) {
-        // Correct + can continue: keep table visible, async-load flop
-        set({ sessionStats: updatedStats })
-        void loadContinuation(spot, result, set).catch((err: unknown) => {
-          console.error('Failed to load flop continuation', err)
-          set({ handPhase: { phase: 'idle' }, hasContinuation: false })
-        })
-      } else {
-        // Correct + no continuation: advance to next hand
-        set({
-          handPhase: { phase: 'idle' },
-          hasContinuation: false,
-          sessionStats: updatedStats,
-        })
-      }
+      // Brief correct flash — auto-advances after 600ms via useEffect
+      set({
+        handPhase: { phase: 'preflop-correct', spot, canContinue },
+        sessionStats: updatedStats,
+      })
     } else {
       // Wrong: show correction
       set({
@@ -244,9 +237,9 @@ export const useHandStore = create<HandState>()((set, get) => ({
     }
 
     if (isCorrect) {
+      // Brief correct flash — auto-advances after 600ms via useEffect
       set({
-        handPhase: { phase: 'idle' },
-        hasContinuation: false,
+        handPhase: { phase: 'flop-correct', continuation },
         sessionStats: updatedStats,
       })
     } else {
@@ -254,6 +247,33 @@ export const useHandStore = create<HandState>()((set, get) => ({
         handPhase: { phase: 'flop-correction', continuation, result },
         sessionStats: updatedStats,
       })
+    }
+  },
+
+  advanceAfterCorrect: () => {
+    const { handPhase } = get()
+
+    if (handPhase.phase === 'preflop-correct') {
+      if (handPhase.canContinue) {
+        const result: SpotResult = {
+          spotId: handPhase.spot.id,
+          userAction: handPhase.spot.correctAction,
+          isCorrect: true,
+          decisionTimeMs: 0,
+          timestamp: Date.now(),
+        }
+        void loadContinuation(handPhase.spot, result, set).catch((err: unknown) => {
+          console.error('Failed to load flop continuation', err)
+          set({ handPhase: { phase: 'idle' }, hasContinuation: false })
+        })
+      } else {
+        set({ handPhase: { phase: 'idle' }, hasContinuation: false })
+      }
+      return
+    }
+
+    if (handPhase.phase === 'flop-correct') {
+      set({ handPhase: { phase: 'idle' }, hasContinuation: false })
     }
   },
 
