@@ -20,27 +20,16 @@ import { useSettingsStore } from '@/stores/settingsStore'
 
 import type { HandContinuation, Spot, SpotResult } from '@/features/trainer/types'
 
-// ─── Hand flow mode ────────────────────────────────────────
-
-export type HandFlowMode = { mode: 'natural' } | { mode: 'postflop-drill' }
-
 // ─── Phase model (discriminated union) ──────────────────────
 
 export type HandPhase =
   | { phase: 'idle' }
   | { phase: 'preflop-dealing'; spot: Spot }
   | { phase: 'preflop-decision'; spot: Spot; startedAt: number }
-  | { phase: 'preflop-feedback'; spot: Spot; result: SpotResult; canContinue: boolean }
+  | { phase: 'preflop-correction'; spot: Spot; result: SpotResult; canContinue: boolean }
   | { phase: 'flop-dealing'; continuation: HandContinuation }
   | { phase: 'flop-decision'; continuation: HandContinuation; startedAt: number }
-  | { phase: 'flop-feedback'; continuation: HandContinuation; result: PostflopSpotResult }
-  | {
-      phase: 'hand-summary'
-      preflopSpot: Spot
-      preflopResult: SpotResult
-      continuation: HandContinuation | null
-      postflopResult: PostflopSpotResult | null
-    }
+  | { phase: 'flop-correction'; continuation: HandContinuation; result: PostflopSpotResult }
 
 // ─── Session stats ──────────────────────────────────────────
 
@@ -49,7 +38,6 @@ export interface HandSessionStats {
   preflopCorrect: number
   postflopCorrect: number
   postflopHands: number
-  fullHandCorrect: number
   totalDecisionTimeMs: number
   sessionStartedAt: number
 }
@@ -59,7 +47,6 @@ const INITIAL_STATS: HandSessionStats = {
   preflopCorrect: 0,
   postflopCorrect: 0,
   postflopHands: 0,
-  fullHandCorrect: 0,
   totalDecisionTimeMs: 0,
   sessionStartedAt: Date.now(),
 }
@@ -68,34 +55,67 @@ const INITIAL_STATS: HandSessionStats = {
 
 interface HandState {
   handPhase: HandPhase
-  handFlowMode: HandFlowMode
   sessionStats: HandSessionStats
 
   /** Whether the current spot has matching postflop solutions in the manifest */
   hasContinuation: boolean
 
   // Actions
-  setHandFlowMode: (mode: HandFlowMode) => void
   dealPreflop: (spot: Spot, hasContinuation: boolean) => void
   startPreflopDecision: () => void
   submitPreflopAction: (userAction: Action) => void
-  continueToFlop: () => Promise<void>
   startFlopDecision: () => void
   submitFlopAction: (userAction: PostflopAction) => void
-  showHandSummary: () => void
+  acknowledgeCorrection: () => void
   nextHand: () => void
   resetSession: () => void
+}
+
+// ─── Continuation helper ────────────────────────────────────
+
+async function loadContinuation(
+  spot: Spot,
+  preflopResult: SpotResult,
+  set: (partial: Partial<HandState>) => void,
+): Promise<void> {
+  if (spot.kind !== 'response') return
+
+  const manifest = await loadManifest()
+  const matchingSolutions = findMatchingSolutions(spot, manifest)
+  if (matchingSolutions.length === 0) return
+
+  const entry = pickRandomEntry(matchingSolutions)
+  const solution = await getSolution(entry.solutionKey)
+  if (!solution) return
+
+  const postflopSpot = generatePostflopSpotForHand(solution, spot, spot.heroCards)
+  if (!postflopSpot) {
+    const fallbackSpot = generatePostflopSpot(solution)
+    const continuation: HandContinuation = {
+      preflopSpot: spot,
+      preflopResult,
+      postflopNodeKey: entry.nodeKey,
+      postflopSpot: fallbackSpot,
+    }
+    set({ handPhase: { phase: 'flop-dealing', continuation } })
+    return
+  }
+
+  const continuation: HandContinuation = {
+    preflopSpot: spot,
+    preflopResult,
+    postflopNodeKey: entry.nodeKey,
+    postflopSpot,
+  }
+  set({ handPhase: { phase: 'flop-dealing', continuation } })
 }
 
 // ─── Store ──────────────────────────────────────────────────
 
 export const useHandStore = create<HandState>()((set, get) => ({
   handPhase: { phase: 'idle' },
-  handFlowMode: { mode: 'natural' },
   sessionStats: { ...INITIAL_STATS },
   hasContinuation: false,
-
-  setHandFlowMode: (mode: HandFlowMode) => set({ handFlowMode: mode }),
 
   dealPreflop: (spot: Spot, hasContinuation: boolean) => {
     set({
@@ -132,7 +152,6 @@ export const useHandStore = create<HandState>()((set, get) => ({
       timestamp: Date.now(),
     }
 
-    // Can continue only if solver says call AND postflop solutions exist
     const canContinue = hasContinuation && spot.correctAction === 'call'
 
     // Fire-and-forget mastery persistence
@@ -143,55 +162,36 @@ export const useHandStore = create<HandState>()((set, get) => ({
       },
     )
 
-    set({
-      handPhase: { phase: 'preflop-feedback', spot, result, canContinue },
-      sessionStats: {
-        ...sessionStats,
-        handsPlayed: sessionStats.handsPlayed + 1,
-        preflopCorrect: sessionStats.preflopCorrect + (isCorrect ? 1 : 0),
-        totalDecisionTimeMs: sessionStats.totalDecisionTimeMs + decisionTimeMs,
-      },
-    })
-  },
+    const updatedStats = {
+      ...sessionStats,
+      handsPlayed: sessionStats.handsPlayed + 1,
+      preflopCorrect: sessionStats.preflopCorrect + (isCorrect ? 1 : 0),
+      totalDecisionTimeMs: sessionStats.totalDecisionTimeMs + decisionTimeMs,
+    }
 
-  continueToFlop: async () => {
-    const { handPhase } = get()
-    if (handPhase.phase !== 'preflop-feedback' || !handPhase.canContinue) return
-    if (handPhase.spot.kind !== 'response') return
-
-    const { spot, result: preflopResult } = handPhase
-
-    const manifest = await loadManifest()
-    const matchingSolutions = findMatchingSolutions(spot, manifest)
-    if (matchingSolutions.length === 0) return
-
-    const entry = pickRandomEntry(matchingSolutions)
-    const solution = await getSolution(entry.solutionKey)
-    if (!solution) return
-
-    // Generate postflop spot for this specific hand
-    const postflopSpot = generatePostflopSpotForHand(solution, spot, spot.heroCards)
-    if (!postflopSpot) {
-      // Hand not in solver's postflop range — fallback to random hand from solution
-      const fallbackSpot = generatePostflopSpot(solution)
-      const continuation: HandContinuation = {
-        preflopSpot: spot,
-        preflopResult,
-        postflopNodeKey: entry.nodeKey,
-        postflopSpot: fallbackSpot,
+    if (isCorrect) {
+      if (canContinue) {
+        // Correct + can continue: keep table visible, async-load flop
+        set({ sessionStats: updatedStats })
+        void loadContinuation(spot, result, set).catch((err: unknown) => {
+          console.error('Failed to load flop continuation', err)
+          set({ handPhase: { phase: 'idle' }, hasContinuation: false })
+        })
+      } else {
+        // Correct + no continuation: advance to next hand
+        set({
+          handPhase: { phase: 'idle' },
+          hasContinuation: false,
+          sessionStats: updatedStats,
+        })
       }
-      set({ handPhase: { phase: 'flop-dealing', continuation } })
-      return
+    } else {
+      // Wrong: show correction
+      set({
+        handPhase: { phase: 'preflop-correction', spot, result, canContinue },
+        sessionStats: updatedStats,
+      })
     }
-
-    const continuation: HandContinuation = {
-      preflopSpot: spot,
-      preflopResult,
-      postflopNodeKey: entry.nodeKey,
-      postflopSpot,
-    }
-
-    set({ handPhase: { phase: 'flop-dealing', continuation } })
   },
 
   startFlopDecision: () => {
@@ -236,51 +236,44 @@ export const useHandStore = create<HandState>()((set, get) => ({
       },
     )
 
-    set({
-      handPhase: { phase: 'flop-feedback', continuation, result },
-      sessionStats: {
-        ...sessionStats,
-        postflopCorrect: sessionStats.postflopCorrect + (isCorrect ? 1 : 0),
-        postflopHands: sessionStats.postflopHands + 1,
-        totalDecisionTimeMs: sessionStats.totalDecisionTimeMs + decisionTimeMs,
-      },
-    })
+    const updatedStats = {
+      ...sessionStats,
+      postflopCorrect: sessionStats.postflopCorrect + (isCorrect ? 1 : 0),
+      postflopHands: sessionStats.postflopHands + 1,
+      totalDecisionTimeMs: sessionStats.totalDecisionTimeMs + decisionTimeMs,
+    }
+
+    if (isCorrect) {
+      set({
+        handPhase: { phase: 'idle' },
+        hasContinuation: false,
+        sessionStats: updatedStats,
+      })
+    } else {
+      set({
+        handPhase: { phase: 'flop-correction', continuation, result },
+        sessionStats: updatedStats,
+      })
+    }
   },
 
-  showHandSummary: () => {
+  acknowledgeCorrection: () => {
     const { handPhase } = get()
 
-    if (handPhase.phase === 'flop-feedback') {
-      const { sessionStats } = get()
-      const bothCorrect =
-        handPhase.continuation.preflopResult.isCorrect && handPhase.result.isCorrect
-
-      set({
-        handPhase: {
-          phase: 'hand-summary',
-          preflopSpot: handPhase.continuation.preflopSpot,
-          preflopResult: handPhase.continuation.preflopResult,
-          continuation: handPhase.continuation,
-          postflopResult: handPhase.result,
-        },
-        sessionStats: {
-          ...sessionStats,
-          fullHandCorrect: sessionStats.fullHandCorrect + (bothCorrect ? 1 : 0),
-        },
-      })
+    if (handPhase.phase === 'preflop-correction') {
+      if (handPhase.canContinue) {
+        void loadContinuation(handPhase.spot, handPhase.result, set).catch((err: unknown) => {
+          console.error('Failed to load flop continuation', err)
+          set({ handPhase: { phase: 'idle' }, hasContinuation: false })
+        })
+      } else {
+        set({ handPhase: { phase: 'idle' }, hasContinuation: false })
+      }
       return
     }
 
-    if (handPhase.phase === 'preflop-feedback') {
-      set({
-        handPhase: {
-          phase: 'hand-summary',
-          preflopSpot: handPhase.spot,
-          preflopResult: handPhase.result,
-          continuation: null,
-          postflopResult: null,
-        },
-      })
+    if (handPhase.phase === 'flop-correction') {
+      set({ handPhase: { phase: 'idle' }, hasContinuation: false })
     }
   },
 
@@ -291,7 +284,6 @@ export const useHandStore = create<HandState>()((set, get) => ({
   resetSession: () => {
     set({
       handPhase: { phase: 'idle' },
-      handFlowMode: { mode: 'natural' },
       hasContinuation: false,
       sessionStats: { ...INITIAL_STATS, sessionStartedAt: Date.now() },
     })

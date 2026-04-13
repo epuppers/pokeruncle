@@ -9,7 +9,6 @@ vi.mock('@/features/trainer/lib/mastery-persistence', () => ({
   recordSpotResult: vi.fn().mockResolvedValue(undefined),
 }))
 
-
 vi.mock('@/stores/settingsStore', () => ({
   useSettingsStore: {
     getState: () => ({ trainingStrictness: 5 }),
@@ -118,65 +117,26 @@ describe('handStore', () => {
   })
 
   describe('submitPreflopAction', () => {
-    it('transitions to preflop-feedback with correct result', () => {
-      const spot = makeResponseSpot({ correctAction: 'call' })
-      useHandStore.getState().dealPreflop(spot, true)
-      useHandStore.getState().startPreflopDecision()
-      useHandStore.getState().submitPreflopAction('call')
-
-      const phase = useHandStore.getState().handPhase
-      expect(phase.phase).toBe('preflop-feedback')
-      if (phase.phase === 'preflop-feedback') {
-        expect(phase.result.isCorrect).toBe(true)
-        expect(phase.result.userAction).toBe('call')
-      }
-    })
-
-    it('marks incorrect action as not correct', () => {
-      const spot = makeResponseSpot({ correctAction: 'call' })
-      useHandStore.getState().dealPreflop(spot, true)
-      useHandStore.getState().startPreflopDecision()
-      useHandStore.getState().submitPreflopAction('fold')
-
-      const phase = useHandStore.getState().handPhase
-      if (phase.phase === 'preflop-feedback') {
-        expect(phase.result.isCorrect).toBe(false)
-      }
-    })
-
-    it('sets canContinue true when correctAction is call and solutions exist', () => {
-      const spot = makeResponseSpot({ correctAction: 'call' })
-      useHandStore.getState().dealPreflop(spot, true)
-      useHandStore.getState().startPreflopDecision()
-      useHandStore.getState().submitPreflopAction('call')
-
-      const phase = useHandStore.getState().handPhase
-      if (phase.phase === 'preflop-feedback') {
-        expect(phase.canContinue).toBe(true)
-      }
-    })
-
-    it('sets canContinue false when correctAction is not call', () => {
-      const spot = makeResponseSpot({ correctAction: 'raise' })
-      useHandStore.getState().dealPreflop(spot, true)
-      useHandStore.getState().startPreflopDecision()
-      useHandStore.getState().submitPreflopAction('raise')
-
-      const phase = useHandStore.getState().handPhase
-      if (phase.phase === 'preflop-feedback') {
-        expect(phase.canContinue).toBe(false)
-      }
-    })
-
-    it('sets canContinue false when no matching solutions', () => {
+    it('goes to idle on correct answer without continuation', () => {
       const spot = makeResponseSpot({ correctAction: 'call' })
       useHandStore.getState().dealPreflop(spot, false)
       useHandStore.getState().startPreflopDecision()
       useHandStore.getState().submitPreflopAction('call')
 
+      expect(useHandStore.getState().handPhase.phase).toBe('idle')
+    })
+
+    it('goes to preflop-correction on wrong answer', () => {
+      const spot = makeResponseSpot({ correctAction: 'call' })
+      useHandStore.getState().dealPreflop(spot, false)
+      useHandStore.getState().startPreflopDecision()
+      useHandStore.getState().submitPreflopAction('fold')
+
       const phase = useHandStore.getState().handPhase
-      if (phase.phase === 'preflop-feedback') {
-        expect(phase.canContinue).toBe(false)
+      expect(phase.phase).toBe('preflop-correction')
+      if (phase.phase === 'preflop-correction') {
+        expect(phase.result.isCorrect).toBe(false)
+        expect(phase.result.userAction).toBe('fold')
       }
     })
 
@@ -208,22 +168,22 @@ describe('handStore', () => {
     })
   })
 
-  describe('showHandSummary', () => {
-    it('transitions from preflop-feedback to hand-summary (preflop only)', () => {
-      const spot = makeResponseSpot({ correctAction: 'fold' })
+  describe('acknowledgeCorrection', () => {
+    it('goes to idle from preflop-correction without continuation', () => {
+      const spot = makeResponseSpot({ correctAction: 'call' })
       useHandStore.getState().dealPreflop(spot, false)
       useHandStore.getState().startPreflopDecision()
       useHandStore.getState().submitPreflopAction('fold')
-      useHandStore.getState().showHandSummary()
 
-      const phase = useHandStore.getState().handPhase
-      expect(phase.phase).toBe('hand-summary')
-      if (phase.phase === 'hand-summary') {
-        expect(phase.preflopSpot.id).toBe(spot.id)
-        expect(phase.preflopResult.isCorrect).toBe(true)
-        expect(phase.continuation).toBeNull()
-        expect(phase.postflopResult).toBeNull()
-      }
+      expect(useHandStore.getState().handPhase.phase).toBe('preflop-correction')
+
+      useHandStore.getState().acknowledgeCorrection()
+      expect(useHandStore.getState().handPhase.phase).toBe('idle')
+    })
+
+    it('does nothing from non-correction phases', () => {
+      useHandStore.getState().acknowledgeCorrection()
+      expect(useHandStore.getState().handPhase.phase).toBe('idle')
     })
   })
 
@@ -251,7 +211,7 @@ describe('handStore', () => {
   describe('resetSession', () => {
     it('resets phase and stats', () => {
       const spot = makeResponseSpot({ correctAction: 'call' })
-      useHandStore.getState().dealPreflop(spot, true)
+      useHandStore.getState().dealPreflop(spot, false)
       useHandStore.getState().startPreflopDecision()
       useHandStore.getState().submitPreflopAction('call')
       useHandStore.getState().resetSession()
@@ -269,14 +229,13 @@ describe('handStore', () => {
       useHandStore.getState().dealPreflop(spot1, false)
       useHandStore.getState().startPreflopDecision()
       useHandStore.getState().submitPreflopAction('call')
-      useHandStore.getState().nextHand()
 
-      // Hand 2: incorrect
+      // Hand 2: incorrect → correction → next
       const spot2 = makeResponseSpot({ id: 'h2', correctAction: 'raise' })
       useHandStore.getState().dealPreflop(spot2, false)
       useHandStore.getState().startPreflopDecision()
       useHandStore.getState().submitPreflopAction('fold')
-      useHandStore.getState().nextHand()
+      useHandStore.getState().acknowledgeCorrection()
 
       const stats = useHandStore.getState().sessionStats
       expect(stats.handsPlayed).toBe(2)
