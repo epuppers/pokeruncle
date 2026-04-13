@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Target, Hash, Crosshair, Timer, Award } from 'lucide-react'
+import { Target, Hash, Crosshair, Timer } from 'lucide-react'
 
 import { useHandStore } from '@/stores/handStore'
 
@@ -22,7 +22,6 @@ function useElapsedMinutes(sessionStartedAt: number, handsPlayed: number): numbe
  */
 export function HandSessionHud() {
   const stats = useHandStore((s) => s.sessionStats)
-  const handFlowMode = useHandStore((s) => s.handFlowMode)
   const elapsedMin = useElapsedMinutes(stats.sessionStartedAt, stats.handsPlayed)
 
   if (stats.handsPlayed === 0) return null
@@ -31,11 +30,6 @@ export function HandSessionHud() {
   const postflopAcc =
     stats.postflopHands > 0
       ? Math.round((stats.postflopCorrect / stats.postflopHands) * 100)
-      : null
-
-  const fullHandAcc =
-    stats.postflopHands > 0
-      ? Math.round((stats.fullHandCorrect / stats.postflopHands) * 100)
       : null
 
   const handsPerMin = elapsedMin > 0.1 ? Math.round((stats.handsPlayed / elapsedMin) * 10) / 10 : 0
@@ -47,16 +41,8 @@ export function HandSessionHud() {
       {postflopAcc !== null && (
         <Stat label="Postflop" value={`${postflopAcc}%`} icon={Crosshair} />
       )}
-      {fullHandAcc !== null && (
-        <Stat label="Full Hand" value={`${fullHandAcc}%`} icon={Award} />
-      )}
       {handsPerMin > 0 && (
         <Stat label="Hands/min" value={handsPerMin} icon={Timer} />
-      )}
-      {handFlowMode.mode === 'postflop-drill' && (
-        <span className="rounded-full bg-brass/20 px-2 py-0.5 text-xs text-brass">
-          Postflop Drill
-        </span>
       )}
     </div>
   )

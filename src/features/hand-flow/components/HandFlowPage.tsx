@@ -2,22 +2,23 @@ import { useEffect } from 'react'
 
 import { useHandStore } from '@/stores/handStore'
 import { useTrainerStore } from '@/stores/trainerStore'
-
+import { actionLabel } from '@/lib/poker-glossary'
+import { POSTFLOP_ACTION_LABELS } from '@/features/postflop'
 import { useRangeQuery } from '@/features/trainer/hooks/use-range-query'
 
 import { useHandDealer } from '../hooks/use-hand-dealer'
 import { useHandDealingSequence } from '../hooks/use-hand-dealing-sequence'
 import { useHandKeyboard } from '../hooks/use-hand-keyboard'
+import { CorrectionBanner } from './CorrectionBanner'
 import { HandActionBar } from './HandActionBar'
-import { HandFeedback } from './HandFeedback'
 import { HandFlowFilters } from './HandFlowFilters'
 import { HandSessionHud } from './HandSessionHud'
-import { HandSummary } from './HandSummary'
 import { HandTable } from './HandTable'
 
 /**
- * Unified hand flow page — deals preflop, optionally continues to flop,
- * all on one persistent table. Route: /play
+ * Unified hand flow page — a continuous game that deals preflop,
+ * optionally continues to flop, corrects errors inline, and
+ * auto-advances on correct answers. Route: /play
  */
 export function HandFlowPage() {
   const provider = useTrainerStore((s) => s.provider)
@@ -45,15 +46,19 @@ export function HandFlowPage() {
 
       <HandTable dealingStepIndex={dealingStepIndex} />
 
-      {phase === 'preflop-feedback' && (
-        <HandFeedback street="preflop" handPhase={handPhase} />
+      {phase === 'preflop-correction' && (
+        <CorrectionBanner
+          userActionLabel={actionLabel(handPhase.result.userAction)}
+          correctActionLabel={actionLabel(handPhase.spot.correctAction)}
+        />
       )}
 
-      {phase === 'flop-feedback' && (
-        <HandFeedback street="flop" handPhase={handPhase} />
+      {phase === 'flop-correction' && (
+        <CorrectionBanner
+          userActionLabel={POSTFLOP_ACTION_LABELS[handPhase.result.userAction]}
+          correctActionLabel={POSTFLOP_ACTION_LABELS[handPhase.continuation.postflopSpot.correctAction]}
+        />
       )}
-
-      {phase === 'hand-summary' && <HandSummary />}
 
       <HandActionBar />
     </div>
