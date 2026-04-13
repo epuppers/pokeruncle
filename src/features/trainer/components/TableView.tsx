@@ -62,22 +62,27 @@ export function TableView({ spot, revealedSteps }: TableViewProps) {
         {/* Pot display (center, above cards) */}
         <PotDisplay totalPot={pot} visible={pot > 0} />
 
-        {/* Bet chips for each revealed blind/raise/call */}
-        {steps.map((step, i) => {
-          if (i >= revealedCount) return null
-          if (step.style === 'fold' || step.style === 'hero' || step.style === 'dealer' || step.style === 'deal') return null
-          const amount = parseDollarAmount(step.label)
-          if (amount <= 0) return null
-          return (
+        {/* Bet chips — show only the latest bet per position to avoid stacking */}
+        {(() => {
+          const latestBetByPosition = new Map<Position, { amount: number; style: DealingStep['style'] }>()
+          for (let i = 0; i < revealedCount && i < steps.length; i++) {
+            const step = steps[i]
+            if (step.style === 'fold' || step.style === 'hero' || step.style === 'dealer' || step.style === 'deal') continue
+            const amount = parseDollarAmount(step.label)
+            if (amount > 0) {
+              latestBetByPosition.set(step.position, { amount, style: step.style })
+            }
+          }
+          return [...latestBetByPosition.entries()].map(([pos, { amount, style }]) => (
             <BetChip
-              key={`chip-${spot.id}-${i}`}
-              position={step.position}
+              key={`chip-${spot.id}-${pos}`}
+              position={pos}
               amount={amount}
-              style={step.style}
+              style={style}
               animate={isDealing}
             />
-          )
-        })}
+          ))
+        })()}
 
         {/* Face-down card backs at dealt seats */}
         {POSITIONS.map((pos) => {
