@@ -21,6 +21,7 @@ const DisclaimerPage = lazy(() => import('@/components/DisclaimerPage').then(m =
 const ReviewPage = lazy(() => import('@/features/review').then(m => ({ default: m.ReviewPage })))
 const SettingsPage = lazy(() => import('@/features/settings').then(m => ({ default: m.SettingsPage })))
 const PostflopTrainerPage = lazy(() => import('@/features/postflop').then(m => ({ default: m.PostflopTrainerPage })))
+const HandFlowPage = lazy(() => import('@/features/hand-flow').then(m => ({ default: m.HandFlowPage })))
 
 // Root layout component
 function RootLayout() {
@@ -37,7 +38,7 @@ function RootLayout() {
       {/* Header */}
       <header className="relative z-10 px-4 py-3 bg-background/80 backdrop-blur-md">
         <div className="flex items-center justify-between">
-          <Link to="/train" className="flex items-center gap-2 group">
+          <Link to="/play" className="flex items-center gap-2 group">
             <Spade className="size-5 text-brass fill-brass/20 transition-transform group-hover:scale-110" />
             <h1 className="font-display text-lg font-bold tracking-wide">
               <span className="bg-gradient-to-r from-brass to-brass-dim bg-clip-text text-transparent">
@@ -48,6 +49,7 @@ function RootLayout() {
 
           {/* Navigation tabs */}
           <nav aria-label="Main navigation" className="flex items-center gap-1">
+            <NavLink to="/play" label="Play" />
             <NavLink to="/train" label="Train" />
             <NavLink to="/train/postflop" label="Postflop" />
             <NavLink to="/review" label="Review" />
@@ -219,6 +221,12 @@ const postflopRoute = createRoute({
   component: PostflopTrainerPage,
 })
 
+const playRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/play',
+  component: HandFlowPage,
+})
+
 const settingsRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/settings',
@@ -227,6 +235,7 @@ const settingsRoute = createRoute({
 
 const routeTree = rootRoute.addChildren([
   indexRoute,
+  playRoute,
   trainRoute,
   postflopRoute,
   reviewRoute,
