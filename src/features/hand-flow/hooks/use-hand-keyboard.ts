@@ -40,16 +40,13 @@ const POSTFLOP_KEY_MAP: Record<string, PostflopAction> = {
 
 /**
  * Global keyboard listener for the unified hand flow.
- * Handles all phases: dealing skip, preflop actions, postflop actions,
- * continue/summary/next navigation.
+ * Handles dealing skip, preflop/postflop actions, and correction acknowledgement.
  */
 export function useHandKeyboard(): void {
   const handPhase = useHandStore((s) => s.handPhase)
   const submitPreflopAction = useHandStore((s) => s.submitPreflopAction)
   const submitFlopAction = useHandStore((s) => s.submitFlopAction)
-  const continueToFlop = useHandStore((s) => s.continueToFlop)
-  const showHandSummary = useHandStore((s) => s.showHandSummary)
-  const nextHand = useHandStore((s) => s.nextHand)
+  const acknowledgeCorrection = useHandStore((s) => s.acknowledgeCorrection)
   const keyBindings = useSettingsStore((s) => s.keyBindings)
   const skipDealing = useSkipDealing()
 
@@ -81,6 +78,19 @@ export function useHandKeyboard(): void {
         return
       }
 
+      // Preflop correction — only the correct action key acknowledges
+      if (phase === 'preflop-correction') {
+        const spot = handPhase.spot
+        const activeKeyMap =
+          spot.kind === 'push-fold' ? getPushFoldKeyMap(spot, keyBindings) : preflopKeyMap
+        const action = activeKeyMap[e.key]
+        if (action === spot.correctAction) {
+          e.preventDefault()
+          acknowledgeCorrection()
+        }
+        return
+      }
+
       // Postflop action keys
       if (phase === 'flop-decision') {
         const action = POSTFLOP_KEY_MAP[e.key]
@@ -91,26 +101,12 @@ export function useHandKeyboard(): void {
         return
       }
 
-      // Space-based navigation
-      if (e.key === ' ' || e.code === 'Space') {
-        e.preventDefault()
-
-        if (phase === 'preflop-feedback') {
-          if (handPhase.canContinue) {
-            void continueToFlop()
-          } else {
-            showHandSummary()
-          }
-          return
-        }
-
-        if (phase === 'flop-feedback') {
-          showHandSummary()
-          return
-        }
-
-        if (phase === 'hand-summary') {
-          nextHand()
+      // Flop correction — only the correct action key acknowledges
+      if (phase === 'flop-correction') {
+        const action = POSTFLOP_KEY_MAP[e.key]
+        if (action === handPhase.continuation.postflopSpot.correctAction) {
+          e.preventDefault()
+          acknowledgeCorrection()
         }
       }
     }
@@ -121,9 +117,7 @@ export function useHandKeyboard(): void {
     handPhase,
     submitPreflopAction,
     submitFlopAction,
-    continueToFlop,
-    showHandSummary,
-    nextHand,
+    acknowledgeCorrection,
     skipDealing,
     keyBindings,
     preflopKeyMap,
